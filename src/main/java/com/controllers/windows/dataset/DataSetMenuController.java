@@ -5,10 +5,9 @@ import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Dataset;
 import com.sun.javafx.collections.ObservableListWrapper;
-import com.tools.Encryptor;
+import com.tools.Constant;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,24 +50,19 @@ public class DataSetMenuController extends MenuController {
     @FXML
     private ChoiceBox<Boolean> choiceBox_Activate;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         menuBarController.init(this);
         List<Boolean> list = new ArrayList<Boolean>();
         list.add(true);
         list.add(false);
         ObservableList<Boolean> observableList = new ObservableListWrapper<Boolean>(list);
         choiceBox_Activate.setItems(observableList);
-        response = dataSetController.getDatasetById(new Encryptor().decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("password").toString()),
-                Integer.parseInt(getMap().get("datasetId").toString()));
+        response = dataSetController.getDatasetById(Constant.getAuth(),
+                Integer.parseInt(Constant.getMap().get("datasetId").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             dataset = new Dataset().fromJson(response);
@@ -80,10 +74,7 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void save(ActionEvent event) throws IOException {
-        response = dataSetController.changeDataset(new Encryptor().decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("password").toString()),
+        response = dataSetController.changeDataset(Constant.getAuth(),
                 new Dataset(dataset.getId(), textField_Name.getText(), textArea_Description.getText(),
                         choiceBox_Activate.getSelectionModel().getSelectedItem().booleanValue()));
         statusCode = response.getStatusLine().getStatusCode();
@@ -98,13 +89,13 @@ public class DataSetMenuController extends MenuController {
 
 
     public void backToMainMenu(ActionEvent event) throws IOException {
-        windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController,
+        windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), mainMenuController,
                 "Main menu", 600, 640);
     }
 
     public void addConfiguration(ActionEvent event) throws IOException {
-        getMap().put("datasetName", dataset.getName());
-        windowsController.openNewModalWindow("dataset/changeConfigurationMenu.fxml", getStage(), getInstance(), changeConfigurationMenuController,
+        Constant.getMap().put("datasetName", dataset.getName());
+        windowsController.openNewModalWindow("dataset/changeConfigurationMenu.fxml", getStage(), changeConfigurationMenuController,
                 "Add configuration", true, 870, 560);
     }
 }

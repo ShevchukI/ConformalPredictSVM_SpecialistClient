@@ -1,7 +1,7 @@
 package com.controllers.windows.menu;
 
+import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 import com.tools.Placeholder;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
@@ -18,21 +18,21 @@ public abstract class MenuController {
     @Autowired
     protected HazelcastInstance instance;
 
-    @Autowired
-    protected IMap<String, String> userMap;
+//    @Autowired
+//    protected IMap<String, String> userMap;
 
 
     private Placeholder placeholder = new Placeholder();
     private Stage stage;
     private Stage newWindow;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage) throws IOException {
+//        userMap = Hazelcast.getHazelcastInstanceByName("mainInstance").getMap("userMap");
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Hazelcast.getHazelcastInstanceByName("mainInstance").getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
+//        setInstance(hazelcastInstance);
     }
 
     public void setStage(Stage stage) {
@@ -43,17 +43,17 @@ public abstract class MenuController {
         return stage;
     }
 
-    public HazelcastInstance getInstance() {
-        return instance;
-    }
+//    public HazelcastInstance getInstance() {
+//        return instance;
+////    }
 
-    public void setInstance(HazelcastInstance hazelcastInstance) {
-        instance = hazelcastInstance;
-    }
+//    public void setInstance(HazelcastInstance hazelcastInstance) {
+//        instance = hazelcastInstance;
+//    }
 
-    public IMap getMap() {
-        return userMap;
-    }
+//    public IMap getMap() {
+//        return userMap;
+//    }
 
     public void setNewWindow(Stage newWindow) {
         this.newWindow = newWindow;
@@ -114,10 +114,10 @@ public abstract class MenuController {
         alert.showAndWait();
     }
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, boolean change) throws IOException {
+    public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
     }
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) {
+    public void initialize(Stage stage, Stage newWindow) {
     }
 
 }

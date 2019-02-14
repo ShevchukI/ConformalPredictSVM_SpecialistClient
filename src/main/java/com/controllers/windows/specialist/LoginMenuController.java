@@ -49,12 +49,15 @@ public class LoginMenuController extends MenuController {
             alert.setContentText("Password is empty!");
             alert.showAndWait();
         } else {
-            response = specialistController.specialistAuthorization(textField_Login.getText(), passwordField_Password.getText());
+            String[] authorization = new String[2];
+            authorization[0] = textField_Login.getText();
+            authorization[1] = passwordField_Password.getText();
+            response = specialistController.specialistAuthorization(authorization);
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
-                Constant.fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText(), getMap());
+                Constant.fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
 //                fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
-                windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(),
+                windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(),
                         mainMenuController, "Main menu", 600, 640);
             }
 //            if (statusCode == 200) {
@@ -81,7 +84,7 @@ public class LoginMenuController extends MenuController {
     }
 
     public void signUp(ActionEvent event) throws IOException {
-        windowsController.openWindow("specialist/registrationMenu.fxml", getStage(), getInstance(),
+        windowsController.openWindow("specialist/registrationMenu.fxml", getStage(),
                 registrationMenuController,"Registration", 408, 400);
     }
 

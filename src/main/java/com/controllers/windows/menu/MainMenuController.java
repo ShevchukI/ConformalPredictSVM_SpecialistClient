@@ -3,10 +3,9 @@ package com.controllers.windows.menu;
 import com.controllers.requests.DataSetController;
 import com.controllers.windows.dataset.AddDataSetMenuController;
 import com.controllers.windows.dataset.DataSetMenuController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Dataset;
 import com.models.DatasetPage;
-import com.tools.Encryptor;
+import com.tools.Constant;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -88,17 +87,15 @@ public class MainMenuController extends MenuController {
     @FXML
     private Button button_View;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
-        getMap().remove("datasetId");
+        Constant.getMap().remove("datasetId");
         menuBarController.init(this);
-        label_Name.setText(getMap().get("name").toString() + " " + getMap().get("surname").toString());
-        pageIndx = Integer.parseInt(getMap().get("pageIndex").toString());
+        label_Name.setText(Constant.getMap().get("name").toString() + " " + Constant.getMap().get("surname").toString());
+        pageIndx = Integer.parseInt(Constant.getMap().get("pageIndex").toString());
         tableColumn_AllNumber.setSortable(false);
         tableColumn_AllNumber.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_AllDataSetTable.getItems().
                 indexOf(column.getValue()) + 1) + (pageIndx - 1) * objectOnPage));
@@ -158,32 +155,32 @@ public class MainMenuController extends MenuController {
 
 
     public void addDataSet(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("dataset/addDataSetMenu.fxml", getStage(), getInstance(), addDataSetMenuController,
+        windowsController.openNewModalWindow("dataset/addDataSetMenu.fxml", getStage(), addDataSetMenuController,
                 "Add new dataset", 740, 500);
     }
 
     public void viewDataSet(ActionEvent event) throws IOException {
         if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            getMap().put("datasetId", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
-            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(), getInstance(),
+            Constant.getMap().put("datasetId", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
+            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(),
                     dataSetMenuController, "Dataset menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            getMap().put("datasetId", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
-            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(), getInstance(),
+            Constant.getMap().put("datasetId", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
+            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(),
                     dataSetMenuController, "Dataset menu", 800, 640);
         }
     }
 
     public void viewDataSet() throws IOException {
         if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            getMap().put("datasetId", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
-            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(), getInstance(),
+            Constant.getMap().put("datasetId", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
+            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(),
                     dataSetMenuController, "Dataset menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            getMap().put("datasetId", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
-            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(), getInstance(),
+            Constant.getMap().put("datasetId", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
+            windowsController.openWindowResizable("dataset/dataSetMenu.fxml", getStage(),
                     dataSetMenuController, "Dataset menu", 800, 640);
         }
     }
@@ -218,10 +215,7 @@ public class MainMenuController extends MenuController {
 
 
     public void getAllPage(int pageIndx, int objectOnPage) throws IOException {
-        response = dataSetController.getDataSetAllPage(new Encryptor().decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("password").toString()),
+        response = dataSetController.getDataSetAllPage(Constant.getAuth(),
                 pageIndx, objectOnPage);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
@@ -240,10 +234,7 @@ public class MainMenuController extends MenuController {
     }
 
     public void getMyPage(int pageIndx, int objectOnPage) throws IOException {
-        response = dataSetController.getSpecialistDataSetAllPage(new Encryptor().decrypt(getMap().get("key").toString(),
-                getMap().get("vector").toString(), getMap().get("login").toString()),
-                new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("password").toString()),
+        response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
                 pageIndx, objectOnPage);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
@@ -264,10 +255,7 @@ public class MainMenuController extends MenuController {
     public void changeActive(ActionEvent event) throws IOException {
         if (tab_All.isSelected()) {
             if (tableView_AllDataSetTable.getSelectionModel().getSelectedItem().isActive()) {
-                response = dataSetController.changeActive(new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()),
+                response = dataSetController.changeActive(Constant.getAuth(),
                         tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId(),
                         false
                 );
@@ -276,10 +264,7 @@ public class MainMenuController extends MenuController {
                     tableView_AllDataSetTable.getSelectionModel().getSelectedItem().setActive(false);
                 }
             } else {
-                response = dataSetController.changeActive(new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()),
+                response = dataSetController.changeActive(Constant.getAuth(),
                         tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId(),
                         true
                 );
@@ -300,10 +285,7 @@ public class MainMenuController extends MenuController {
 
         if (tab_My.isSelected()) {
             if (tableView_MyDataSetTable.getSelectionModel().getSelectedItem().isActive()) {
-                response = dataSetController.changeActive(new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()),
+                response = dataSetController.changeActive(Constant.getAuth(),
                         tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId(),
                         false
                 );
@@ -312,10 +294,7 @@ public class MainMenuController extends MenuController {
                     tableView_MyDataSetTable.getSelectionModel().getSelectedItem().setActive(false);
                 }
             } else {
-                response = dataSetController.changeActive(new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                getMap().get("password").toString()),
+                response = dataSetController.changeActive(Constant.getAuth(),
                         tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId(),
                         true
                 );

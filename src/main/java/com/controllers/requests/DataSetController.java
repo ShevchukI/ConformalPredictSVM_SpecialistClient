@@ -27,8 +27,8 @@ import java.util.Base64;
  */
 public class DataSetController extends MainController {
 
-    public HttpResponse getDataSetAllPage(String name, String password, int page, int objectOnPage) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse getDataSetAllPage(String[] auhtorization, int page, int objectOnPage) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((auhtorization[0] + ":" + auhtorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage);
         request.addHeader("Authorization", basicAuthPayload);
@@ -42,8 +42,8 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse getSpecialistDataSetAllPage(String name, String password, int page, int objectOnPage) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse getSpecialistDataSetAllPage(String[] auhtorization, int page, int objectOnPage) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((auhtorization[0] + ":" + auhtorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage + "/specialist");
         request.addHeader("Authorization", basicAuthPayload);
@@ -57,8 +57,8 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse changeActive(String name, String password, int datasetId, boolean active) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse changeActive(String[] auhtorization, int datasetId, boolean active) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((auhtorization[0] + ":" + auhtorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpPut request = new HttpPut(getUrl() + "/dataset/" + datasetId + "/activate");
         request.addHeader("Authorization", basicAuthPayload);
@@ -78,9 +78,9 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse createDataSet(String name, String password, Dataset dataset) throws IOException {
+    public HttpResponse createDataSet(String[] authorization, Dataset dataset) throws IOException {
         String json = new Gson().toJson(dataset);
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(getUrl() + "/dataset/");
         request.addHeader("Authorization", basicAuthPayload);
@@ -96,8 +96,8 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse addObjectsToDataset(String name, String password, File file, int datasetId) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse addObjectsToDataset(String[] authorization, File file, int datasetId) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(getUrl() + "/dataset/" + datasetId + "/objects");
         request.addHeader("Authorization", basicAuthPayload);
@@ -114,8 +114,8 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse getDatasetById(String name, String password, int datasetId) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+    public HttpResponse getDatasetById(String[] authorization, int datasetId) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId);
         request.addHeader("Authorization", basicAuthPayload);
@@ -129,9 +129,9 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse changeDataset(String name, String password, Dataset dataset) throws IOException {
+    public HttpResponse changeDataset(String[] authorization, Dataset dataset) throws IOException {
         String json = new Gson().toJson(dataset);
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpPut request = new HttpPut(getUrl() + "/dataset/" + dataset.getId());
         request.addHeader("Authorization", basicAuthPayload);

@@ -72,7 +72,7 @@ public class RegistrationMenuController extends MenuController {
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
-                windowsController.openWindow("specialist/loginMenu.fxml", getStage(), getInstance(), loginMenuController,
+                windowsController.openWindow("specialist/loginMenu.fxml", getStage(), loginMenuController,
                         "Login menu", 350, 190);
             }
 //            else {
@@ -104,7 +104,7 @@ public class RegistrationMenuController extends MenuController {
 
     //
     public void returnToLoginMenu() throws IOException {
-        windowsController.openWindow("specialist/loginMenu.fxml", getStage(), getInstance(), loginMenuController,
+        windowsController.openWindow("specialist/loginMenu.fxml", getStage(), loginMenuController,
                 "Login menu", 350, 190);
     }
 

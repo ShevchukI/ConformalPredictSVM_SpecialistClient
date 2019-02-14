@@ -5,9 +5,8 @@ import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Dataset;
-import com.tools.Encryptor;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -52,13 +51,13 @@ public class AddDataSetMenuController extends MenuController {
     @FXML
     private TextArea textArea_Error;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage, Stage newWindow) {
+//        userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
+//        setInstance(hazelcastInstance);
         setNewWindow(newWindow);
         menuBarController.init(this);
         textArea_Error.setEditable(false);
@@ -174,18 +173,12 @@ public class AddDataSetMenuController extends MenuController {
             Dataset dataset = new Dataset(textField_DatasetName.getText(),
                     textArea_Description.getText(),
                     textArea_Columns.getText());
-            response = dataSetController.createDataSet(new Encryptor().decrypt(getMap().get("key").toString(),
-                    getMap().get("vector").toString(), getMap().get("login").toString()),
-                    new Encryptor().decrypt(getMap().get("key").toString(),
-                            getMap().get("vector").toString(), getMap().get("password").toString()),
+            response = dataSetController.createDataSet(Constant.getAuth(),
                     dataset);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 int id = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
-                response = dataSetController.addObjectsToDataset(new Encryptor().decrypt(getMap().get("key").toString(),
-                        getMap().get("vector").toString(), getMap().get("login").toString()),
-                        new Encryptor().decrypt(getMap().get("key").toString(),
-                                getMap().get("vector").toString(), getMap().get("password").toString()),
+                response = dataSetController.addObjectsToDataset(Constant.getAuth(),
                         fileBuf, id);
                 System.out.println(id);
                 statusCode = response.getStatusLine().getStatusCode();
@@ -198,7 +191,7 @@ public class AddDataSetMenuController extends MenuController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Dataset saved!");
             alert.showAndWait();
-            windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController, "Main menu", 600, 640);
+            windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), mainMenuController, "Main menu", 600, 640);
             getNewWindow().close();
         }
     }

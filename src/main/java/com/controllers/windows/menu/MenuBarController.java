@@ -3,6 +3,7 @@ package com.controllers.windows.menu;
 import com.controllers.windows.dataset.AddDataSetMenuController;
 import com.controllers.windows.specialist.ChangeInfoMenuController;
 import com.controllers.windows.specialist.LoginMenuController;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,7 +41,7 @@ public class MenuBarController extends MenuController {
     //
     public void closeApplication(ActionEvent event) {
         menuController.getStage().setOnHiding(event1 -> {
-            menuController.getInstance().shutdown();
+           Constant.getInstance().shutdown();
         });
         menuController.getStage().close();
     }
@@ -51,19 +52,19 @@ public class MenuBarController extends MenuController {
 //    }
 //
     public void signOut(ActionEvent event) throws IOException {
-        windowsController.openWindow("specialist/loginMenu.fxml", menuController.getStage(), menuController.getInstance(), loginMenuController,
+        windowsController.openWindow("specialist/loginMenu.fxml", menuController.getStage(), loginMenuController,
                 "Login menu", 350, 190);
     }
 
     //
     public void changeName(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("specialist/changeName.fxml", menuController.getStage(), menuController.getInstance(),
+        windowsController.openNewModalWindow("specialist/changeName.fxml", menuController.getStage(),
                 changeInfoMenuController, "Change name and surname", true, 400, 200);
     }
 
     //
     public void changePassword(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("specialist/changePassword.fxml", menuController.getStage(), menuController.getInstance(),
+        windowsController.openNewModalWindow("specialist/changePassword.fxml", menuController.getStage(),
                 changeInfoMenuController, "Change password", false, 400, 200);
 
     }

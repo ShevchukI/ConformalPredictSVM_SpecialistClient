@@ -2,8 +2,8 @@ package com.controllers.windows.specialist;
 
 import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
-import com.hazelcast.core.HazelcastInstance;
 import com.models.Specialist;
+import com.tools.Constant;
 import com.tools.Encryptor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,17 +55,15 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltip_Surname;
 
     @FXML
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, boolean change) throws IOException {
-        userMap = hazelcastInstance.getMap("userMap");
+    public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
-            hazelcastInstance.getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        setInstance(hazelcastInstance);
         setNewWindow(newWindow);
         if (change) {
-            textField_Name.setText(getMap().get("name").toString());
-            textField_Surname.setText(getMap().get("surname").toString());
+            textField_Name.setText(Constant.getMap().get("name").toString());
+            textField_Surname.setText(Constant.getMap().get("surname").toString());
         }
     }
 
@@ -73,17 +71,14 @@ public class ChangeInfoMenuController extends MenuController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         if (checkPasswords()) {
-            if (passwordField_CurrentPassword.getText().equals(new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                    getMap().get("password").toString()))) {
+            if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    response = specialistController.changePassword(new Encryptor().decrypt(getMap().get("key").toString(),
-                            getMap().get("vector").toString(), getMap().get("login").toString()),
-                            new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                    getMap().get("password").toString()),
+                    response = specialistController.changePassword(Constant.getAuth(),
                             passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
-                        getMap().put("password", new Encryptor().encrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
+                        Constant.getMap().put("password", new Encryptor().encrypt(Constant.getMap().get("key").toString(),
+                                Constant.getMap().get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         alert.setContentText("Password changed!");
                         alert.showAndWait();
@@ -108,16 +103,13 @@ public class ChangeInfoMenuController extends MenuController {
         alert.setHeaderText(null);
         if (checkNames()) {
             Specialist specialist = new Specialist(textField_Name.getText(), textField_Surname.getText());
-            response = specialistController.changeName(new Encryptor().decrypt(getMap().get("key").toString(),
-                    getMap().get("vector").toString(), getMap().get("login").toString()),
-                    new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                            getMap().get("password").toString()), specialist);
+            response = specialistController.changeName(Constant.getAuth(), specialist);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
-                getMap().put("name", specialist.getName());
-                getMap().put("surname", specialist.getSurname());
+                Constant.getMap().put("name", specialist.getName());
+                Constant.getMap().put("surname", specialist.getSurname());
             }
             getNewWindow().close();
         }
