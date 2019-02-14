@@ -2,8 +2,6 @@ package com.controllers.windows.menu;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
-import com.models.Specialist;
-import com.tools.Encryptor;
 import com.tools.Placeholder;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
@@ -22,6 +20,7 @@ public abstract class MenuController {
 
     @Autowired
     protected IMap<String, String> userMap;
+
 
     private Placeholder placeholder = new Placeholder();
     private Stage stage;
@@ -88,23 +87,31 @@ public abstract class MenuController {
         }
     }
 
-    public void fillMap(Specialist specialistFromJson, String login, String password) {
-        Specialist specialist = specialistFromJson;
-        String key;
-        String vector;
-        key = new Encryptor().genRandString();
-        vector = new Encryptor().genRandString();
-        getMap().put("key", key);
-        getMap().put("vector", vector);
-        getMap().put("login", new Encryptor().encrypt(key, vector, login));
-        getMap().put("password", new Encryptor().encrypt(key, vector, password));
-        getMap().put("id", specialist.getId());
-        getMap().put("name", specialist.getName());
-        getMap().put("surname", specialist.getSurname());
-    }
+//    public void fillMap(Specialist specialistFromJson, String login, String password) {
+//        Specialist specialist = specialistFromJson;
+//        String key;
+//        String vector;
+//        key = new Encryptor().genRandString();
+//        vector = new Encryptor().genRandString();
+//        getMap().put("key", key);
+//        getMap().put("vector", vector);
+//        getMap().put("login", new Encryptor().encrypt(key, vector, login));
+//        getMap().put("password", new Encryptor().encrypt(key, vector, password));
+//        getMap().put("id", specialist.getId());
+//        getMap().put("name", specialist.getName());
+//        getMap().put("surname", specialist.getSurname());
+//        getMap().put("pageIndex", "1");
+//    }
 
     public void getPlaceholderAlert(ActionEvent event) {
         placeholder.getAlert();
+    }
+
+    public void getAlert(String header, String content, Alert.AlertType alertType){
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow, boolean change) throws IOException {
@@ -112,4 +119,5 @@ public abstract class MenuController {
 
     public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) {
     }
+
 }

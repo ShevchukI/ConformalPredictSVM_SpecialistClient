@@ -5,6 +5,7 @@ import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.Specialist;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -51,7 +52,8 @@ public class LoginMenuController extends MenuController {
             response = specialistController.specialistAuthorization(textField_Login.getText(), passwordField_Password.getText());
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
-                fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
+                Constant.fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText(), getMap());
+//                fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
                 windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(),
                         mainMenuController, "Main menu", 600, 640);
             }

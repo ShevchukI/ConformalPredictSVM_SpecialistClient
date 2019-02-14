@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="509.0" prefWidth="776.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataset.DataSetMenuController">
+    <top>
+        <VBox>
+            <children>
+                <fx:include fx:id="menuBar" source="../menu/menuBar.fxml" />
+            </children>
+        </VBox>
+    </top>
+    <center>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+            <TextField fx:id="textField_Name" layoutX="106.0" layoutY="10.0" prefHeight="26.0" prefWidth="200.0" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="10.0" />
+            <Label layoutX="17.0" layoutY="52.0" text="Description:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="52.0" />
+            <TextArea fx:id="textArea_Description" layoutX="110.0" layoutY="52.0" prefHeight="70.0" prefWidth="200.0" wrapText="true" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="52.0" />
+            <TextArea layoutX="347.0" layoutY="14.0" prefHeight="394.0" prefWidth="360.0" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
+            <Button layoutX="14.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" onAction="#addConfiguration"/>
+            <Button layoutX="100.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="View" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="179.0" />
+            <Button fx:id="button_Test" layoutX="312.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Test" AnchorPane.rightAnchor="400.8" AnchorPane.topAnchor="179.0" />
+            <TableView fx:id="tableView_Configuration" layoutX="14.0" layoutY="216.0" prefHeight="218.0" prefWidth="362.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="216.0">
+              <columns>
+                <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0" text="#" />
+                <TableColumn fx:id="tableColumn_Name" minWidth="80.0" text="Name" />
+                  <TableColumn fx:id="tableColumn_Setting" minWidth="80.0" sortable="false" text="Settings" />
+                  <TableColumn fx:id="tableColumn_Active" maxWidth="80.0" minWidth="80.0" text="Active" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <Button layoutX="180.0" layoutY="179.0" mnemonicParsing="false" onAction="#save" prefHeight="26.0" prefWidth="63.0" text="Save" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="179.0" />
+            <Button layoutX="552.0" layoutY="445.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="26.0" prefWidth="63.0" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+            <Label layoutX="17.0" layoutY="449.0" prefHeight="18.0" prefWidth="28.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+            <Label fx:id="label_Count" layoutX="46.0" layoutY="452.0" text="placeholder" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
+            <Label layoutX="17.0" layoutY="136.0" prefHeight="18.0" prefWidth="60.0" text="Activate:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="135.0" />
+            <ChoiceBox fx:id="choiceBox_Activate" layoutX="110.0" layoutY="132.0" prefHeight="26.0" prefWidth="135.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="130.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

@@ -1,112 +1,110 @@
 package com.controllers.windows.dataset;
 
+import com.controllers.requests.DataSetController;
+import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
+import com.controllers.windows.menu.WindowsController;
 import com.hazelcast.core.HazelcastInstance;
+import com.models.Dataset;
+import com.sun.javafx.collections.ObservableListWrapper;
+import com.tools.Encryptor;
+import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.apache.http.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Admin on 07.02.2019.
+ * Created by Admin on 12.02.2019.
  */
 public class DataSetMenuController extends MenuController {
+    @Autowired
+    HttpResponse response;
+    @Autowired
+    MainMenuController mainMenuController;
 
-    private ArrayList<String> filterList = new ArrayList<String>();
-    private File file;
+//    private ObservableList observableList;
+    private WindowsController windowsController = new WindowsController();
+    private Dataset dataset;
+    private DataSetController dataSetController = new DataSetController();
+    private ChangeConfigurationMenuController changeConfigurationMenuController = new ChangeConfigurationMenuController();
+    int statusCode;
 
     @FXML
-    private TextField textField_FileName;
+    private MenuBarController menuBarController;
     @FXML
-    private TextField textField_DatasetName;
+    private TextField textField_Name;
     @FXML
     private TextArea textArea_Description;
     @FXML
-    private TextArea textArea_Columns;
+    private Button button_Test;
     @FXML
-    private TextArea textArea_Content;
+    private TableView tableView_Configuration;
     @FXML
-    private MenuBarController menuBarController;
+    private ChoiceBox<Boolean> choiceBox_Activate;
 
-    public void initialize(Stage stage, HazelcastInstance hazelcastInstance, Stage newWindow) {
+    public void initialize(Stage stage, HazelcastInstance hazelcastInstance) throws IOException {
         userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
             hazelcastInstance.getLifecycleService().shutdown();
         });
         setStage(stage);
         setInstance(hazelcastInstance);
-        setNewWindow(newWindow);
         menuBarController.init(this);
-
-        filterList.add("*.csv");
-        filterList.add("*.txt");
-
-        textField_FileName.textProperty().addListener((observable, oldValue, newValue) -> {
-            String fileName = file.getName().substring(0, file.getName().length() - 4);
-            textField_DatasetName.setText(fileName);
-        });
-    }
-
-    public void chooseFile(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Files", filterList);
-        fileChooser.getExtensionFilters().add(extensionFilter);
-        file = fileChooser.showOpenDialog(null);
-        try {
-            if (fileChooser != null) {
-                textField_FileName.setText(file.getAbsolutePath());
-            }
-        } catch (Exception e) {
-            e.getStackTrace();
+        List<Boolean> list = new ArrayList<Boolean>();
+        list.add(true);
+        list.add(false);
+        ObservableList<Boolean> observableList = new ObservableListWrapper<Boolean>(list);
+        choiceBox_Activate.setItems(observableList);
+        response = dataSetController.getDatasetById(new Encryptor().decrypt(getMap().get("key").toString(),
+                getMap().get("vector").toString(), getMap().get("login").toString()),
+                new Encryptor().decrypt(getMap().get("key").toString(),
+                        getMap().get("vector").toString(), getMap().get("password").toString()),
+                Integer.parseInt(getMap().get("datasetId").toString()));
+        statusCode = response.getStatusLine().getStatusCode();
+        if (checkStatusCode(statusCode)) {
+            dataset = new Dataset().fromJson(response);
+            textField_Name.setText(dataset.getName());
+            textArea_Description.setText(dataset.getDescription());
+            choiceBox_Activate.setValue(dataset.isActive());
         }
-        if (textField_FileName.getText() != null) {
-            fillUpData(textField_FileName.getText());
-        }
-
-        try {
-            System.out.println(file.getAbsolutePath());
-            System.out.println(file.getPath());
-            System.out.println(file.getName());
-        } catch (NullPointerException e) {
-            System.out.println("file not choose!");
-        }
-
+        button_Test.disableProperty().bind(Bindings.isEmpty(tableView_Configuration.getSelectionModel().getSelectedItems()));
     }
 
     public void save(ActionEvent event) throws IOException {
-        File file1 = new File("F:\\testsingDataset.txt");
-        FileWriter writer = new FileWriter(file1);
-        String[] content = textArea_Content.getText().split("\n");
-        for (int i = 0; i<content.length; i++){
-            writer.write(content[i]+"\r\n");
-        }
-        writer.flush();
-        writer.close();
-        System.out.println("save");
-    }
-
-    public void cancel(ActionEvent event) {
-        getNewWindow().close();
-    }
-
-    public void fillUpData(String fileName) {
-        try {
-            FileReader input = new FileReader(fileName);
-            BufferedReader bufRead = new BufferedReader(input);
-            String line = bufRead.readLine();
-            textArea_Columns.setText(line);
-            while ((line = bufRead.readLine()) != null) {
-                textArea_Content.appendText(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        response = dataSetController.changeDataset(new Encryptor().decrypt(getMap().get("key").toString(),
+                getMap().get("vector").toString(), getMap().get("login").toString()),
+                new Encryptor().decrypt(getMap().get("key").toString(),
+                        getMap().get("vector").toString(), getMap().get("password").toString()),
+                new Dataset(dataset.getId(), textField_Name.getText(), textArea_Description.getText(),
+                        choiceBox_Activate.getSelectionModel().getSelectedItem().booleanValue()));
+        statusCode = response.getStatusLine().getStatusCode();
+        if(checkStatusCode(statusCode)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Saved!");
+            alert.showAndWait();
+        } else {
+            System.out.println(statusCode);
         }
     }
 
+
+    public void backToMainMenu(ActionEvent event) throws IOException {
+        windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), getInstance(), mainMenuController,
+                "Main menu", 600, 640);
+    }
+
+    public void addConfiguration(ActionEvent event) throws IOException {
+        getMap().put("datasetName", dataset.getName());
+        windowsController.openNewModalWindow("dataset/changeConfigurationMenu.fxml", getStage(), getInstance(), changeConfigurationMenuController,
+                "Add configuration", true, 870, 560);
+    }
 }

@@ -1,5 +1,12 @@
 package com.models;
 
+import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  * Created by Admin on 03.02.2019.
  */
@@ -7,10 +14,17 @@ public class Dataset {
     private int id;
     private String name;
     private String description;
+    private String columns;
     private boolean active;
     private Specialist specialist;
 
     public Dataset() {
+    }
+
+    public Dataset(String name, String description, String columns) {
+        this.name = name;
+        this.description = description;
+        this.columns = columns;
     }
 
     public Dataset(int id, String name, String description, boolean active, Specialist specialist) {
@@ -19,7 +33,18 @@ public class Dataset {
         this.description = description;
         this.active = active;
         this.specialist = specialist;
+//        if(active){
+//            this.checkBox.isSelected();
+//        }
     }
+
+    public Dataset(int id, String name, String description, boolean active) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.active = active;
+    }
+
 
     public int getId() {
         return id;
@@ -45,6 +70,14 @@ public class Dataset {
         this.description = description;
     }
 
+    public String getColumn() {
+        return columns;
+    }
+
+    public void setColumn(String column) {
+        this.columns = column;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -59,5 +92,11 @@ public class Dataset {
 
     public void setSpecialist(Specialist specialist) {
         this.specialist = specialist;
+    }
+
+    public Dataset fromJson(HttpResponse response) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+        String json = reader.readLine();
+        return new Gson().fromJson(json, Dataset.class);
     }
 }

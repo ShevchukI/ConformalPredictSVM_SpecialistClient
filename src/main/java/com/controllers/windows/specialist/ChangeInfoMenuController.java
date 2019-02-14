@@ -79,7 +79,8 @@ public class ChangeInfoMenuController extends MenuController {
                     response = specialistController.changePassword(new Encryptor().decrypt(getMap().get("key").toString(),
                             getMap().get("vector").toString(), getMap().get("login").toString()),
                             new Encryptor().decrypt(getMap().get("key").toString(), getMap().get("vector").toString(),
-                                    getMap().get("password").toString()), passwordField_ConfirmPassword.getText());
+                                    getMap().get("password").toString()),
+                            passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
                         getMap().put("password", new Encryptor().encrypt(getMap().get("key").toString(), getMap().get("vector").toString(),

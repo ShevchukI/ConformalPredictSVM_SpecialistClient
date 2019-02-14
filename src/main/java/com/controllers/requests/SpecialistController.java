@@ -23,13 +23,12 @@ import java.util.Base64;
 /**
  * Created by Admin on 03.02.2019.
  */
-public class SpecialistController {
-    private final static String URL = "http://localhost:8888";
+public class SpecialistController extends MainController{
 
     public HttpResponse specialistAuthorization(String name, String password) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(URL + "/doctor-system/specialist/authorization");
+        HttpGet request = new HttpGet(getUrl()+"/authorization");
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
@@ -41,11 +40,10 @@ public class SpecialistController {
         return response;
     }
 
-
     public int specialistRegistration(Specialist specialist) throws IOException {
         String json = new Gson().toJson(specialist);
         CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(URL + "/doctor-system/specialist/registration");
+        HttpPost request = new HttpPost(getUrl()+ "/registration");
         request.setHeader("Content-Type", "application/json");
         request.setEntity(new StringEntity(json));
         HttpResponse response = null;
@@ -61,7 +59,7 @@ public class SpecialistController {
     public HttpResponse changePassword(String name, String password, String newPassword) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
         CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(URL + "/doctor-system/specialist/psw");
+        HttpPut request = new HttpPut(getUrl()+ "/psw");
         request.setHeader("Authorization", basicAuthPayload);
         request.setEntity(new StringEntity(newPassword));
         HttpResponse response = null;
@@ -76,10 +74,9 @@ public class SpecialistController {
 
     public HttpResponse changeName(String name, String password, Specialist specialist) throws IOException {
         String json = new Gson().toJson(specialist);
-
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((name + ":" + password).getBytes());
         CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(URL + "/doctor-system/specialist");
+        HttpPut request = new HttpPut(getUrl());
         request.setHeader("Authorization", basicAuthPayload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(new StringEntity(json));

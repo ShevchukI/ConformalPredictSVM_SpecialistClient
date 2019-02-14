@@ -1,6 +1,6 @@
 package com.controllers.windows.menu;
 
-import com.controllers.windows.dataset.DataSetMenuController;
+import com.controllers.windows.dataset.AddDataSetMenuController;
 import com.controllers.windows.specialist.ChangeInfoMenuController;
 import com.controllers.windows.specialist.LoginMenuController;
 import javafx.event.ActionEvent;
@@ -29,9 +29,8 @@ public class MenuBarController extends MenuController {
 //
     private MenuController menuController;
 
-    private DataSetMenuController dataSetMenuController;
+    private AddDataSetMenuController addDataSetMenuController;
 
-    //
 //
     public void init(MenuController menuController) {
         this.menuController = menuController;

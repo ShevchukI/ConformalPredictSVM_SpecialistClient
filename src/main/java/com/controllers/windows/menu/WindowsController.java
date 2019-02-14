@@ -24,7 +24,34 @@ public class WindowsController {
     private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
     public void start(Stage stage) throws IOException {
+
+//        Config config = new Config();
+//        config.setInstanceName("instance");
+//        NetworkConfig networkConfig = config.getNetworkConfig();
+//        networkConfig.setPort(5700);
+//        MapConfig ticketsMapConfig = new MapConfig();
+//        ticketsMapConfig.setName("mapConfig");
+//
+//        config.addMapConfig(ticketsMapConfig);
+//        Config config = new Config();
+//        config.setInstanceName("instName");
+//        MapConfig mapConfig = new MapConfig();
+//        mapConfig.setName("userMap");
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+
+//        Config config = new Config();
+//        config.setInstanceName("instance");
+//        NetworkConfig networkConfig = config.getNetworkConfig();
+//        networkConfig.setPort(5700);
+//        Join join = networkConfig.getJoin();
+//        join.getMulticastConfig().setEnabled(false);
+//        TcpIpConfig tcpIpConfig = join.getTcpIpConfig();
+//        hazelcastMembersList.forEach(tcpIpConfig::addMember);
+//        tcpIpConfig.setEnabled(true);
+//        networkConfig.getInterfaces().setEnabled(true).addInterface(hazelcastInterface);
+
+//        Constant.createInstanceAndMap();
+
         FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/specialist/loginMenu.fxml"));
         Pane loginMenuPane = (Pane)loginMenuLoader.load();
         Scene loginMenuScene = new Scene(loginMenuPane);
