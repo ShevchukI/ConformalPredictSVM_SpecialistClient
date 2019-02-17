@@ -90,6 +90,7 @@ public class AddDataSetMenuController extends MenuController {
             e.getStackTrace();
         }
         if (textField_FileName.getText() != null) {
+            textArea_Content.clear();
             fillUpData(textField_FileName.getText());
         }
 
@@ -108,7 +109,6 @@ public class AddDataSetMenuController extends MenuController {
         textArea_Error.setStyle("-fx-border-color: inherit");
         textArea_Error.clear();
         textArea_Error.setVisible(false);
-
         try {
             if (!file.exists()) {
                 textArea_Error.appendText("File not found!");
@@ -125,17 +125,18 @@ public class AddDataSetMenuController extends MenuController {
             error++;
             return;
         }
-
         if (!checkColumns(textArea_Columns.getText())) {
             error++;
         }
-
-        File fileBuf = new File("C:\\fileBuf");
-        FileWriter writer = new FileWriter(fileBuf, true);
+        File fileBuf = new File("C:\\qwwww.txt");
+        FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
+        FileReader input = new FileReader(textField_FileName.getText());
+        BufferedReader bufRead = new BufferedReader(input);
+        String line = bufRead.readLine();
+        textArea_Columns.setText(line);
         String[] mainContent = textArea_Content.getText().split("\n");
-        System.out.println(mainContent.length);
         textArea_Content.clear();
-        String[][] content = new String[mainContent.length][mainContent.length];
+        String[][] content = new String[mainContent.length][3];
         for (int i = 0; i < mainContent.length; i++) {
             String[] split = mainContent[i].split(",");
             content[i][0] = split[0];
@@ -162,13 +163,10 @@ public class AddDataSetMenuController extends MenuController {
         writer.flush();
         writer.close();
         mainContent = textArea_Content.getText().split("\n");
-        System.out.println(mainContent.length);
-
         if (error != 0) {
             textArea_Error.setStyle("-fx-border-color: red");
             textArea_Error.setStyle("-fx-text-fill: red");
             textArea_Error.setVisible(true);
-            System.out.println("error");
         } else {
             Dataset dataset = new Dataset(textField_DatasetName.getText(),
                     textArea_Description.getText(),
@@ -181,17 +179,18 @@ public class AddDataSetMenuController extends MenuController {
                 response = dataSetController.addObjectsToDataset(Constant.getAuth(),
                         fileBuf, id);
                 System.out.println(id);
+                System.out.println(fileBuf);
                 statusCode = response.getStatusLine().getStatusCode();
                 if (checkStatusCode(statusCode)) {
                     System.out.println(statusCode);
                     fileBuf.delete();
+
                 }
             }
-            System.out.println("save");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Dataset saved!");
             alert.showAndWait();
-            windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(), mainMenuController, "Main menu", 600, 640);
+            windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
             getNewWindow().close();
         }
     }

@@ -25,8 +25,8 @@ import java.util.Base64;
  */
 public class SpecialistController extends MainController{
 
-    public HttpResponse specialistAuthorization(String[] auhtorization) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((auhtorization[0] + ":" + auhtorization[1]).getBytes());
+    public HttpResponse specialistAuthorization(String[] authorization) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/authorization");
         request.addHeader("Authorization", basicAuthPayload);
@@ -56,8 +56,8 @@ public class SpecialistController extends MainController{
         return response.getStatusLine().getStatusCode();
     }
 
-    public HttpResponse changePassword(String[] auhtorization, String newPassword) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((auhtorization[0] + ":" + auhtorization[1]).getBytes());
+    public HttpResponse changePassword(String[] authorization, String newPassword) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpPut request = new HttpPut(getUrl()+ "/psw");
         request.setHeader("Authorization", basicAuthPayload);
@@ -72,9 +72,9 @@ public class SpecialistController extends MainController{
         return response;
     }
 
-    public HttpResponse changeName(String[] auhtorization, Specialist specialist) throws IOException {
+    public HttpResponse changeName(String[] authorization, Specialist specialist) throws IOException {
         String json = new Gson().toJson(specialist);
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((auhtorization[0] + ":" + auhtorization[1]).getBytes());
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpPut request = new HttpPut(getUrl());
         request.setHeader("Authorization", basicAuthPayload);

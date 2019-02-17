@@ -52,19 +52,19 @@ public class MenuBarController extends MenuController {
 //    }
 //
     public void signOut(ActionEvent event) throws IOException {
-        windowsController.openWindow("specialist/loginMenu.fxml", menuController.getStage(), loginMenuController,
+        windowsController.openWindow("specialist/loginMenu", menuController.getStage(), loginMenuController,
                 "Login menu", 350, 190);
     }
 
     //
     public void changeName(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("specialist/changeName.fxml", menuController.getStage(),
+        windowsController.openNewModalWindow("specialist/changeName", menuController.getStage(),
                 changeInfoMenuController, "Change name and surname", true, 400, 200);
     }
 
     //
     public void changePassword(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("specialist/changePassword.fxml", menuController.getStage(),
+        windowsController.openNewModalWindow("specialist/changePassword", menuController.getStage(),
                 changeInfoMenuController, "Change password", false, 400, 200);
 
     }

@@ -62,8 +62,8 @@ public class ChangeInfoMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         if (change) {
-            textField_Name.setText(Constant.getMap().get("name").toString());
-            textField_Surname.setText(Constant.getMap().get("surname").toString());
+            textField_Name.setText(Constant.getMapByName("user").get("name").toString());
+            textField_Surname.setText(Constant.getMapByName("user").get("surname").toString());
         }
     }
 
@@ -77,8 +77,8 @@ public class ChangeInfoMenuController extends MenuController {
                             passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
-                        Constant.getMap().put("password", new Encryptor().encrypt(Constant.getMap().get("key").toString(),
-                                Constant.getMap().get("vector").toString(),
+                        Constant.getMapByName("user").put("password", new Encryptor().encrypt(Constant.getMapByName("key").get("key").toString(),
+                                Constant.getMapByName("key").get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         alert.setContentText("Password changed!");
                         alert.showAndWait();
@@ -108,8 +108,8 @@ public class ChangeInfoMenuController extends MenuController {
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
-                Constant.getMap().put("name", specialist.getName());
-                Constant.getMap().put("surname", specialist.getSurname());
+                Constant.getMapByName("user").put("name", specialist.getName());
+                Constant.getMapByName("user").put("surname", specialist.getSurname());
             }
             getNewWindow().close();
         }

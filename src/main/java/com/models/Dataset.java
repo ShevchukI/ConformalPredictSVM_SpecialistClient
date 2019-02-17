@@ -16,9 +16,15 @@ public class Dataset {
     private String description;
     private String columns;
     private boolean active;
+    private String visibleActive;
     private Specialist specialist;
 
     public Dataset() {
+    }
+    public Dataset(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
     }
 
     public Dataset(String name, String description, String columns) {
@@ -33,9 +39,6 @@ public class Dataset {
         this.description = description;
         this.active = active;
         this.specialist = specialist;
-//        if(active){
-//            this.checkBox.isSelected();
-//        }
     }
 
     public Dataset(int id, String name, String description, boolean active) {
@@ -44,7 +47,6 @@ public class Dataset {
         this.description = description;
         this.active = active;
     }
-
 
     public int getId() {
         return id;
@@ -70,12 +72,24 @@ public class Dataset {
         this.description = description;
     }
 
-    public String getColumn() {
+    public String getColumns() {
         return columns;
     }
 
-    public void setColumn(String column) {
-        this.columns = column;
+    public void setColumns(String columns) {
+        this.columns = columns;
+    }
+
+    public String getVisibleActive() {
+        return visibleActive;
+    }
+
+    public void setVisibleActive(Boolean active) {
+        if(active) {
+            this.visibleActive = "Enabled";
+        } else {
+            this.visibleActive = "Disabled";
+        }
     }
 
     public boolean isActive() {

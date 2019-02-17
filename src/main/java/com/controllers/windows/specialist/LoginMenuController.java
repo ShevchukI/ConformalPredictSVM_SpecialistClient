@@ -57,7 +57,7 @@ public class LoginMenuController extends MenuController {
             if(checkStatusCode(statusCode)){
                 Constant.fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
 //                fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
-                windowsController.openWindowResizable("menu/mainMenu.fxml", getStage(),
+                windowsController.openWindowResizable("menu/mainMenu", getStage(),
                         mainMenuController, "Main menu", 600, 640);
             }
 //            if (statusCode == 200) {
@@ -84,7 +84,7 @@ public class LoginMenuController extends MenuController {
     }
 
     public void signUp(ActionEvent event) throws IOException {
-        windowsController.openWindow("specialist/registrationMenu.fxml", getStage(),
+        windowsController.openWindow("specialist/registrationMenu", getStage(),
                 registrationMenuController,"Registration", 408, 400);
     }
 

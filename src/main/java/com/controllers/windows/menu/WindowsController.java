@@ -86,7 +86,7 @@ public class WindowsController {
     }
 
     public void openWindowResizable(String rootName, Stage stage, MenuController controller, String title, int minWidth, int minHeight) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName + ".fxml"));
         Pane pane = (Pane) loader.load();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
@@ -104,7 +104,7 @@ public class WindowsController {
 
     public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
                                    String title, boolean change, int minWidth, int minHeight) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName + ".fxml"));
         Pane pane = (Pane) loader.load();
         Stage newWindow = new Stage();
         Scene scene = new Scene(pane);
@@ -125,7 +125,7 @@ public class WindowsController {
 
     public void openNewModalWindow(String rootName, Stage stage, MenuController controller,
                                    String title, int minWidth, int minHeight) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName + ".fxml"));
         Pane pane = (Pane) loader.load();
         Stage newWindow = new Stage();
         Scene scene = new Scene(pane);

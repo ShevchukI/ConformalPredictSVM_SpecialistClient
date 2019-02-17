@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="509.0" prefWidth="776.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataset.DataSetMenuController">
+<BorderPane prefHeight="573.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataset.DataSetMenuController">
     <top>
         <VBox>
             <children>
@@ -23,14 +23,13 @@
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="14.0" layoutY="14.0" text="Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <TextField fx:id="textField_Name" layoutX="106.0" layoutY="10.0" prefHeight="26.0" prefWidth="200.0" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="textField_Name" layoutX="106.0" layoutY="10.0" prefHeight="31.0" prefWidth="380.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="10.0" />
             <Label layoutX="17.0" layoutY="52.0" text="Description:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="52.0" />
-            <TextArea fx:id="textArea_Description" layoutX="110.0" layoutY="52.0" prefHeight="70.0" prefWidth="200.0" wrapText="true" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="52.0" />
-            <TextArea layoutX="347.0" layoutY="14.0" prefHeight="394.0" prefWidth="360.0" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
-            <Button layoutX="14.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" onAction="#addConfiguration"/>
+            <TextArea fx:id="textArea_Description" layoutX="110.0" layoutY="52.0" prefHeight="70.0" prefWidth="380.0" wrapText="true" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="52.0" />
+            <Button layoutX="14.0" layoutY="179.0" mnemonicParsing="false" onAction="#addConfiguration" prefHeight="26.0" prefWidth="63.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" />
             <Button layoutX="100.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="View" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="179.0" />
-            <Button fx:id="button_Test" layoutX="312.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Test" AnchorPane.rightAnchor="400.8" AnchorPane.topAnchor="179.0" />
-            <TableView fx:id="tableView_Configuration" layoutX="14.0" layoutY="216.0" prefHeight="218.0" prefWidth="362.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="216.0">
+            <Button fx:id="button_Test" layoutX="421.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Test" AnchorPane.topAnchor="179.0" />
+            <TableView fx:id="tableView_Configuration" layoutX="14.0" layoutY="216.0" prefHeight="275.0" prefWidth="470.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="216.0">
               <columns>
                 <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0" text="#" />
                 <TableColumn fx:id="tableColumn_Name" minWidth="80.0" text="Name" />
@@ -47,6 +46,7 @@
             <Label fx:id="label_Count" layoutX="46.0" layoutY="452.0" text="placeholder" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
             <Label layoutX="17.0" layoutY="136.0" prefHeight="18.0" prefWidth="60.0" text="Activate:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="135.0" />
             <ChoiceBox fx:id="choiceBox_Activate" layoutX="110.0" layoutY="132.0" prefHeight="26.0" prefWidth="135.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="130.0" />
+            <TableView fx:id="tableView_Object" layoutX="526.0" layoutY="8.0" prefHeight="481.0" prefWidth="320.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="526.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
          </children>
       </AnchorPane>
    </center>
