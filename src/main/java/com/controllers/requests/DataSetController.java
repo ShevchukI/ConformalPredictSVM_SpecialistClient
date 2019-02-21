@@ -7,6 +7,7 @@ import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -150,7 +151,22 @@ public class DataSetController extends MainController {
     public HttpResponse getDatasetObjects(String[] authorization, int datasetId) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId+"/objects");
+        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId + "/objects");
+        request.addHeader("Authorization", basicAuthPayload);
+        HttpResponse response = null;
+        try {
+            response = client.execute(request);
+        } catch (HttpHostConnectException e) {
+            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+        }
+        return response;
+    }
+
+    public HttpResponse deleteDataset(String[] authorization, int datasetId) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpDelete request = new HttpDelete(getUrl() + "/dataset/" + datasetId);
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {

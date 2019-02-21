@@ -3,6 +3,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -11,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="573.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataset.DataSetMenuController">
+<BorderPane prefHeight="662.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataset.DataSetMenuController">
     <top>
         <VBox>
             <children>
@@ -20,33 +23,67 @@
         </VBox>
     </top>
     <center>
-      <AnchorPane BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="594.0" prefWidth="894.0" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="14.0" layoutY="14.0" text="Name:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
             <TextField fx:id="textField_Name" layoutX="106.0" layoutY="10.0" prefHeight="31.0" prefWidth="380.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="10.0" />
             <Label layoutX="17.0" layoutY="52.0" text="Description:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="52.0" />
             <TextArea fx:id="textArea_Description" layoutX="110.0" layoutY="52.0" prefHeight="70.0" prefWidth="380.0" wrapText="true" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="52.0" />
             <Button layoutX="14.0" layoutY="179.0" mnemonicParsing="false" onAction="#addConfiguration" prefHeight="26.0" prefWidth="63.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" />
-            <Button layoutX="100.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="View" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="179.0" />
-            <Button fx:id="button_Test" layoutX="421.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Test" AnchorPane.topAnchor="179.0" />
-            <TableView fx:id="tableView_Configuration" layoutX="14.0" layoutY="216.0" prefHeight="275.0" prefWidth="470.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="216.0">
-              <columns>
-                <TableColumn fx:id="tableColumn_Number" maxWidth="120.0" minWidth="30.0" text="#" />
-                <TableColumn fx:id="tableColumn_Name" minWidth="80.0" text="Name" />
-                  <TableColumn fx:id="tableColumn_Setting" minWidth="80.0" sortable="false" text="Settings" />
-                  <TableColumn fx:id="tableColumn_Active" maxWidth="80.0" minWidth="80.0" text="Active" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
+            <Button fx:id="button_View" layoutX="100.0" layoutY="179.0" mnemonicParsing="false" onAction="#viewConfiguration" prefHeight="26.0" prefWidth="63.0" text="View" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="179.0" />
+            <Button fx:id="button_Delete" layoutX="421.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" textFill="RED" AnchorPane.topAnchor="179.0" onAction="#deleteConfiguration"/>
+            <TabPane layoutX="14.0" layoutY="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="225.0">
+               <tabs>
+                  <Tab fx:id="tab_AllConfiguration" closable="false" text="All configuration">
+                     <content>
+                        <AnchorPane>
+                           <children>
+                              <TableView fx:id="tableView_AllConfiguration" prefHeight="252.0" prefWidth="470.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                  <TableColumn fx:id="tableColumn_AllNumber" maxWidth="120.0" minWidth="30.0" text="#" />
+                                  <TableColumn fx:id="tableColumn_AllName" minWidth="80.0" text="Name" />
+                                    <TableColumn fx:id="tableColumn_AllActive" maxWidth="80.0" minWidth="80.0" text="Active" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <Pagination fx:id="pagination_AllConfiguration" layoutY="252.0" prefHeight="64.0" prefWidth="470.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Label layoutX="8.0" layoutY="328.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                              <Label fx:id="label_AllCount" layoutX="30.0" layoutY="331.0" text="Label" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="tab_MyConfiguration" closable="false" text="My configuration">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="tableView_MyConfiguration" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                  <TableColumn fx:id="tableColumn_MyNumber" maxWidth="120.0" minWidth="30.0" text="#" />
+                                  <TableColumn fx:id="tableColumn_MyName" minWidth="80.0" text="Name" />
+                                    <TableColumn fx:id="tableColumn_MyActive" maxWidth="80.0" minWidth="80.0" text="Active" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                              <Pagination fx:id="pagination_MyConfiguration" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Label layoutX="14.0" layoutY="331.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                              <Label fx:id="label_MyCount" text="Label" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
             <Button layoutX="180.0" layoutY="179.0" mnemonicParsing="false" onAction="#save" prefHeight="26.0" prefWidth="63.0" text="Save" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="179.0" />
             <Button layoutX="552.0" layoutY="445.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="26.0" prefWidth="63.0" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-            <Label layoutX="17.0" layoutY="449.0" prefHeight="18.0" prefWidth="28.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-            <Label fx:id="label_Count" layoutX="46.0" layoutY="452.0" text="placeholder" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
             <Label layoutX="17.0" layoutY="136.0" prefHeight="18.0" prefWidth="60.0" text="Activate:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="135.0" />
             <ChoiceBox fx:id="choiceBox_Activate" layoutX="110.0" layoutY="132.0" prefHeight="26.0" prefWidth="135.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="130.0" />
-            <TableView fx:id="tableView_Object" layoutX="526.0" layoutY="8.0" prefHeight="481.0" prefWidth="320.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="526.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
+            <TableView fx:id="tableView_Object" layoutX="526.0" layoutY="8.0" prefHeight="481.0" prefWidth="320.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="526.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
+            <Button fx:id="button_Activate" layoutX="268.0" layoutY="179.0" mnemonicParsing="false" onAction="#activateConfiguration" text="Activate config" />
          </children>
       </AnchorPane>
    </center>

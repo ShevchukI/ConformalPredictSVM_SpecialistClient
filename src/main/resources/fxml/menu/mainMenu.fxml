@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
     <top>
         <VBox>
             <children>
@@ -47,14 +47,15 @@
                               </TableView>
                               <Label prefHeight="21.0" prefWidth="25.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                               <Label fx:id="label_AllCount" layoutX="40.0" layoutY="302.0" prefHeight="18.0" prefWidth="80.0" text="placeholder" AnchorPane.bottomAnchor="15.600000000000023" AnchorPane.leftAnchor="40.0" />
-                              <Pagination fx:id="pagination_AllDataSet" prefHeight="296.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                              <Pagination fx:id="pagination_AllDataSet" layoutY="244.0" prefHeight="62.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
                                  <contextMenu>
                                     <ContextMenu>
                                       <items>
                                         <MenuItem fx:id="menuItem_AllChangeActive" mnemonicParsing="false" onAction="#changeActive" text="Change active" />
                                       </items>
                                     </ContextMenu>
-                                 </contextMenu></Pagination>
+                                 </contextMenu>
+                              </Pagination>
                            </children>
                         </AnchorPane>
                   </content>
@@ -79,7 +80,7 @@
                               </TableView>
                               <Label prefHeight="21.0" prefWidth="25.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                               <Label fx:id="label_MyCount" layoutX="40.0" layoutY="302.0" prefHeight="18.0" prefWidth="80.0" text="placeholder" AnchorPane.bottomAnchor="15.600000000000023" AnchorPane.leftAnchor="40.0" />
-                              <Pagination fx:id="pagination_MyDataSet" prefHeight="300.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                              <Pagination fx:id="pagination_MyDataSet" layoutY="245.0" prefHeight="61.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
                                  <contextMenu>
                                     <ContextMenu>
                                        <items>
@@ -97,7 +98,8 @@
             <Label fx:id="label_Name" layoutX="84.0" layoutY="15.0" prefHeight="18.0" prefWidth="460.0" text="placeholder" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
             <Button layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#addDataSet" prefHeight="26.0" prefWidth="49.0" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="40.0" />
             <Button fx:id="button_View" layoutX="84.0" layoutY="70.0" mnemonicParsing="false" onAction="#viewDataSet" prefHeight="26.0" prefWidth="70.0" text="View" AnchorPane.leftAnchor="84.0" AnchorPane.topAnchor="40.0" />
-            <Button fx:id="button_updateActive" layoutX="169.0" layoutY="70.0" mnemonicParsing="false" onAction="#updateActive" prefHeight="31.0" prefWidth="125.0" text="Update Active" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="40.0" />
+            <Button fx:id="button_ChangeActive" layoutX="169.0" layoutY="70.0" mnemonicParsing="false" onAction="#changeActive" prefHeight="31.0" prefWidth="125.0" text="Change Active" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="40.0" />
+            <Button fx:id="button_Delete" layoutX="479.0" layoutY="40.0" mnemonicParsing="false" text="Delete" textFill="RED" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0" onAction="#delete"/>
          </children></AnchorPane>
     </center>
 </BorderPane>

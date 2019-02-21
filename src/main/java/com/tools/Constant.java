@@ -10,11 +10,14 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.models.SVMParameter;
 import com.models.Specialist;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,6 +32,14 @@ public class Constant {
     private static final String DATASET_MAP_NAME = "dataset";
     private static final String KEY_MAP_NAME = "key";
     private static final String MISCELLANEOUS_MAP_NAME = "misc";
+
+    private static final int SVM_DEGREE = 3;
+    private static final double SVM_GAMMA = 1;
+    private static final double SVM_C = 1;
+    private static final double SVM_NU = 0.5;
+    private static final double SVM_EPS = 0.001;
+
+
 
     public static void createInstanceAndMap() {
         Config config = new Config();
@@ -72,7 +83,10 @@ public class Constant {
         getMapByName("user").put("id", specialist.getId());
         getMapByName("user").put("name", specialist.getName());
         getMapByName("user").put("surname", specialist.getSurname());
-        getMapByName("misc").put("pageIndex", "1");
+        getMapByName("misc").put("pageIndexAllDataset", "1");
+        getMapByName("misc").put("pageIndexMyDataset", "1");
+        getMapByName("misc").put("pageIndexAllConfiguration", "1");
+        getMapByName("misc").put("pageIndexMyConfiguration", "1");
 
 //        getMap().put("key", key);
 //        getMap().put("vector", vector);
@@ -133,4 +147,39 @@ public class Constant {
         return string.split(delimeter).length;
     }
 
+
+    public static int getSvmDegree() {
+        return SVM_DEGREE;
+    }
+
+    public static double getSvmGamma(int columnCount) {
+        return SVM_GAMMA/columnCount;
+    }
+
+    public static double getSvmC() {
+        return SVM_C;
+    }
+
+    public static double getSvmNu() {
+        return SVM_NU;
+    }
+
+    public static double getSvmEps() {
+        return SVM_EPS;
+    }
+
+    public static double formatterSliderValueToDouble(double text, String pattern){
+        DecimalFormat formatter = new DecimalFormat(pattern);
+        String string = formatter.format(text);
+        return Double.parseDouble(string.replace(",", "."));
+    }
+
+    public static String responseToString(HttpResponse response) throws IOException {
+        HttpEntity entity = response.getEntity();
+
+        // Read the contents of an entity and return it as a String.
+        String content = EntityUtils.toString(entity);
+        return  content;
+//        return new BasicResponseHandler().handleResponse(response);
+    }
 }

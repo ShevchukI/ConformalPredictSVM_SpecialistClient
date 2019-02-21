@@ -4,21 +4,21 @@ package com.models;
  * Created by Admin on 17.02.2019.
  */
 public class Configuration {
-    private String name;
-    private int c;
-    private int degree;
-    private double eps;
-    private double gamma;
+    protected String name;
+    protected double c;
+    protected int degree;
+    protected double eps;
+    protected double gamma;
     private int kernelParameter;
-    private double nu;
-    private int probability;
+    protected double nu;
+    protected int probability;
     private int svmParameter;
-    private double testPart;
+    protected double testPart;
 
     public Configuration() {
     }
 
-    public Configuration(String name, int c, int degree, double eps, double gamma, int kernelParameter,
+    public Configuration(String name, double c, int degree, double eps, double gamma, int kernelParameter,
                          double nu, int probability, int svmParameter, double testPart) {
         this.name = name;
         this.c = c;
@@ -40,11 +40,11 @@ public class Configuration {
         this.name = name;
     }
 
-    public int getC() {
+    public double getC() {
         return c;
     }
 
-    public void setC(int c) {
+    public void setC(double c) {
         this.c = c;
     }
 
@@ -127,4 +127,6 @@ public class Configuration {
                 ", testPart=" + testPart +
                 '}';
     }
+
+
 }

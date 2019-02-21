@@ -6,6 +6,7 @@ import com.controllers.windows.dataset.DataSetMenuController;
 import com.models.Dataset;
 import com.models.DatasetPage;
 import com.tools.Constant;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,7 +48,8 @@ public class MainMenuController extends MenuController {
     private int statusCode;
     private DatasetPage datasetPage;
     private int objectOnPage = 30;
-    private int pageIndx;
+    private int allPageIndex;
+    private int myPageIndex;
 
     @FXML
     private MenuBarController menuBarController;
@@ -87,6 +89,10 @@ public class MainMenuController extends MenuController {
     private Label label_Name;
     @FXML
     private Button button_View;
+    @FXML
+    private Button button_ChangeActive;
+    @FXML
+    private Button button_Delete;
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
@@ -95,64 +101,29 @@ public class MainMenuController extends MenuController {
         setStage(stage);
         Constant.getMapByName("dataset").remove("id");
         menuBarController.init(this);
+
         label_Name.setText(Constant.getMapByName("user").get("name").toString() + " " + Constant.getMapByName("user").get("surname").toString());
-        pageIndx = 1;
-        pageIndx = Integer.parseInt(Constant.getMapByName("misc").get("pageIndex").toString());
-        tableColumn_AllNumber.setSortable(false);
-        tableColumn_AllNumber.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_AllDataSetTable.getItems().
-                indexOf(column.getValue()) + 1) + (pageIndx - 1) * objectOnPage));
-        tableColumn_AllName.setCellValueFactory(new PropertyValueFactory<Dataset, String>("name"));
-        tableColumn_AllName.setSortable(false);
-        tableColumn_AllDescription.setCellValueFactory(new PropertyValueFactory<Dataset, String>("description"));
-        tableColumn_AllDescription.setSortable(false);
-
-        tableColumn_AllActive.setCellValueFactory(new PropertyValueFactory<Dataset, String>("visibleActive"));
-        tableColumn_AllActive.setSortable(false);
-
-////        button_View.disableProperty().bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems()).or(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
-//        button_View.disableProperty().bind(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems()));
-
-        tableView_AllDataSetTable.setRowFactory(tv -> {
-            TableRow<Dataset> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    try {
-                        viewDataSet();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return row;
-        });
+        allPageIndex = 1;
+        allPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllDataset").toString());
+        setSettingColumnTable(allPageIndex, tableView_AllDataSetTable, tableColumn_AllNumber,
+                tableColumn_AllName, tableColumn_AllDescription, tableColumn_AllActive);
         pagination_AllDataSet.setPageFactory(this::createAllPage);
 
-        tableColumn_MyNumber.setSortable(false);
-        tableColumn_MyNumber.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView_MyDataSetTable.getItems().
-                indexOf(column.getValue()) + 1) + (pageIndx - 1) * objectOnPage));
-        tableColumn_MyName.setCellValueFactory(new PropertyValueFactory<Dataset, String>("name"));
-        tableColumn_MyName.setSortable(false);
-        tableColumn_MyDescription.setCellValueFactory(new PropertyValueFactory<Dataset, String>("description"));
-        tableColumn_MyDescription.setSortable(false);
-        tableColumn_MyActive.setCellValueFactory(new PropertyValueFactory<Dataset, String>("visibleActive"));
-        tableColumn_MyActive.setSortable(false);
-        tableView_MyDataSetTable.setRowFactory(tv -> {
-            TableRow<Dataset> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    try {
-                        viewDataSet();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return row;
-        });
+        myPageIndex = 1;
+        myPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexMyDataset").toString());
+        setSettingColumnTable(myPageIndex, tableView_MyDataSetTable, tableColumn_MyNumber,
+                tableColumn_MyName, tableColumn_MyDescription, tableColumn_MyActive);
         pagination_MyDataSet.setPageFactory(this::createMyPage);
-//        button_View.disableProperty().bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems()));
-//        button_View.disableProperty().bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems()).or(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
 
+        button_View.disableProperty()
+                .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
+                        .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
+        button_ChangeActive.disableProperty()
+                .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
+                        .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
+        button_Delete.disableProperty()
+                .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
+                        .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
     }
 
 
@@ -162,46 +133,30 @@ public class MainMenuController extends MenuController {
     }
 
     public void viewDataSet(ActionEvent event) throws IOException {
-        if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            Constant.getMapByName("dataset").put("id", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
-            windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
-                    dataSetMenuController, "Dataset menu", 800, 640);
-        }
-        if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            Constant.getMapByName("dataset").put("id", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
-            windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
-                    dataSetMenuController, "Dataset menu", 800, 640);
-        }
+        viewDataSet();
     }
 
     public void viewDataSet() throws IOException {
         if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
             Constant.getMapByName("dataset").put("id", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName("misc").put("pageIndexAllDataset", allPageIndex);
             windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
                     dataSetMenuController, "Dataset menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
             Constant.getMapByName("dataset").put("id", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName("misc").put("pageIndexMyDataset", myPageIndex);
             windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
                     dataSetMenuController, "Dataset menu", 800, 640);
         }
     }
 
-    public void updateActive(ActionEvent event) {
-        tableView_AllDataSetTable.refresh();
-        System.out.println("refresh all");
-        tableView_MyDataSetTable.refresh();
-        System.out.println("refresh my");
-
-    }
-
     private Node createAllPage(int pageIndex) {
         try {
-            pageIndx = pageIndex + 1;
+            allPageIndex = pageIndex + 1;
             response = dataSetController.getDataSetAllPage(Constant.getAuth(),
-                    pageIndx, objectOnPage);
-            allDatasetObservableList = getOListAfterFillPage(pageIndx, response, allDatasetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
-//            getAllPage(pageIndx, objectOnPage);
+                    allPageIndex, objectOnPage);
+            allDatasetObservableList = getOListAfterFillPage(allPageIndex, response, allDatasetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -210,68 +165,14 @@ public class MainMenuController extends MenuController {
 
     private Node createMyPage(int pageIndex) {
         try {
-            pageIndx = pageIndex + 1;
+            myPageIndex = pageIndex + 1;
             response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
-                    pageIndx, objectOnPage);
-            myDatasetObservableList = getOListAfterFillPage(pageIndx, response, myDatasetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
-//            getMyPage(pageIndx, objectOnPage);
+                    myPageIndex, objectOnPage);
+            myDatasetObservableList = getOListAfterFillPage(myPageIndex, response, myDatasetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return tableView_MyDataSetTable;
-    }
-
-
-    public void getAllPage(int pageIndx, int objectOnPage) throws IOException {
-//        response = dataSetController.getDataSetAllPage(Constant.getAuth(),
-//                pageIndx, objectOnPage);
-//        statusCode = response.getStatusLine().getStatusCode();
-//        if (checkStatusCode(statusCode)) {
-//            datasetPage = new DatasetPage().fromJson(response);
-//            allDatasetObservableList = FXCollections.observableList(datasetPage.getDatasetEntities());
-//            for (Dataset dataset : datasetPage.getDatasetEntities()) {
-//                if (dataset.isActive()) {
-//                    dataset.setVisibleActive("Enabled");
-//                } else {
-//                    dataset.setVisibleActive("Disabled");
-//                }
-//            }
-//        }
-//        if (allDatasetObservableList.isEmpty()) {
-//            pagination_AllDataSet.setPageCount(1);
-//            pagination_AllDataSet.setCurrentPageIndex(1);
-//        } else {
-//            pagination_AllDataSet.setPageCount(datasetPage.getNumberOfPages());
-//            pagination_AllDataSet.setCurrentPageIndex(pageIndx - 1);
-//        }
-//        tableView_AllDataSetTable.setItems(allDatasetObservableList);
-//        label_AllCount.setText(String.valueOf(allDatasetObservableList.size()));
-    }
-
-    public void getMyPage(int pageIndx, int objectOnPage) throws IOException {
-//        response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
-//                pageIndx, objectOnPage);
-//        statusCode = response.getStatusLine().getStatusCode();
-//        if (checkStatusCode(statusCode)) {
-//            datasetPage = new DatasetPage().fromJson(response);
-//            myDatasetObservableList = FXCollections.observableList(datasetPage.getDatasetEntities());
-//            for (Dataset dataset : datasetPage.getDatasetEntities()) {
-//                if (dataset.isActive()) {
-//                    dataset.setVisibleActive("Enabled");
-//                } else {
-//                    dataset.setVisibleActive("Disabled");
-//                }
-//            }
-//        }
-//        if (myDatasetObservableList.isEmpty()) {
-//            pagination_MyDataSet.setPageCount(1);
-//            pagination_MyDataSet.setCurrentPageIndex(1);
-//        } else {
-//            pagination_MyDataSet.setPageCount(datasetPage.getNumberOfPages());
-//            pagination_MyDataSet.setCurrentPageIndex(pageIndx - 1);
-//        }
-//        tableView_MyDataSetTable.setItems(myDatasetObservableList);
-//        label_MyCount.setText(String.valueOf(myDatasetObservableList.size()));
     }
 
     public void changeActive(ActionEvent event) throws IOException {
@@ -342,4 +243,70 @@ public class MainMenuController extends MenuController {
     }
 
 
+    public void delete(ActionEvent event) throws IOException {
+        if (tab_All.isSelected()) {
+            delete(tableView_AllDataSetTable);
+        }
+        if (tab_My.isSelected()) {
+            delete(tableView_MyDataSetTable);
+        }
+        try {
+            response = dataSetController.getDataSetAllPage(Constant.getAuth(),
+                    allPageIndex, objectOnPage);
+            allDatasetObservableList = getOListAfterFillPage(allPageIndex, response, allDatasetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
+                    myPageIndex, objectOnPage);
+            myDatasetObservableList = getOListAfterFillPage(myPageIndex, response, myDatasetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(TableView<Dataset> tableView) throws IOException {
+        boolean result = questionOkCancel("Do you really want to delete dataset: "
+                + tableView.getSelectionModel().getSelectedItem().getName()
+                + "?");
+        if (result) {
+            response = dataSetController.deleteDataset(Constant.getAuth(), tableView.getSelectionModel().getSelectedItem().getId());
+            statusCode = response.getStatusLine().getStatusCode();
+            if (checkStatusCode(statusCode)) {
+                getAlert(null, tableView.getSelectionModel().getSelectedItem().getName()
+                        + " deleted!", Alert.AlertType.INFORMATION);
+            } else if (statusCode == 400) {
+                getAlert(null, "You can not delete someone else's dataset!", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    private void setSettingColumnTable(int pageIndex, TableView tableView,
+                                       TableColumn<Dataset, Number> columnNumber,
+                                       TableColumn columnName,
+                                       TableColumn columnDescription, TableColumn columnActive) {
+        columnNumber.setSortable(false);
+        columnNumber.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView.getItems().
+                indexOf(column.getValue()) + 1) + (pageIndex - 1) * objectOnPage));
+        columnName.setCellValueFactory(new PropertyValueFactory<Dataset, String>("name"));
+        columnName.setSortable(false);
+        columnDescription.setCellValueFactory(new PropertyValueFactory<Dataset, String>("description"));
+        columnDescription.setSortable(false);
+        columnActive.setCellValueFactory(new PropertyValueFactory<Dataset, String>("visibleActive"));
+        columnActive.setSortable(false);
+        tableView.setRowFactory(tv -> {
+            TableRow<Dataset> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    try {
+                        viewDataSet();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return row;
+        });
+    }
 }

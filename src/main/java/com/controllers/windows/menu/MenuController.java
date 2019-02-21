@@ -5,10 +5,13 @@ import com.hazelcast.core.HazelcastInstance;
 import com.tools.Placeholder;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Created by Admin on 10.01.2019.
@@ -112,6 +115,19 @@ public abstract class MenuController {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    public boolean questionOkCancel(String questionText){
+        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, questionText, ok, cancel);
+        questionOfCancellation.setHeaderText(null);
+        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+        if(result.orElse(cancel) == ok){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {

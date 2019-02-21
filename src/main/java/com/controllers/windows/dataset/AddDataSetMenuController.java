@@ -178,13 +178,9 @@ public class AddDataSetMenuController extends MenuController {
                 int id = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
                 response = dataSetController.addObjectsToDataset(Constant.getAuth(),
                         fileBuf, id);
-                System.out.println(id);
-                System.out.println(fileBuf);
                 statusCode = response.getStatusLine().getStatusCode();
                 if (checkStatusCode(statusCode)) {
-                    System.out.println(statusCode);
                     fileBuf.delete();
-
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
