@@ -25,19 +25,8 @@ import java.io.IOException;
  * Created by Admin on 07.01.2019.
  */
 public class MainMenuController extends MenuController {
-    //
-//    @Autowired
-//    RegistrationMenuController registrationMenuController;
-//
-//    @Autowired
-//    AddPatientAndCardMenuController addPatientAndCardMenuController;
-//
-//    @Autowired
-//    CardMenuController cardMenuController;
-//
     @Autowired
     HttpResponse response;
-
 
     private ObservableList<Dataset> allDatasetObservableList;
     private ObservableList<Dataset> myDatasetObservableList;

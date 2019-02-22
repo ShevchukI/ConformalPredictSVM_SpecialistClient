@@ -147,7 +147,6 @@ public class Constant {
         return string.split(delimeter).length;
     }
 
-
     public static int getSvmDegree() {
         return SVM_DEGREE;
     }
@@ -176,10 +175,8 @@ public class Constant {
 
     public static String responseToString(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
-
-        // Read the contents of an entity and return it as a String.
         String content = EntityUtils.toString(entity);
+//        return  EntityUtils.toString(response.getEntity());
         return  content;
-//        return new BasicResponseHandler().handleResponse(response);
     }
 }

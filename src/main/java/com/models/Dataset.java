@@ -27,6 +27,13 @@ public class Dataset {
         this.description = description;
     }
 
+    public Dataset(int id, String name, String description, String columns) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.columns = columns;
+    }
+
     public Dataset(String name, String description, String columns) {
         this.name = name;
         this.description = description;

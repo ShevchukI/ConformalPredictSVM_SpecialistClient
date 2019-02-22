@@ -27,10 +27,7 @@ public class LoginMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-//    private String key;
-//    private String vector;
     private SpecialistController specialistController = new SpecialistController();
-//    private Encryptor encryptor = new Encryptor();
     private int statusCode;
     private WindowsController windowsController = new WindowsController();
 
@@ -56,30 +53,9 @@ public class LoginMenuController extends MenuController {
             statusCode = response.getStatusLine().getStatusCode();
             if(checkStatusCode(statusCode)){
                 Constant.fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
-//                fillMap(new Specialist().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
                 windowsController.openWindowResizable("menu/mainMenu", getStage(),
                         mainMenuController, "Main menu", 600, 640);
             }
-//            if (statusCode == 200) {
-//                Specialist specialist = new Specialist().fromJson(response);
-//                key = encryptor.genRandString();
-//                vector = encryptor.genRandString();
-//                getMap().put("key", key);
-//                getMap().put("vector", vector);
-//                getMap().put("login", encryptor.encrypt(key, vector, textField_Login.getText()));
-//                getMap().put("password", encryptor.encrypt(key, vector, passwordField_Password.getText()));
-//                getMap().put("id", specialist.getId());
-//                getMap().put("name", specialist.getName());
-//                getMap().put("surname", specialist.getSurname());
-//
-//                windowsController.openWindowResizable("mainMenu.fxml", getStage(), getInstance(),
-//                        mainMenuController, "Main menu", 600, 640);
-//            } else {
-//
-//                alert.setHeaderText("Status code: " + statusCode);
-//                alert.setContentText("Login or password incorrect!");
-//                alert.showAndWait();
-//            }
         }
     }
 

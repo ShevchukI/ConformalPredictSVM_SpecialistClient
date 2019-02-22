@@ -21,38 +21,27 @@ public class RegistrationMenuController extends MenuController {
     LoginMenuController loginMenuController;
 
     private WindowsController windowsController = new WindowsController();
-    
-    private int statusCode;
-    
     private SpecialistController specialistController = new SpecialistController();
-    
+    private int statusCode;
+
     @FXML
     private TextField textField_Name;
-
     @FXML
     private TextField textField_Surname;
-
     @FXML
     private TextField textField_Login;
-
     @FXML
     private PasswordField passwordField_Password;
-
     @FXML
     private PasswordField passwordField_ConfirmPassword;
-
     @FXML
     private Tooltip tooltip_Name;
-
     @FXML
     private Tooltip tooltip_Surname;
-
     @FXML
     private Tooltip tooltip_Login;
-
     @FXML
     private Tooltip tooltip_Password;
-
     @FXML
     private Tooltip tooltip_ConfirmPassword;
 
@@ -75,16 +64,10 @@ public class RegistrationMenuController extends MenuController {
                 windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
                         "Login menu", 350, 190);
             }
-//            else {
-//                alert.setAlertType(Alert.AlertType.ERROR);
-//                alert.setHeaderText("Status code: "+statusCode);
-//                alert.setContentText("Already exist!");
-//                alert.showAndWait();
-//            }
         }
     }
 
-    
+
     public void cancel(ActionEvent event) {
         ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -102,13 +85,11 @@ public class RegistrationMenuController extends MenuController {
         }
     }
 
-    //
     public void returnToLoginMenu() throws IOException {
         windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
                 "Login menu", 350, 190);
     }
 
-    //
     public boolean checkRegister() {
         if (textField_Name.getText().equals("")) {
             tooltipError_Name.setText("You name is empty!");

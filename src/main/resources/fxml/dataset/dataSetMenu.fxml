@@ -2,7 +2,9 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -31,7 +33,7 @@
             <TextArea fx:id="textArea_Description" layoutX="110.0" layoutY="52.0" prefHeight="70.0" prefWidth="380.0" wrapText="true" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="52.0" />
             <Button layoutX="14.0" layoutY="179.0" mnemonicParsing="false" onAction="#addConfiguration" prefHeight="26.0" prefWidth="63.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" />
             <Button fx:id="button_View" layoutX="100.0" layoutY="179.0" mnemonicParsing="false" onAction="#viewConfiguration" prefHeight="26.0" prefWidth="63.0" text="View" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="179.0" />
-            <Button fx:id="button_Delete" layoutX="421.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" textFill="RED" AnchorPane.topAnchor="179.0" onAction="#deleteConfiguration"/>
+            <Button fx:id="button_Delete" layoutX="421.0" layoutY="179.0" mnemonicParsing="false" onAction="#deleteConfiguration" prefHeight="26.0" prefWidth="63.0" text="Delete" textFill="RED" AnchorPane.topAnchor="179.0" />
             <TabPane layoutX="14.0" layoutY="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="225.0">
                <tabs>
                   <Tab fx:id="tab_AllConfiguration" closable="false" text="All configuration">
@@ -48,7 +50,14 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <Pagination fx:id="pagination_AllConfiguration" layoutY="252.0" prefHeight="64.0" prefWidth="470.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Pagination fx:id="pagination_AllConfiguration" layoutY="252.0" prefHeight="64.0" prefWidth="470.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                       <items>
+                                          <MenuItem fx:id="menuItem_AllChangeActive" mnemonicParsing="false" onAction="#activateConfiguration" text="Change active" />
+                                       </items>
+                                    </ContextMenu>
+                                 </contextMenu></Pagination>
                               <Label layoutX="8.0" layoutY="328.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                               <Label fx:id="label_AllCount" layoutX="30.0" layoutY="331.0" text="Label" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
                            </children>
@@ -69,7 +78,14 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <Pagination fx:id="pagination_MyConfiguration" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Pagination fx:id="pagination_MyConfiguration" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                       <items>
+                                          <MenuItem fx:id="menuItem_MyChangeActive" mnemonicParsing="false" onAction="#activateConfiguration" text="Change active" />
+                                       </items>
+                                    </ContextMenu>
+                                 </contextMenu></Pagination>
                               <Label layoutX="14.0" layoutY="331.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                               <Label fx:id="label_MyCount" text="Label" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="40.0" />
                            </children>

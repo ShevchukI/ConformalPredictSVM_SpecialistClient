@@ -225,7 +225,7 @@ public class DataSetMenuController extends MenuController {
 
     public void save(ActionEvent event) throws IOException {
         response = dataSetController.changeDataset(Constant.getAuth(),
-                new Dataset(dataset.getId(), textField_Name.getText(), textArea_Description.getText()));
+                new Dataset(dataset.getId(), textField_Name.getText(), textArea_Description.getText(), dataset.getColumns()));
         statusCode = response.getStatusLine().getStatusCode();
         if (!checkStatusCode(statusCode)) {
             getAlert(null, "Don`t save!", Alert.AlertType.ERROR);
@@ -403,7 +403,7 @@ public class DataSetMenuController extends MenuController {
         if (checkStatusCode(statusCode)) {
             createPage(tablePageIndex, allPage, tableView, list, pagination, labelCount);
         } else {
-            System.out.println(statusCode);
+            System.out.println(statusCode + " : " + configId);
         }
     }
 

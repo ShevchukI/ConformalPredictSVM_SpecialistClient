@@ -133,7 +133,7 @@ public abstract class MenuController {
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
     }
 
-    public void initialize(Stage stage, Stage newWindow) {
+    public void initialize(Stage stage, Stage newWindow) throws IOException {
     }
 
 }

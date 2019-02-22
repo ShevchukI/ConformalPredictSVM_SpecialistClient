@@ -52,12 +52,10 @@ public class AddDataSetMenuController extends MenuController {
     private TextArea textArea_Error;
 
     public void initialize(Stage stage, Stage newWindow) {
-//        userMap = hazelcastInstance.getMap("userMap");
         stage.setOnHidden(event -> {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-//        setInstance(hazelcastInstance);
         setNewWindow(newWindow);
         menuBarController.init(this);
         textArea_Error.setEditable(false);
@@ -80,7 +78,7 @@ public class AddDataSetMenuController extends MenuController {
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Files", filterList);
         fileChooser.getExtensionFilters().add(extensionFilter);
         try {
-            file = fileChooser.showOpenDialog(null);
+            file = fileChooser.showOpenDialog(getNewWindow());
             if (fileChooser != null) {
                 textField_FileName.setText(file.getAbsolutePath());
             }

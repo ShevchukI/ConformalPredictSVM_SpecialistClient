@@ -143,13 +143,9 @@ public class ConfigurationEntity {
         }
     }
 
-
-
     public void setSvmParameter(SVMParameter svmParameter) {
         this.svmParameter = svmParameter;
     }
-
-
 
     public void setKernelParameter(SVMParameter kernelParameter) {
         this.kernelParameter = kernelParameter;
