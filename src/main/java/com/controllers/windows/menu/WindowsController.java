@@ -116,4 +116,25 @@ public class WindowsController {
         newWindow.show();
     }
 
+    public void openNewResizableModalWindow(String rootName, Stage stage, MenuController controller,
+                                   String title, int minWidth, int minHeight) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName + ".fxml"));
+        Pane pane = (Pane) loader.load();
+        Stage newWindow = new Stage();
+        Scene scene = new Scene(pane);
+        newWindow.setScene(scene);
+        newWindow.setMinWidth(minWidth);
+        newWindow.setMinHeight(minHeight);
+        newWindow.setMaxWidth(sSize.getWidth());
+        newWindow.setMaxHeight(sSize.getHeight());
+        newWindow.setResizable(true);
+        newWindow.setTitle(title);
+        newWindow.getIcons().add(new Image("img/icons/icon.png"));
+        newWindow.initModality(Modality.WINDOW_MODAL);
+        newWindow.initOwner(stage);
+        controller = (MenuController) loader.getController();
+        controller.initialize(stage, newWindow);
+        newWindow.show();
+    }
+
 }

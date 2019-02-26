@@ -20,8 +20,12 @@ public class Predict {
     private double credibility;
     private double alphaPositive;
     private double alphaNegative;
+    private DatasetObject datasetObjectsEntity;
     private String visibleClass;
     private String visibleCredibility;
+    private String visibleConfidence;
+    private String visibleParameters;
+
 
     public Predict() {
     }
@@ -97,6 +101,14 @@ public class Predict {
         this.credibility = credibility;
     }
 
+    public String getVisibleConfidence() {
+        return visibleConfidence;
+    }
+
+    public void setVisibleConfidence(String visibleConfidence) {
+        this.visibleConfidence = visibleConfidence;
+    }
+
     public double getAlphaPositive() {
         return alphaPositive;
     }
@@ -127,6 +139,22 @@ public class Predict {
 
     public void setVisibleCredibility(String visibleCredibility) {
         this.visibleCredibility = visibleCredibility;
+    }
+
+    public DatasetObject getDatasetObjectsEntity() {
+        return datasetObjectsEntity;
+    }
+
+    public void setDatasetObjectsEntity(DatasetObject datasetObjectsEntity) {
+        this.datasetObjectsEntity = datasetObjectsEntity;
+    }
+
+    public String getVisibleParameters() {
+        return visibleParameters;
+    }
+
+    public void setVisibleParameters(String visibleParameters) {
+        this.visibleParameters = visibleParameters;
     }
 
     public Predict fromJson(HttpResponse response) throws IOException {

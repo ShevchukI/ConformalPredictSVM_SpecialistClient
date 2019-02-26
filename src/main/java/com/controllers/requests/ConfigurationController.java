@@ -172,4 +172,19 @@ public class ConfigurationController extends MainController {
         }
         return response;
     }
+
+    public HttpResponse getDetaildeResult(String[] authorization, int configId) throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(getUrl() + "/result/general/" + configId+"/configuration_result");
+        request.addHeader("Authorization", basicAuthPayload);
+        HttpResponse response = null;
+        try {
+            response = client.execute(request);
+        } catch (HttpHostConnectException e) {
+            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+        }
+        return response;
+    }
 }

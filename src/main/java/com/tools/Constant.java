@@ -8,13 +8,20 @@ import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+import com.models.Predict;
 import com.models.SVMParameter;
 import com.models.Specialist;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
@@ -27,7 +34,7 @@ import java.util.Comparator;
  */
 public class Constant {
 
-    private static final String INSTANCE_NAME = "mainInstance";
+    private static final String INSTANCE_NAME = "mainSpecialistInstance";
     private static final String USER_MAP_NAME = "user";
     private static final String DATASET_MAP_NAME = "dataset";
     private static final String KEY_MAP_NAME = "key";
@@ -38,7 +45,6 @@ public class Constant {
     private static final double SVM_C = 1;
     private static final double SVM_NU = 0.5;
     private static final double SVM_EPS = 0.001;
-
 
 
     public static void createInstanceAndMap() {
@@ -63,11 +69,11 @@ public class Constant {
 //        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(USER_MAP_NAME);
 //    }
 
-    public static IMap getMapByName(String mapName){
+    public static IMap getMapByName(String mapName) {
         return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(mapName);
     }
 
-    private static MapConfig createMapWithName(String mapName){
+    private static MapConfig createMapWithName(String mapName) {
         MapConfig mapConfig = new MapConfig();
         mapConfig.setName(mapName);
         return mapConfig;
@@ -121,11 +127,11 @@ public class Constant {
         }.getType();
         ArrayList<SVMParameter> allTypes = gson.fromJson(json, founderListType);
         ArrayList<SVMParameter> SVCkernelTypes = new ArrayList<>();
-        for(SVMParameter svmParameter: allTypes){
-            if(svmParameter.getName().equals("LINEAR")
+        for (SVMParameter svmParameter : allTypes) {
+            if (svmParameter.getName().equals("LINEAR")
                     || svmParameter.getName().equals("POLY")
                     || svmParameter.getName().equals("RBF")
-                    || svmParameter.getName().equals("SIGMOID")){
+                    || svmParameter.getName().equals("SIGMOID")) {
                 SVCkernelTypes.add(svmParameter);
             }
         }
@@ -133,7 +139,7 @@ public class Constant {
         return SVCkernelTypes;
     }
 
-    public static Comparator<SVMParameter> SVMParamNameComparator = new Comparator<SVMParameter> (){
+    public static Comparator<SVMParameter> SVMParamNameComparator = new Comparator<SVMParameter>() {
 
         @Override
         public int compare(SVMParameter param1, SVMParameter param2) {
@@ -143,7 +149,7 @@ public class Constant {
         }
     };
 
-    public static int getCountSplitString(String string, String delimeter){
+    public static int getCountSplitString(String string, String delimeter) {
         return string.split(delimeter).length;
     }
 
@@ -152,7 +158,7 @@ public class Constant {
     }
 
     public static double getSvmGamma(int columnCount) {
-        return SVM_GAMMA/columnCount;
+        return SVM_GAMMA / columnCount;
     }
 
     public static double getSvmC() {
@@ -167,7 +173,7 @@ public class Constant {
         return SVM_EPS;
     }
 
-    public static double formatterSliderValueToDouble(double text, String pattern){
+    public static double formatterSliderValueToDouble(double text, String pattern) {
         DecimalFormat formatter = new DecimalFormat(pattern);
         String string = formatter.format(text);
         return Double.parseDouble(string.replace(",", "."));
@@ -177,6 +183,104 @@ public class Constant {
         HttpEntity entity = response.getEntity();
         String content = EntityUtils.toString(entity);
 //        return  EntityUtils.toString(response.getEntity());
-        return  content;
+        return content;
+    }
+
+    public static ArrayList<Predict> getPredictListFromJson(HttpResponse response) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        DataInputStream dataInputStream = new DataInputStream(response.getEntity().getContent());
+        String line;
+        while ((line = dataInputStream.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        dataInputStream.close();
+        String json = stringBuilder.toString();
+        Gson gson = new Gson();
+        Type founderListType = new TypeToken<ArrayList<Predict>>() {
+        }.getType();
+        ArrayList<Predict> predicts = gson.fromJson(json, founderListType);
+        return predicts;
+    }
+
+    public static void printTableAndMatrix(String outputFileName, ArrayList<Predict> predicts) throws IOException {
+        SettingsExcel settingsExcel = new SettingsExcel();
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Result");
+        XSSFCellStyle styleStandart = settingsExcel.createStyleForCellStandart(workbook);
+
+        String[] columnsTitle = {"Id", "Real class", "Predict class", "Confidence", "Credibility",
+                "pPositive", "pNegative", "Alpha positive", "Alpha negative", "Parameters"};
+        settingsExcel.createCellForTitle(sheet, columnsTitle);
+        Row row;
+        Cell cell;
+
+        settingsExcel.createMainCell(sheet, predicts);
+
+        int indentRow = predicts.size() + 2;
+
+        row = sheet.createRow(indentRow);
+        cell = row.createCell(0, CellType.STRING);
+        cell.setCellValue("");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(1, CellType.STRING);
+        cell.setCellValue("Real: 1\nPredict: 1");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(2, CellType.STRING);
+        cell.setCellValue("Real: -1\nPredict: 1");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(3, CellType.STRING);
+        cell.setCellValue("Real: 1\nPredict: -1");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(4, CellType.STRING);
+        cell.setCellValue("Real: -1\nPredict: -1");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(5, CellType.STRING);
+        cell.setCellValue("Empty");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(6, CellType.STRING);
+        cell.setCellValue("Uncertain predictions");
+        cell.setCellStyle(styleStandart);
+
+        double[] significance = {0.01, 0.05, 0.1, 0.15, 0.2};
+
+        int column = 6;
+        int[] matrix = new int[column];
+
+        for (int i = 0; i < significance.length; i++) {
+            for (int j = 0; j < column; j++) {
+                matrix[j] = 0;
+            }
+            for (int k = 0; k < predicts.size(); k++) {
+                if ((predicts.get(k).getpPositive() < significance[i]
+                        && predicts.get(k).getpNegative() < significance[i])) {
+                    matrix[4] = matrix[4] + 1;
+                } else if (predicts.get(k).getpPositive() >= significance[i]
+                        && predicts.get(k).getpNegative() >= significance[i]) {
+                    matrix[5] = matrix[5] + 1;
+                } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == 1) {
+                    matrix[0] = matrix[0] + 1;
+                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == 1) {
+                    matrix[1] = matrix[1] + 1;
+                } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == -1) {
+                    matrix[2] = matrix[2] + 1;
+                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == -1) {
+                    matrix[3] = matrix[3] + 1;
+                }
+
+            }
+            settingsExcel.createCellRowMatrixRegionPrediction(sheet, matrix, significance[i], indentRow + i);
+        }
+
+        File file = new File(outputFileName + ".xlsx");
+        file.getParentFile().mkdirs();
+        FileOutputStream outFile = new FileOutputStream(file);
+        workbook.write(outFile);
+        outFile.close();
     }
 }

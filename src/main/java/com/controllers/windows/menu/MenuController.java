@@ -1,14 +1,12 @@
 package com.controllers.windows.menu;
 
-import com.hazelcast.core.Hazelcast;
-import com.hazelcast.core.HazelcastInstance;
+import com.tools.Constant;
 import com.tools.Placeholder;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -18,8 +16,8 @@ import java.util.Optional;
  */
 public abstract class MenuController {
 
-    @Autowired
-    protected HazelcastInstance instance;
+//    @Autowired
+//    protected HazelcastInstance instance;
 
 //    @Autowired
 //    protected IMap<String, String> userMap;
@@ -32,7 +30,8 @@ public abstract class MenuController {
     public void initialize(Stage stage) throws IOException {
 //        userMap = Hazelcast.getHazelcastInstanceByName("mainInstance").getMap("userMap");
         stage.setOnHidden(event -> {
-            Hazelcast.getHazelcastInstanceByName("mainInstance").getLifecycleService().shutdown();
+            Constant.getInstance().getLifecycleService().shutdown();
+//            Hazelcast.getHazelcastInstanceByName("mainSpecialistInstance").getLifecycleService().shutdown();
         });
         setStage(stage);
 //        setInstance(hazelcastInstance);

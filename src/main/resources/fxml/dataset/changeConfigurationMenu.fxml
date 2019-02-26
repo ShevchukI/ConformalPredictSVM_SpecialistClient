@@ -157,12 +157,12 @@
                   <Insets left="50.0" />
                </FlowPane.margin>
             </ProgressIndicator>
-            <Button fx:id="button_Test" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="Test" onAction="#diagnosticSingleObject">
+            <Button fx:id="button_Test" mnemonicParsing="false" onAction="#diagnosticSingleObject" prefHeight="26.0" prefWidth="50.0" text="Test">
                <FlowPane.margin>
                   <Insets left="35.0" />
                </FlowPane.margin>
             </Button>
-            <Button fx:id="button_ShowDetails" mnemonicParsing="false" text="Show details">
+            <Button fx:id="button_ShowDetails" mnemonicParsing="false" text="Show details" onAction="#showDetails">
                <FlowPane.margin>
                   <Insets left="515.0" />
                </FlowPane.margin>

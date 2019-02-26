@@ -5,14 +5,15 @@ package com.models;
  */
 public class DatasetObject {
     private int id;
-    private String content;
+    private String params;
+    private int objectClass;
 
     public DatasetObject() {
     }
 
     public DatasetObject(int id, String content) {
         this.id = id;
-        this.content = content;
+        this.params = content;
     }
 
     public int getId() {
@@ -23,11 +24,21 @@ public class DatasetObject {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getParams() {
+        return params;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setParams(String content) {
+        this.params = content;
+    }
+
+
+
+    public int getObjectClass() {
+        return objectClass;
+    }
+
+    public void setObjectClass(int objectClass) {
+        this.objectClass = objectClass;
     }
 }

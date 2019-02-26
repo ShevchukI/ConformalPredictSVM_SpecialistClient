@@ -1,10 +1,8 @@
 package com.controllers.windows.dataset;
 
-import com.controllers.requests.ConfigurationController;
 import com.controllers.requests.DataSetController;
 import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
-import com.models.ConfigurationEntity;
 import com.models.Dataset;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
@@ -20,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +38,17 @@ public class DiagnosticMenuController extends MenuController {
     HttpResponse response;
 
     private Dataset dataset;
-    private ConfigurationEntity configurationEntity;
+//    private ConfigurationEntity configurationEntity;
     private int statusCode;
     private int datasetId;
     private int configurationId;
     private String[] columns;
     private DataSetController dataSetController = new DataSetController();
-    private ConfigurationController configurationController = new ConfigurationController();
+//    private ConfigurationController configurationController = new ConfigurationController();
     private IllnessController illnessController = new IllnessController();
     private List<Predict> predictList = new ArrayList<>();
     private ObservableList<Predict> predicts;
+    private Predict predict;
 
     @FXML
     private CheckBox checkBox_Significance;
@@ -66,14 +66,21 @@ public class DiagnosticMenuController extends MenuController {
     private TableColumn tableColumn_Class;
     @FXML
     private TableColumn tableColumn_Credibility;
+    @FXML
+    private StackPane stackPane_Table;
+    @FXML
+    private StackPane stackPane_Progress;
+    @FXML
+    private Button button_Run;
+    @FXML
+    private Button button_Ok;
 
     @FXML
     public void initialize(Stage stage, Stage newWindow) throws IOException {
-        stage.setOnHidden(event -> {
-//            Constant.getInstance().getLifecycleService().shutdown();
-        });
         setStage(stage);
         setNewWindow(newWindow);
+        stackPane_Table.setVisible(true);
+        stackPane_Progress.setVisible(false);
         tableColumn_Class.setSortable(false);
         tableColumn_Class.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleClass"));
         tableColumn_Credibility.setSortable(false);
@@ -93,37 +100,13 @@ public class DiagnosticMenuController extends MenuController {
         datasetId = Integer.parseInt(Constant.getMapByName("dataset").get("id").toString());
         configurationId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
         createFields(datasetId);
-//        getPlaceholderFill(row);
     }
 
-
-    public void getPlaceholderFill(int row) {
-//        anchorPane = new AnchorPane();
-//        anchorPane.setId("test");
-//        GridPane gridPane = new GridPane();
-        for (int i = 0; i < row; i++) {
-//            HBox hBox = new HBox();
-            Label label = new Label("label treeeeeeeeeeee " + i);
-            TextField textField = new TextField("234" + i);
-            textField.setId("qwerty" + i);
-            textField.setMaxWidth(100.0);
-            gridPane_Data.add(label, 0, i);
-            gridPane_Data.setHalignment(label, HPos.LEFT);
-            gridPane_Data.add(textField, 1, i);
-            gridPane_Data.setHalignment(textField, HPos.RIGHT);
-
-            gridPane_Data.setMargin(label, new Insets(14, 5, 10, 14));
-            gridPane_Data.setMargin(textField, new Insets(14, 14, 10, 5));
-        }
-//        anchorPane.setTopAnchor(gridPane, 0.0);
-//        anchorPane.setLeftAnchor(gridPane, 14.0);
-//        anchorPane.setRightAnchor(gridPane, 0.0);
-//        anchorPane.setBottomAnchor(gridPane, 0.0);
-//        anchorPane.getChildren().add(gridPane);
-//        scrollPane_Data.setContent(anchorPane);
-    }
 
     public void runDiagnostic(ActionEvent event) throws IOException {
+        tableView_Result.setOpacity(0);
+        stackPane_Progress.setVisible(true);
+        button_Run.setDisable(true);
         ParameterSingleObject parameterSingleObject = new ParameterSingleObject("", 0);
         for (int i = 2; i < columns.length; i++) {
             TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
@@ -148,28 +131,85 @@ public class DiagnosticMenuController extends MenuController {
         System.out.println("First request: " + statusCode);
         if (checkStatusCode(statusCode)) {
             int processId = Integer.parseInt(Constant.responseToString(response));
-            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
-            statusCode = response.getStatusLine().getStatusCode();
-            System.out.println("Second request: " + statusCode);
-            if (checkStatusCode(statusCode)) {
-                Predict predict = new Predict().fromJson(response);
-                if (predict.getRealClass() == predict.getPredictClass()) {
-                    predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
-                    predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
-                } else {
-                    predict.setVisibleClass("Uncertain");
-                    predict.setVisibleCredibility("");
+            Thread calculation = new Thread(new Runnable() {
+                @Override
+                public void run() {
+//                    button_Run.setDisable(true);
+                    predict = new Predict();
+                    predict.setPredictClass(0);
+//                    double progress = 0;
+                    while (predict.getPredictClass() == 0) {
+                        try {
+                            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
+                            statusCode = response.getStatusLine().getStatusCode();
+                            System.out.println("Second request: " + statusCode);
+                            if (statusCode == 200) {
+                                predict = new Predict().fromJson(response);
+                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
+                                if (predict.getPredictClass() != 0) {
+                                    if (predict.getRealClass() == predict.getPredictClass()) {
+                                        switch (predict.getPredictClass()) {
+                                            case 1:
+                                                predict.setVisibleClass("Positive");
+                                                break;
+                                            case -1:
+                                                predict.setVisibleClass("Negative");
+                                                break;
+                                            default:
+                                                break;
+                                        }
+//                                        predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
+//                                        predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
+                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+                                    } else {
+                                        predict.setVisibleClass("Uncertain");
+                                        predict.setVisibleConfidence("");
+                                    }
+                                    predictList.clear();
+                                    predictList.add(predict);
+                                    predicts = FXCollections.observableArrayList(predictList);
+                                    tableView_Result.setItems(predicts);
+//                                    stackPane_Table.setVisible(true);
+                                    stackPane_Progress.setVisible(false);
+                                    tableView_Result.setOpacity(100);
+
+                                }
+                                Thread.sleep(1000 * 1);
+                            } else {
+                                return;
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+//                        button_Run.setDisable(false);
+                    }
+                    button_Run.setDisable(false);
+                    button_Ok.setDisable(false);
                 }
-                predictList.clear();
-                predictList.add(predict);
-                predicts = FXCollections.observableArrayList(predictList);
-                tableView_Result.setItems(predicts);
-                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
-
+            });
+            calculation.start();
+//            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
+//            statusCode = response.getStatusLine().getStatusCode();
+//            System.out.println("Second request: " + statusCode);
+//            if (checkStatusCode(statusCode)) {
+//                Predict predict = new Predict().fromJson(response);
+//                if (predict.getRealClass() == predict.getPredictClass()) {
+//                    predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
+//                    predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
+//                } else {
+//                    predict.setVisibleClass("Uncertain");
+//                    predict.setVisibleCredibility("");
+//                }
+//                predictList.clear();
+//                predictList.add(predict);
+//                predicts = FXCollections.observableArrayList(predictList);
+//                tableView_Result.setItems(predicts);
+//                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
             }
-
         }
-    }
 
     public void cancel(ActionEvent event) {
         getNewWindow().close();

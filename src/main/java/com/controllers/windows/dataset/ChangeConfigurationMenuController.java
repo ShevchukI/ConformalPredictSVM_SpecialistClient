@@ -308,9 +308,9 @@ public class ChangeConfigurationMenuController extends MenuController {
                             try {
                                 HttpResponse response = configurationController.getProgress(Constant.getAuth(), processId);
                                 progress = Double.parseDouble(Constant.responseToString(response)) / 100;
-//                                System.out.println(progress);
+                                System.out.println(progress);
                                 progressIndicator_Progress.setProgress(progress);
-                                Thread.sleep(1000 * 2);
+                                Thread.sleep(1000 * 1);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             } catch (IOException e) {
@@ -413,6 +413,11 @@ public class ChangeConfigurationMenuController extends MenuController {
     public void diagnosticSingleObject(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow("dataset/diagnosticMenu", getNewWindow(), diagnosticMenuController,
                 "Diagnostic object", 670, 500);
+    }
+
+    public void showDetails(ActionEvent event) throws IOException {
+        windowsController.openNewResizableModalWindow("dataset/detailsResultMenu", getNewWindow(), diagnosticMenuController,
+                "Details", 670, 500);
     }
 }
 
