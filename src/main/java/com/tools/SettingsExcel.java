@@ -112,11 +112,11 @@ public class SettingsExcel {
             cell.setCellStyle(styleDouble);
 
             cell = row.createCell(5, CellType.NUMERIC);
-            cell.setCellValue(predicts.get(i).getpPositive());
+            cell.setCellValue(predicts.get(i).getPPositive());
             cell.setCellStyle(styleStandart);
 
             cell = row.createCell(6, CellType.NUMERIC);
-            cell.setCellValue(predicts.get(i).getpNegative());
+            cell.setCellValue(predicts.get(i).getPNegative());
             cell.setCellStyle(styleStandart);
 
             cell = row.createCell(7, CellType.NUMERIC);

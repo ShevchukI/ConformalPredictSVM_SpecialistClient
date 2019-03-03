@@ -61,19 +61,19 @@ public class Predict {
         this.realClass = realClass;
     }
 
-    public double getpPositive() {
+    public double getPPositive() {
         return pPositive;
     }
 
-    public void setpPositive(double pPositive) {
+    public void setPPositive(double pPositive) {
         this.pPositive = pPositive;
     }
 
-    public double getpNegative() {
+    public double getPNegative() {
         return pNegative;
     }
 
-    public void setpNegative(double pNegative) {
+    public void setPNegative(double pNegative) {
         this.pNegative = pNegative;
     }
 

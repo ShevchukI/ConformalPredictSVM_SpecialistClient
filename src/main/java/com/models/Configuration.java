@@ -18,19 +18,19 @@ public class Configuration {
     public Configuration() {
     }
 
-    public Configuration(String name, double c, int degree, double eps, double gamma, int kernelParameter,
-                         double nu, int probability, int svmParameter, double testPart) {
-        this.name = name;
-        this.c = c;
-        this.degree = degree;
-        this.eps = eps;
-        this.gamma = gamma;
-        this.kernelParameter = kernelParameter;
-        this.nu = nu;
-        this.probability = probability;
-        this.svmParameter = svmParameter;
-        this.testPart = testPart;
-    }
+//    public Configuration(String name, double c, int degree, double eps, double gamma, int kernelParameter,
+//                         double nu, int probability, int svmParameter, double testPart) {
+//        this.name = name;
+//        this.c = c;
+//        this.degree = degree;
+//        this.eps = eps;
+//        this.gamma = gamma;
+//        this.kernelParameter = kernelParameter;
+//        this.nu = nu;
+//        this.probability = probability;
+//        this.svmParameter = svmParameter;
+//        this.testPart = testPart;
+//    }
 
     public String getName() {
         return name;

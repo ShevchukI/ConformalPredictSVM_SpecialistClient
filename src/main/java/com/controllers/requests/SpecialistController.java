@@ -1,7 +1,7 @@
 package com.controllers.requests;
 
 import com.google.gson.Gson;
-import com.models.Specialist;
+import com.models.SpecialistEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpStatus;
@@ -40,8 +40,8 @@ public class SpecialistController extends MainController{
         return response;
     }
 
-    public int specialistRegistration(Specialist specialist) throws IOException {
-        String json = new Gson().toJson(specialist);
+    public int specialistRegistration(SpecialistEntity specialistEntity) throws IOException {
+        String json = new Gson().toJson(specialistEntity);
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(getUrl()+ "/registration");
         request.setHeader("Content-Type", "application/json");
@@ -72,8 +72,8 @@ public class SpecialistController extends MainController{
         return response;
     }
 
-    public HttpResponse changeName(String[] authorization, Specialist specialist) throws IOException {
-        String json = new Gson().toJson(specialist);
+    public HttpResponse changeName(String[] authorization, SpecialistEntity specialistEntity) throws IOException {
+        String json = new Gson().toJson(specialistEntity);
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpPut request = new HttpPut(getUrl());

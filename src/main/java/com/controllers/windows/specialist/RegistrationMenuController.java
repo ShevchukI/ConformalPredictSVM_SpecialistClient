@@ -3,7 +3,7 @@ package com.controllers.windows.specialist;
 import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.models.Specialist;
+import com.models.SpecialistEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -53,15 +53,15 @@ public class RegistrationMenuController extends MenuController {
 
     public void register(ActionEvent event) throws IOException {
         if (checkRegister()) {
-            Specialist specialist = new Specialist(textField_Name.getText(), textField_Surname.getText(),
+            SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText(),
                     textField_Login.getText(), passwordField_ConfirmPassword.getText());
-            statusCode = specialistController.specialistRegistration(specialist);
+            statusCode = specialistController.specialistRegistration(specialistEntity);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
-                windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
+                windowsController.openWindow("specialistEntity/loginMenu", getStage(), loginMenuController,
                         "Login menu", 350, 190);
             }
         }

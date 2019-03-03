@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="548.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataset.AddDataSetMenuController">
+<BorderPane prefHeight="548.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.AddDataSetMenuController">
    <top>
       <VBox>
          <children>
@@ -22,7 +22,7 @@
             <Label layoutX="14.0" layoutY="14.0" text="File:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
             <TextField fx:id="textField_FileName" layoutX="95.0" layoutY="9.0" prefHeight="26.0" prefWidth="230.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0" onAction="#fillUpData"/>
             <Label layoutX="15.0" layoutY="59.0" text="Name:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="59.0" />
-            <TextField fx:id="textField_DatasetName" layoutX="101.0" layoutY="54.0" prefHeight="31.0" prefWidth="315.0" AnchorPane.leftAnchor="101.0" AnchorPane.topAnchor="54.0" />
+            <TextField fx:id="textField_DataSetName" layoutX="101.0" layoutY="54.0" prefHeight="31.0" prefWidth="315.0" AnchorPane.leftAnchor="101.0" AnchorPane.topAnchor="54.0" />
             <Label layoutX="15.0" layoutY="103.0" text="Description:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="103.0" />
             <TextArea fx:id="textArea_Description" layoutX="101.0" layoutY="103.0" prefHeight="79.0" prefWidth="315.0" wrapText="true" AnchorPane.leftAnchor="101.0" AnchorPane.topAnchor="103.0" />
             <Button layoutX="344.0" layoutY="11.0" mnemonicParsing="false" onAction="#chooseFile" text="Choose" AnchorPane.leftAnchor="344.0" AnchorPane.topAnchor="10.0" />

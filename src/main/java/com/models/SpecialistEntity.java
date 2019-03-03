@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Admin on 03.02.2019.
  */
-public class Specialist {
+public class SpecialistEntity {
 
     private int id;
     private String name;
@@ -18,17 +18,17 @@ public class Specialist {
     private String login;
     private String password;
 
-    public Specialist() {
+    public SpecialistEntity() {
     }
 
-    public Specialist(String name, String surname, String login, String password) {
+    public SpecialistEntity(String name, String surname, String login, String password) {
         this.name = name;
         this.surname = surname;
         this.login = login;
         this.password = password;
     }
 
-    public Specialist(int id, String name, String surname, String login, String password) {
+    public SpecialistEntity(int id, String name, String surname, String login, String password) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -36,15 +36,15 @@ public class Specialist {
         this.password = password;
     }
 
-    public Specialist(String name, String surname) {
+    public SpecialistEntity(String name, String surname) {
         this.name = name;
         this.surname = surname;
     }
 
-    public Specialist fromJson(HttpResponse response) throws IOException {
+    public SpecialistEntity fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
-        return new Gson().fromJson(json, Specialist.class);
+        return new Gson().fromJson(json, SpecialistEntity.class);
     }
     
     public int getId() {

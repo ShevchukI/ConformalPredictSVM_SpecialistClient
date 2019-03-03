@@ -10,7 +10,10 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.models.Predict;
 import com.models.SVMParameter;
-import com.models.Specialist;
+import com.models.SpecialistEntity;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -28,6 +31,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Created by Admin on 14.02.2019.
@@ -36,7 +40,7 @@ public class Constant {
 
     private static final String INSTANCE_NAME = "mainSpecialistInstance";
     private static final String USER_MAP_NAME = "user";
-    private static final String DATASET_MAP_NAME = "dataset";
+    private static final String DATASET_MAP_NAME = "dataSet";
     private static final String KEY_MAP_NAME = "key";
     private static final String MISCELLANEOUS_MAP_NAME = "misc";
 
@@ -79,16 +83,16 @@ public class Constant {
         return mapConfig;
     }
 
-    public static void fillMap(Specialist specialist, String login, String password) {
+    public static void fillMap(SpecialistEntity specialistEntity, String login, String password) {
         String key = new Encryptor().genRandString();
         String vector = new Encryptor().genRandString();
         getMapByName("key").put("key", key);
         getMapByName("key").put("vector", vector);
         getMapByName("user").put("login", new Encryptor().encrypt(key, vector, login));
         getMapByName("user").put("password", new Encryptor().encrypt(key, vector, password));
-        getMapByName("user").put("id", specialist.getId());
-        getMapByName("user").put("name", specialist.getName());
-        getMapByName("user").put("surname", specialist.getSurname());
+        getMapByName("user").put("id", specialistEntity.getId());
+        getMapByName("user").put("name", specialistEntity.getName());
+        getMapByName("user").put("surname", specialistEntity.getSurname());
         getMapByName("misc").put("pageIndexAllDataset", "1");
         getMapByName("misc").put("pageIndexMyDataset", "1");
         getMapByName("misc").put("pageIndexAllConfiguration", "1");
@@ -98,9 +102,9 @@ public class Constant {
 //        getMap().put("vector", vector);
 //        getMap().put("login", new Encryptor().encrypt(key, vector, login));
 //        getMap().put("password", new Encryptor().encrypt(key, vector, password));
-//        getMap().put("id", specialist.getId());
-//        getMap().put("name", specialist.getName());
-//        getMap().put("surname", specialist.getSurname());
+//        getMap().put("id", specialistEntity.getId());
+//        getMap().put("name", specialistEntity.getName());
+//        getMap().put("surname", specialistEntity.getSurname());
 //        getMap().put("pageIndex", "1");
     }
 
@@ -257,11 +261,11 @@ public class Constant {
                 matrix[j] = 0;
             }
             for (int k = 0; k < predicts.size(); k++) {
-                if ((predicts.get(k).getpPositive() < significance[i]
-                        && predicts.get(k).getpNegative() < significance[i])) {
+                if ((predicts.get(k).getPPositive() < significance[i]
+                        && predicts.get(k).getPNegative() < significance[i])) {
                     matrix[4] = matrix[4] + 1;
-                } else if (predicts.get(k).getpPositive() >= significance[i]
-                        && predicts.get(k).getpNegative() >= significance[i]) {
+                } else if (predicts.get(k).getPPositive() >= significance[i]
+                        && predicts.get(k).getPNegative() >= significance[i]) {
                     matrix[5] = matrix[5] + 1;
                 } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == 1) {
                     matrix[0] = matrix[0] + 1;
@@ -277,10 +281,35 @@ public class Constant {
             settingsExcel.createCellRowMatrixRegionPrediction(sheet, matrix, significance[i], indentRow + i);
         }
 
-        File file = new File(outputFileName + ".xlsx");
-        file.getParentFile().mkdirs();
+//        File file = null;
+//        try {
+         File   file = new File(outputFileName + ".xlsx");
+            file.getParentFile().mkdirs();
+//        } catch (NullPointerException e) {
+//            getAlert(null, "Invalid directory", Alert.AlertType.ERROR);
+//        }
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
         outFile.close();
+    }
+
+    public static void getAlert(String header, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    public static boolean questionOkCancel(String questionText){
+        ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, questionText, ok, cancel);
+        questionOfCancellation.setHeaderText(null);
+        Optional<ButtonType> result = questionOfCancellation.showAndWait();
+        if(result.orElse(cancel) == ok){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

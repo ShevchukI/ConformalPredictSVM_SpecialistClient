@@ -2,7 +2,7 @@ package com.controllers.windows.specialist;
 
 import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
-import com.models.Specialist;
+import com.models.SpecialistEntity;
 import com.tools.Constant;
 import com.tools.Encryptor;
 import javafx.event.ActionEvent;
@@ -102,14 +102,14 @@ public class ChangeInfoMenuController extends MenuController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         if (checkNames()) {
-            Specialist specialist = new Specialist(textField_Name.getText(), textField_Surname.getText());
-            response = specialistController.changeName(Constant.getAuth(), specialist);
+            SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText());
+            response = specialistController.changeName(Constant.getAuth(), specialistEntity);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
-                Constant.getMapByName("user").put("name", specialist.getName());
-                Constant.getMapByName("user").put("surname", specialist.getSurname());
+                Constant.getMapByName("user").put("name", specialistEntity.getName());
+                Constant.getMapByName("user").put("surname", specialistEntity.getSurname());
             }
             getNewWindow().close();
         }

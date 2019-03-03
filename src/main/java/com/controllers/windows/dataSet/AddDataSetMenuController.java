@@ -1,11 +1,11 @@
-package com.controllers.windows.dataset;
+package com.controllers.windows.dataSet;
 
 import com.controllers.requests.DataSetController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.models.Dataset;
+import com.models.DataSet;
 import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * Created by Admin on 07.02.2019.
  */
 public class AddDataSetMenuController extends MenuController {
+
     @Autowired
     MainMenuController mainMenuController;
     @Autowired
@@ -39,7 +40,7 @@ public class AddDataSetMenuController extends MenuController {
     @FXML
     private TextField textField_FileName;
     @FXML
-    private TextField textField_DatasetName;
+    private TextField textField_DataSetName;
     @FXML
     private TextArea textArea_Description;
     @FXML
@@ -66,7 +67,7 @@ public class AddDataSetMenuController extends MenuController {
         textField_FileName.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 String fileName = file.getName().substring(0, file.getName().length() - 4);
-                textField_DatasetName.setText(fileName);
+                textField_DataSetName.setText(fileName);
             } catch (NullPointerException e) {
                 System.out.println("bad name");
             }
@@ -82,7 +83,7 @@ public class AddDataSetMenuController extends MenuController {
             if (fileChooser != null) {
                 textField_FileName.setText(file.getAbsolutePath());
             }
-        } catch (IllegalStateException e1){
+        } catch (IllegalStateException e1) {
             System.out.println("File not chosen! Application crash!");
         } catch (Exception e) {
             e.getStackTrace();
@@ -126,7 +127,8 @@ public class AddDataSetMenuController extends MenuController {
         if (!checkColumns(textArea_Columns.getText())) {
             error++;
         }
-        File fileBuf = new File("C:\\qwwww.txt");
+        String fileName = "C:\\qwwww.txt";
+        File fileBuf = new File(fileName);
         FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
         FileReader input = new FileReader(textField_FileName.getText());
         BufferedReader bufRead = new BufferedReader(input);
@@ -166,24 +168,25 @@ public class AddDataSetMenuController extends MenuController {
             textArea_Error.setStyle("-fx-text-fill: red");
             textArea_Error.setVisible(true);
         } else {
-            Dataset dataset = new Dataset(textField_DatasetName.getText(),
+            DataSet dataSet = new DataSet(textField_DataSetName.getText(),
                     textArea_Description.getText(),
                     textArea_Columns.getText());
             response = dataSetController.createDataSet(Constant.getAuth(),
-                    dataset);
+                    dataSet);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 int id = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
-                response = dataSetController.addObjectsToDataset(Constant.getAuth(),
+                response = dataSetController.addObjectsToDataSet(Constant.getAuth(),
                         fileBuf, id);
                 statusCode = response.getStatusLine().getStatusCode();
                 if (checkStatusCode(statusCode)) {
                     fileBuf.delete();
                 }
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Dataset saved!");
-            alert.showAndWait();
+            Constant.getAlert(null, "Data Set saved!", Alert.AlertType.INFORMATION);
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setHeaderText("DataSet saved!");
+//            alert.showAndWait();
             windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
             getNewWindow().close();
         }

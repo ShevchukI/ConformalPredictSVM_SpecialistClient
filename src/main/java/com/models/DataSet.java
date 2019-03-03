@@ -10,45 +10,45 @@ import java.io.InputStreamReader;
 /**
  * Created by Admin on 03.02.2019.
  */
-public class Dataset {
+public class DataSet {
     private int id;
     private String name;
     private String description;
     private String columns;
     private boolean active;
-    private String visibleActive;
-    private Specialist specialist;
+    private SpecialistEntity specialistEntity;
 
-    public Dataset() {
+    public DataSet() {
     }
-    public Dataset(int id, String name, String description) {
+
+    public DataSet(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public Dataset(int id, String name, String description, String columns) {
+    public DataSet(int id, String name, String description, String columns) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.columns = columns;
     }
 
-    public Dataset(String name, String description, String columns) {
+    public DataSet(String name, String description, String columns) {
         this.name = name;
         this.description = description;
         this.columns = columns;
     }
 
-    public Dataset(int id, String name, String description, boolean active, Specialist specialist) {
+    public DataSet(int id, String name, String description, boolean active, SpecialistEntity specialistEntity) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.active = active;
-        this.specialist = specialist;
+        this.specialistEntity = specialistEntity;
     }
 
-    public Dataset(int id, String name, String description, boolean active) {
+    public DataSet(int id, String name, String description, boolean active) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -88,14 +88,10 @@ public class Dataset {
     }
 
     public String getVisibleActive() {
-        return visibleActive;
-    }
-
-    public void setVisibleActive(Boolean active) {
-        if(active) {
-            this.visibleActive = "Enabled";
+        if (this.isActive()) {
+            return "Enabled";
         } else {
-            this.visibleActive = "Disabled";
+            return "Disabled";
         }
     }
 
@@ -107,17 +103,21 @@ public class Dataset {
         this.active = active;
     }
 
-    public Specialist getSpecialist() {
-        return specialist;
+    public SpecialistEntity getSpecialistEntity() {
+        return specialistEntity;
     }
 
-    public void setSpecialist(Specialist specialist) {
-        this.specialist = specialist;
+    public void setSpecialistEntity(SpecialistEntity specialistEntity) {
+        this.specialistEntity = specialistEntity;
     }
 
-    public Dataset fromJson(HttpResponse response) throws IOException {
+    public String getOwner() {
+        return specialistEntity.getName() + " " + specialistEntity.getSurname();
+    }
+
+    public DataSet fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
-        return new Gson().fromJson(json, Dataset.class);
+        return new Gson().fromJson(json, DataSet.class);
     }
 }

@@ -1,8 +1,9 @@
 package com.controllers.windows.menu;
 
-import com.controllers.windows.dataset.AddDataSetMenuController;
+import com.controllers.windows.dataSet.AddDataSetMenuController;
 import com.controllers.windows.specialist.ChangeInfoMenuController;
 import com.controllers.windows.specialist.LoginMenuController;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,6 @@ public class MenuBarController extends MenuController {
     }
 
     public void about(ActionEvent event) {
-       getAlert(null, "Client: Peryite\nServer: DayRo", Alert.AlertType.INFORMATION);
+       Constant.getAlert(null, "Client: Peryite\nServer: DayRo", Alert.AlertType.INFORMATION);
     }
 }

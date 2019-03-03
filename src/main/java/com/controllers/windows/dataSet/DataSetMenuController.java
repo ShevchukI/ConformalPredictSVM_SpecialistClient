@@ -1,4 +1,4 @@
-package com.controllers.windows.dataset;
+package com.controllers.windows.dataSet;
 
 import com.controllers.requests.ConfigurationController;
 import com.controllers.requests.DataSetController;
@@ -8,7 +8,7 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.ConfigurationEntity;
 import com.models.ConfigurationPage;
-import com.models.Dataset;
+import com.models.DataSet;
 import com.sun.javafx.collections.ObservableListWrapper;
 import com.tools.Constant;
 import javafx.beans.binding.Bindings;
@@ -39,9 +39,8 @@ public class DataSetMenuController extends MenuController {
     @Autowired
     MainMenuController mainMenuController;
 
-    //    private ObservableList observableList;
     private WindowsController windowsController = new WindowsController();
-    private Dataset dataset;
+    private DataSet dataSet;
     private DataSetController dataSetController = new DataSetController();
     private ConfigurationController configurationController = new ConfigurationController();
     private ChangeConfigurationMenuController changeConfigurationMenuController = new ChangeConfigurationMenuController();
@@ -82,11 +81,15 @@ public class DataSetMenuController extends MenuController {
     @FXML
     private TableColumn tableColumn_AllName;
     @FXML
+    private TableColumn tableColumn_AllOwner;
+    @FXML
     private TableColumn tableColumn_AllActive;
     @FXML
     private TableColumn<ConfigurationEntity, Number> tableColumn_MyNumber;
     @FXML
     private TableColumn tableColumn_MyName;
+    @FXML
+    private TableColumn tableColumn_MyOwner;
     @FXML
     private TableColumn tableColumn_MyActive;
     @FXML
@@ -109,19 +112,19 @@ public class DataSetMenuController extends MenuController {
         list.add("Disabled");
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
-        response = dataSetController.getDatasetById(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName("dataset").get("id").toString()));
+        response = dataSetController.getDataSetById(Constant.getAuth(),
+                Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-            dataset = new Dataset().fromJson(response);
-            if (dataset.isActive()) {
-                dataset.setVisibleActive(true);
-            } else {
-                dataset.setVisibleActive(false);
-            }
-            textField_Name.setText(dataset.getName());
-            textArea_Description.setText(dataset.getDescription());
-            if (dataset.isActive()) {
+            dataSet = new DataSet().fromJson(response);
+//            if (dataSet.isActive()) {
+//                dataSet.setVisibleActive(true);
+//            } else {
+//                dataSet.setVisibleActive(false);
+//            }
+            textField_Name.setText(dataSet.getName());
+            textArea_Description.setText(dataSet.getDescription());
+            if (dataSet.isActive()) {
                 choiceBox_Activate.setValue(list.get(0));
             } else {
                 choiceBox_Activate.setValue(list.get(1));
@@ -137,18 +140,18 @@ public class DataSetMenuController extends MenuController {
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
 
-        response = dataSetController.getDatasetObjects(Constant.getAuth(), dataset.getId());
+        response = dataSetController.getDataSetObjects(Constant.getAuth(), dataSet.getId());
         String responseString = Constant.responseToString(response);
         tableView_Object = fillTableFromResponseString(responseString);
 
         allPageIndex = 1;
         allPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllConfiguration").toString());
-        setSettingColumnTable(allPageIndex, tableView_AllConfiguration, tableColumn_AllNumber, tableColumn_AllName, tableColumn_AllActive);
+        setSettingColumnTable(allPageIndex, tableView_AllConfiguration, tableColumn_AllNumber, tableColumn_AllName, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllConfiguration.setPageFactory(this::createAllPage);
 
         myPageIndex = 1;
         myPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllConfiguration").toString());
-        setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyActive);
+        setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyConfiguration.setPageFactory(this::createMyPage);
 
     }
@@ -168,10 +171,10 @@ public class DataSetMenuController extends MenuController {
     }
 
     private void createPage(int tablePageIndex, boolean allPage, TableView<ConfigurationEntity> tableView,
-                            ObservableList list, Pagination pagination, Label labelCount) {
+                            ObservableList<ConfigurationEntity> list, Pagination pagination, Label labelCount) {
         try {
             response = configurationController.getConfigurationAllPage(Constant.getAuth(),
-                    dataset.getId(), tablePageIndex, objectOnPage, allPage);
+                    dataSet.getId(), tablePageIndex, objectOnPage, allPage);
             list = getOListAfterFillPage(tablePageIndex, response,
                     list, pagination,
                     tableView, labelCount);
@@ -187,13 +190,6 @@ public class DataSetMenuController extends MenuController {
         if (checkStatusCode(statusCode)) {
             configurationPage = new ConfigurationPage().fromJson(response);
             list = FXCollections.observableList(configurationPage.getDatasetConfigurationEntities());
-            for (ConfigurationEntity configurationEntity : configurationPage.getDatasetConfigurationEntities()) {
-                if (configurationEntity.isActive()) {
-                    configurationEntity.setVisibleActive(true);
-                } else {
-                    configurationEntity.setVisibleActive(false);
-                }
-            }
         }
         if (list.isEmpty()) {
             pagination.setPageCount(1);
@@ -206,6 +202,32 @@ public class DataSetMenuController extends MenuController {
         label_Count.setText(String.valueOf(list.size()));
         return list;
     }
+//    public ObservableList getOListAfterFillPage(int pageIndx, HttpResponse response, ObservableList<ConfigurationEntity> list,
+//                                                Pagination pagination, TableView<ConfigurationEntity> tableView, Label label_Count) throws IOException {
+//
+//        statusCode = response.getStatusLine().getStatusCode();
+//        if (checkStatusCode(statusCode)) {
+//            configurationPage = new ConfigurationPage().fromJson(response);
+//            list = FXCollections.observableList(configurationPage.getDatasetConfigurationEntities());
+////            for (ConfigurationEntity configurationEntity : configurationPage.getDatasetConfigurationEntities()) {
+////                if (configurationEntity.isActive()) {
+////                    configurationEntity.setVisibleActive(true);
+////                } else {
+////                    configurationEntity.setVisibleActive(false);
+////                }
+////            }
+//        }
+//        if (list.isEmpty()) {
+//            pagination.setPageCount(1);
+//            pagination.setCurrentPageIndex(1);
+//        } else {
+//            pagination.setPageCount(configurationPage.getNumberOfPages());
+//            pagination.setCurrentPageIndex(pageIndx - 1);
+//        }
+//        tableView.setItems(list);
+//        label_Count.setText(String.valueOf(list.size()));
+//        return list;
+//    }
 
     public void viewConfiguration() throws IOException {
         if (tab_AllConfiguration.isSelected()) {
@@ -216,25 +238,25 @@ public class DataSetMenuController extends MenuController {
             Constant.getMapByName("misc").put("configurationId",
                     tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
         }
-        Constant.getMapByName("dataset").put("name", dataset.getName());
-        Constant.getMapByName("dataset").put("column", dataset.getColumns());
-        windowsController.openNewModalWindow("dataset/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
+        Constant.getMapByName("dataSet").put("name", dataSet.getName());
+        Constant.getMapByName("dataSet").put("column", dataSet.getColumns());
+        windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", true, 870, 540);
     }
 
 
     public void save(ActionEvent event) throws IOException {
-        response = dataSetController.changeDataset(Constant.getAuth(),
-                new Dataset(dataset.getId(), textField_Name.getText(), textArea_Description.getText(), dataset.getColumns()));
+        response = dataSetController.changeDataSet(Constant.getAuth(),
+                new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
         statusCode = response.getStatusLine().getStatusCode();
         if (!checkStatusCode(statusCode)) {
-            getAlert(null, "Don`t save!", Alert.AlertType.ERROR);
+            Constant.getAlert(null, "Don`t save!", Alert.AlertType.ERROR);
         }
-        if (!choiceBox_Activate.getSelectionModel().getSelectedItem().equals(dataset.getVisibleActive())) {
-            response = dataSetController.changeActive(Constant.getAuth(), dataset.getId(), !dataset.isActive());
+        if (!choiceBox_Activate.getSelectionModel().getSelectedItem().equals(dataSet.getVisibleActive())) {
+            response = dataSetController.changeActive(Constant.getAuth(), dataSet.getId(), !dataSet.isActive());
             statusCode = response.getStatusLine().getStatusCode();
             if (!checkStatusCode(statusCode)) {
-                getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
+                Constant.getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
             }
         }
     }
@@ -246,90 +268,15 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void addConfiguration(ActionEvent event) throws IOException {
-        Constant.getMapByName("dataset").put("name", dataset.getName());
-        Constant.getMapByName("dataset").put("column", dataset.getColumns());
-        windowsController.openNewModalWindow("dataset/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
+        Constant.getMapByName("dataSet").put("name", dataSet.getName());
+        Constant.getMapByName("dataSet").put("column", dataSet.getColumns());
+        windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", false, 870, 540);
     }
 
-    public void fillObjectTable(TableView tableView) throws IOException {
-
-//        response = dataSetController.getDatasetObjects(Constant.getAuth(), 289);
-//        String responseString = new BasicResponseHandler().handleResponse(response);
-//        String[] mainContent = responseString.split("\n");
-////        String[] split = null;
-//        ArrayList<String> arrayList = new ArrayList<>();
-//        for(int i = 0; i < 2; i++){
-////        for(int i = 0; i < mainContent.length; i++){
-//            arrayList.add(mainContent[i]);
-//
-//           String[] split = mainContent[i].split(",");
-////            for(int j = 0; j<split.length; j ++) {
-////                TableColumn<String, String> column = new TableColumn<>("")
-////            }
-//            TableColumn<String, String> columnId = new TableColumn<>("ID");
-//            tableView.getColumns().addAll(columnId);
-//            columnId.setCellValueFactory(data -> new SimpleStringProperty(split[0]));
-//            TableColumn<String, String> columnClass = new TableColumn<>("Class");
-//            tableView.getColumns().addAll(columnId);
-//            columnId.setCellValueFactory(data -> new SimpleStringProperty(split[1]));
-//        }
-//        ObservableList<String> details = FXCollections.observableArrayList(arrayList);
-//
-//        tableView.setItems(details);
-//        List<String> list = new ArrayList<>();
-//        list.add("String1");
-//        list.add("String2");
-//        list.add("String3");
-//        list.add("String4");
-//        list.add("String5");
-//        list.add("String6");
-//        ObservableList<String> details = FXCollections.observableArrayList(list);
-//        for(int i = 0; i<list.size(); i++){
-//            TableColumn<String, String> col = new TableColumn<>("Strings"+i);
-//            tableView.getColumns().addAll(col);
-//
-//            col.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-//        }
-//        tableView.setItems(details);
-    }
-
-
-//    public TableView<List<String>> readTabDelimitedFileIntoTable(Path file) throws IOException {
-////        TableView<List<String>> table = new TableView<>();
-//
-//        Files.lines(file).map(line -> line.split(",")).forEach(values -> {
-//            // Add extra columns if necessary:
-//            ArrayList<String> listName = new ArrayList<>();
-//            String[] str = dataset.getColumns().split(",");
-//            for (int i = 0; i < str.length; i++) {
-//                listName.add(str[i]);
-//            }
-//            for (int i = tableView_Object.getColumns().size(); i < values.length; i++) {
-//                TableColumn<List<String>, String> col = new TableColumn<>(listName.get(i));
-//                col.setMinWidth(80);
-//                final int colIndex = i;
-//                col.setCellValueFactory(data -> {
-//                    List<String> rowValues = data.getValue();
-//                    String cellValue;
-//                    if (colIndex < rowValues.size()) {
-//                        cellValue = rowValues.get(colIndex);
-//                    } else {
-//                        cellValue = "";
-//                    }
-//                    return new ReadOnlyStringWrapper(cellValue);
-//                });
-//                tableView_Object.getColumns().add(col);
-//            }
-//            // add row:
-//            tableView_Object.getItems().add(Arrays.asList(values));
-//        });
-//        return tableView_Object;
-//    }
-
     public TableView<List<String>> fillTableFromResponseString(String responseString) {
         ArrayList<String> listName = new ArrayList<>();
-        String[] str = dataset.getColumns().split(",");
+        String[] str = dataSet.getColumns().split(",");
         for (int i = 0; i < str.length; i++) {
             listName.add(str[i]);
         }
@@ -360,17 +307,21 @@ public class DataSetMenuController extends MenuController {
         return tableView_Object;
     }
 
-    public void setSettingColumnTable(int pageIndex, TableView tableView, TableColumn<ConfigurationEntity, Number> columnNumber, TableColumn columnName,
+    public void setSettingColumnTable(int pageIndex, TableView tableView,
+                                      TableColumn<ConfigurationEntity, Number> columnNumber,
+                                      TableColumn columnName,
+                                      TableColumn columnOwner,
                                       TableColumn columnActive) {
         columnNumber.setSortable(false);
         columnNumber.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView.getItems().
                 indexOf(column.getValue()) + 1) + (pageIndex - 1) * objectOnPage));
         columnName.setCellValueFactory(new PropertyValueFactory<ConfigurationEntity, String>("name"));
         columnName.setSortable(false);
+        columnOwner.setCellValueFactory(new PropertyValueFactory<ConfigurationEntity, String>("owner"));
         columnActive.setCellValueFactory(new PropertyValueFactory<ConfigurationEntity, String>("visibleActive"));
         columnActive.setSortable(false);
         tableView.setRowFactory(tv -> {
-            TableRow<Dataset> row = new TableRow<>();
+            TableRow<DataSet> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     try {
@@ -386,38 +337,51 @@ public class DataSetMenuController extends MenuController {
 
     public void activateConfiguration(ActionEvent event) throws IOException {
         if (tab_AllConfiguration.isSelected()) {
-            activateConfiguration(allPageIndex, true, tableView_AllConfiguration,
-                    allConfigurationObservableList, pagination_AllConfiguration, label_AllCount);
+            activateConfiguration(allPageIndex, myPageIndex, true, tableView_AllConfiguration,
+                    tableView_MyConfiguration, allConfigurationObservableList,
+                    myConfigurationObservableList, pagination_AllConfiguration,
+                    pagination_MyConfiguration, label_AllCount, label_MyCount);
         }
         if (tab_MyConfiguration.isSelected()) {
-            activateConfiguration(myPageIndex, false, tableView_MyConfiguration,
-                    myConfigurationObservableList, pagination_MyConfiguration, label_MyCount);
+            activateConfiguration(myPageIndex, allPageIndex, false, tableView_MyConfiguration,
+                    tableView_AllConfiguration, myConfigurationObservableList,
+                    allConfigurationObservableList, pagination_MyConfiguration,
+                    pagination_AllConfiguration, label_MyCount, label_AllCount);
         }
     }
 
-    public void activateConfiguration(int tablePageIndex, boolean allPage, TableView<ConfigurationEntity> tableView,
-                                      ObservableList list, Pagination pagination, Label labelCount) throws IOException {
-        int configId = tableView.getSelectionModel().getSelectedItem().getId();
+    public void activateConfiguration(int firstPageIndex, int secondPageIndex, boolean allPage,
+                                      TableView<ConfigurationEntity> firstTable,
+                                      TableView<ConfigurationEntity> secondTable,
+                                      ObservableList<ConfigurationEntity> firstList,
+                                      ObservableList<ConfigurationEntity> secondList,
+                                      Pagination firstPagination, Pagination secondPagination,
+                                      Label firstCount, Label secondCount) throws IOException {
+        int configId = firstTable.getSelectionModel().getSelectedItem().getId();
         response = configurationController.activateConfiguration(Constant.getAuth(), configId);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-            createPage(tablePageIndex, allPage, tableView, list, pagination, labelCount);
+            createPage(firstPageIndex, allPage, firstTable, firstList,
+                    firstPagination, firstCount);
+            createPage(secondPageIndex, !allPage, secondTable, secondList,
+                    secondPagination, secondCount);
         } else {
             System.out.println(statusCode + " : " + configId);
         }
     }
 
+
     public void deleteConfiguration(ActionEvent event) throws IOException {
         boolean result;
         if (tab_AllConfiguration.isSelected()) {
-            result = questionOkCancel("Do you really want to delete configuration: "
+            result = Constant.questionOkCancel("Do you really want to delete configuration: "
                     + tableView_AllConfiguration.getSelectionModel().getSelectedItem().getName() + "?");
             if (result) {
                 deleteConfiguration(tableView_AllConfiguration);
             }
         }
         if (tab_MyConfiguration.isSelected()) {
-            result = questionOkCancel("Do you really want to delete configuration: "
+            result = Constant.questionOkCancel("Do you really want to delete configuration: "
                     + tableView_MyConfiguration.getSelectionModel().getSelectedItem().getName() + "?");
             if (result) {
                 deleteConfiguration(tableView_MyConfiguration);

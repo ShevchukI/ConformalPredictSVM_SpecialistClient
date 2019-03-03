@@ -1,9 +1,9 @@
-package com.controllers.windows.dataset;
+package com.controllers.windows.dataSet;
 
 import com.controllers.requests.DataSetController;
 import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
-import com.models.Dataset;
+import com.models.DataSet;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
 import com.tools.Constant;
@@ -37,10 +37,10 @@ public class DiagnosticMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private Dataset dataset;
+    private DataSet dataSet;
 //    private ConfigurationEntity configurationEntity;
     private int statusCode;
-    private int datasetId;
+    private int dataSetId;
     private int configurationId;
     private String[] columns;
     private DataSetController dataSetController = new DataSetController();
@@ -97,9 +97,9 @@ public class DiagnosticMenuController extends MenuController {
         textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        datasetId = Integer.parseInt(Constant.getMapByName("dataset").get("id").toString());
+        dataSetId = Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString());
         configurationId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
-        createFields(datasetId);
+        createFields(dataSetId);
     }
 
 
@@ -224,12 +224,12 @@ public class DiagnosticMenuController extends MenuController {
         slider_Significance.setValue(Double.parseDouble(textField_Significance.getText()));
     }
 
-    private void createFields(int datasetId) throws IOException {
-        response = dataSetController.getDatasetById(Constant.getAuth(), datasetId);
+    private void createFields(int dataSetId) throws IOException {
+        response = dataSetController.getDataSetById(Constant.getAuth(), dataSetId);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-            dataset = new Dataset().fromJson(response);
-            columns = dataset.getColumns().split(",");
+            dataSet = new DataSet().fromJson(response);
+            columns = dataSet.getColumns().split(",");
             for (int i = 2; i < columns.length; i++) {
                 Label label = new Label(columns[i]);
                 TextField textField = new TextField();

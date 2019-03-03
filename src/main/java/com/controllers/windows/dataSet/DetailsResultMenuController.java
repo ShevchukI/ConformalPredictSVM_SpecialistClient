@@ -1,15 +1,14 @@
-package com.controllers.windows.dataset;
+package com.controllers.windows.dataSet;
 
 import com.controllers.requests.ConfigurationController;
-import com.controllers.requests.DataSetController;
 import com.controllers.windows.menu.MenuController;
-import com.models.Dataset;
 import com.models.Predict;
 import com.tools.Constant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
  */
 public class DetailsResultMenuController extends MenuController {
 
-
     @Autowired
     HttpResponse response;
 
@@ -37,7 +35,6 @@ public class DetailsResultMenuController extends MenuController {
     private ConfigurationController configurationController = new ConfigurationController();
     private ArrayList<Predict> predictArrayList;
     private ObservableList<Predict> predicts;
-    private DataSetController dataSetController = new DataSetController();
 
     @FXML
     private TextField textField_FileName;
@@ -54,6 +51,10 @@ public class DetailsResultMenuController extends MenuController {
     @FXML
     private TableColumn tableColumn_Credibility;
     @FXML
+    private TableColumn tableColumn_PPositive;
+    @FXML
+    private TableColumn tableColumn_PNegative;
+    @FXML
     private TableColumn tableColumn_AlphaPositive;
     @FXML
     private TableColumn tableColumn_AlphaNegative;
@@ -66,7 +67,7 @@ public class DetailsResultMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         configId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
-        response = configurationController.getDetaildeResult(Constant.getAuth(), configId);
+        response = configurationController.getDetailedResult(Constant.getAuth(), configId);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             predictArrayList = Constant.getPredictListFromJson(response);
@@ -81,6 +82,8 @@ public class DetailsResultMenuController extends MenuController {
         tableColumn_PredictClass.setCellValueFactory(new PropertyValueFactory<Predict, Integer>("predictClass"));
         tableColumn_Confidence.setCellValueFactory(new PropertyValueFactory<Predict, Double>("confidence"));
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, Double>("credibility"));
+        tableColumn_PPositive.setCellValueFactory(new PropertyValueFactory<Predict, Double>("PPositive"));
+        tableColumn_PNegative.setCellValueFactory(new PropertyValueFactory<Predict, Double>("PNegative"));
         tableColumn_AlphaPositive.setCellValueFactory(new PropertyValueFactory<Predict, Double>("alphaPositive"));
         tableColumn_AlphaNegative.setCellValueFactory(new PropertyValueFactory<Predict, Double>("alphaNegative"));
         tableColumn_Parameters.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleParameters"));
@@ -90,7 +93,7 @@ public class DetailsResultMenuController extends MenuController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File file = directoryChooser.showDialog(getNewWindow());
         if (file != null) {
-            textField_FileName.setText(file.getAbsolutePath() + Constant.getMapByName("dataset").get("name"));
+            textField_FileName.setText(file.getAbsolutePath() + Constant.getMapByName("dataSet").get("name"));
         }
     }
 
@@ -98,14 +101,22 @@ public class DetailsResultMenuController extends MenuController {
         getNewWindow().close();
     }
 
-    public void save(ActionEvent event) throws IOException {
-        int datasetId = Integer.parseInt(Constant.getMapByName("dataset").get("id").toString());
-        response = dataSetController.getDatasetById(Constant.getAuth(), datasetId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if(checkStatusCode(statusCode)){
-            Dataset dataset = new Dataset().fromJson(response);
-            String[] column = dataset.getColumns().split(",");
-            Constant.printTableAndMatrix(textField_FileName.getText(), predictArrayList);
+    public void save(ActionEvent event) {
+        if (predictArrayList.size() == 0) {
+            Constant.getAlert(null, "Table is empty!", Alert.AlertType.ERROR);
+        } else {
+            try {
+                Constant.printTableAndMatrix(textField_FileName.getText(), predictArrayList);
+                Constant.getAlert(null, "Data saved in file: " + textField_FileName.getText() + ".xml !",
+                        Alert.AlertType.INFORMATION);
+                getNewWindow().close();
+            } catch (NullPointerException e) {
+                Constant.getAlert(null, "Invalid directory", Alert.AlertType.ERROR);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+//        }
     }
 }

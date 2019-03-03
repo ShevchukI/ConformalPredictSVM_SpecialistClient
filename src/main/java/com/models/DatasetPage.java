@@ -13,14 +13,14 @@ import java.util.List;
  */
 public class DatasetPage {
     private int numberOfPages;
-    private List<Dataset> datasetEntities;
+    private List<DataSet> dataSetEntities;
 
     public DatasetPage() {
     }
 
-    public DatasetPage(int numberOfPages, List<Dataset> datasetEntities) {
+    public DatasetPage(int numberOfPages, List<DataSet> dataSetEntities) {
         this.numberOfPages = numberOfPages;
-        this.datasetEntities = datasetEntities;
+        this.dataSetEntities = dataSetEntities;
     }
 
     public int getNumberOfPages() {
@@ -31,12 +31,12 @@ public class DatasetPage {
         this.numberOfPages = numberOfPages;
     }
 
-    public List<Dataset> getDatasetEntities() {
-        return datasetEntities;
+    public List<DataSet> getDataSetEntities() {
+        return dataSetEntities;
     }
 
-    public void setDatasetEntities(List<Dataset> datasetEntities) {
-        this.datasetEntities = datasetEntities;
+    public void setDataSetEntities(List<DataSet> dataSetEntities) {
+        this.dataSetEntities = dataSetEntities;
     }
 
     public DatasetPage fromJson(HttpResponse response) throws IOException {

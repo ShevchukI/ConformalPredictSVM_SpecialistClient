@@ -97,7 +97,6 @@ public class ConfigurationController extends MainController {
             request = new HttpGet(getUrl() + "/configuration/all/" + datasetId + "/" + page + "/" + objectOnPage);
         } else {
             request = new HttpGet(getUrl() + "/configuration/all/" + datasetId + "/" + page + "/" + objectOnPage + "/specialist");
-
         }
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
@@ -173,7 +172,7 @@ public class ConfigurationController extends MainController {
         return response;
     }
 
-    public HttpResponse getDetaildeResult(String[] authorization, int configId) throws IOException {
+    public HttpResponse getDetailedResult(String[] authorization, int configId) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl() + "/result/general/" + configId+"/configuration_result");

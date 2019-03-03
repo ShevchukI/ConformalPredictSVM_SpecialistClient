@@ -21,23 +21,12 @@ public class ConfigurationEntity {
     private int probability;
     private double testPart;
     private boolean active;
-    private String visibleActive;
     private SVMParameter svmParameter;
     private SVMParameter kernelParameter;
-    private Dataset datasetEntity;
-    private Specialist specialistEntity;
+    private DataSet dataSetEntity;
+    private SpecialistEntity specialistEntity;
 
     public ConfigurationEntity() {
-    }
-
-    public ConfigurationEntity(int id, String name, boolean active, String visibleActive,
-                               Dataset datasetEntity, Specialist specialistEntity) {
-        this.id = id;
-//        this.name = name;
-        this.active = active;
-        this.visibleActive = visibleActive;
-        this.datasetEntity = datasetEntity;
-        this.specialistEntity = specialistEntity;
     }
 
     public int getId() {
@@ -128,20 +117,26 @@ public class ConfigurationEntity {
         this.active = active;
     }
 
-    public String getVisibleActive() {
-        return visibleActive;
-    }
 
-    public void setVisibleActive(String visibleActive) {
-        this.visibleActive = visibleActive;
-    }
-    public void setVisibleActive(Boolean active) {
-        if(active) {
-            this.visibleActive = "Enabled";
+    public String getVisibleActive() {
+        if (this.isActive()) {
+            return "Enabled";
         } else {
-            this.visibleActive = "Disabled";
+            return "Disabled";
         }
     }
+
+//    public void setVisibleActive(String visibleActive) {
+//        this.visibleActive = visibleActive;
+//    }
+//
+//    public void setVisibleActive(Boolean active) {
+//        if(active) {
+//            this.visibleActive = "Enabled";
+//        } else {
+//            this.visibleActive = "Disabled";
+//        }
+//    }
 
     public void setSvmParameter(SVMParameter svmParameter) {
         this.svmParameter = svmParameter;
@@ -151,20 +146,24 @@ public class ConfigurationEntity {
         this.kernelParameter = kernelParameter;
     }
 
-    public Dataset getDatasetEntity() {
-        return datasetEntity;
+    public DataSet getDataSetEntity() {
+        return dataSetEntity;
     }
 
-    public void setDatasetEntity(Dataset datasetEntity) {
-        this.datasetEntity = datasetEntity;
+    public void setDataSetEntity(DataSet dataSetEntity) {
+        this.dataSetEntity = dataSetEntity;
     }
 
-    public Specialist getSpecialistEntity() {
+    public SpecialistEntity getSpecialistEntity() {
         return specialistEntity;
     }
 
-    public void setSpecialistEntity(Specialist specialistEntity) {
+    public void setSpecialistEntity(SpecialistEntity specialistEntity) {
         this.specialistEntity = specialistEntity;
+    }
+
+    public String getOwner(){
+        return specialistEntity.getName() + " " + specialistEntity.getSurname();
     }
 
     public ConfigurationEntity fromJson(HttpResponse response) throws IOException {

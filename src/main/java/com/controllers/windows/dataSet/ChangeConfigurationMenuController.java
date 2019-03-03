@@ -1,4 +1,4 @@
-package com.controllers.windows.dataset;
+package com.controllers.windows.dataSet;
 
 import com.controllers.requests.ConfigurationController;
 import com.controllers.requests.SVMParameterController;
@@ -49,7 +49,7 @@ public class ChangeConfigurationMenuController extends MenuController {
     private List<ConfusionMatrixRow> confusionMatrixRowList = new ArrayList<ConfusionMatrixRow>();
     private ObservableList<ConfusionMatrixRow> confusionMatrixRowObservableList = FXCollections.observableArrayList();
     @FXML
-    private Label label_DatasetName;
+    private Label label_DataSetName;
     @FXML
     private TextField textField_Name;
     @FXML
@@ -97,8 +97,8 @@ public class ChangeConfigurationMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
             if (Constant.getInstance().getLifecycleService().isRunning()) {
-                Constant.getMapByName("dataset").remove("name");
-                Constant.getMapByName("dataset").remove("column");
+                Constant.getMapByName("dataSet").remove("name");
+                Constant.getMapByName("dataSet").remove("column");
                 Constant.getMapByName("misc").remove("configurationId");
                 Constant.getInstance().getLifecycleService().shutdown();
             }
@@ -106,7 +106,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         this.change = change;
-        label_DatasetName.setText(Constant.getMapByName("dataset").get("name").toString());
+        label_DataSetName.setText(Constant.getMapByName("dataSet").get("name").toString());
         response = new SVMParameterController().getAllKernel(Constant.getAuth());
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
@@ -158,7 +158,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         textField_C.disableProperty().bind(radioButton_CSVC.selectedProperty().not());
         textField_NU.disableProperty().bind(radioButton_NUSVC.selectedProperty().not());
 
-        columnCount = Constant.getCountSplitString(Constant.getMapByName("dataset").get("column").toString(), ",") - 2;
+        columnCount = Constant.getCountSplitString(Constant.getMapByName("dataSet").get("column").toString(), ",") - 2;
 
         textField_Gamma.setText(String.valueOf(Constant.getSvmGamma(columnCount)));
 
@@ -195,11 +195,12 @@ public class ChangeConfigurationMenuController extends MenuController {
                 return;
             }
             response = configurationController.createConfiguration(Constant.getAuth(),
-                    Integer.parseInt(Constant.getMapByName("dataset").get("id").toString()),
+                    Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString()),
                     configuration);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 configId = Integer.parseInt(Constant.responseToString(response));
+                Constant.getMapByName("misc").put("configurationId", configId);
             }
 
         } else {
@@ -275,9 +276,9 @@ public class ChangeConfigurationMenuController extends MenuController {
         response = configurationController.changeConfiguration(Constant.getAuth(), configuration, configId);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-            getAlert(null, "Configuration saved!", Alert.AlertType.INFORMATION);
-            windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
-                    dataSetMenuController, "Dataset menu", 800, 640);
+            Constant.getAlert(null, "Configuration saved!", Alert.AlertType.INFORMATION);
+            windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
+                    dataSetMenuController, "DataSet menu", 800, 640);
             getNewWindow().close();
         }
     }
@@ -288,7 +289,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             return;
         }
 //        response = configurationController.createConfiguration(Constant.getAuth(),
-//                Integer.parseInt(Constant.getMapByName("dataset").get("id").toString()),
+//                Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString()),
 //                configuration);
         response = configurationController.changeConfiguration(Constant.getAuth(), configuration, configId);
         statusCode = response.getStatusLine().getStatusCode();
@@ -341,12 +342,12 @@ public class ChangeConfigurationMenuController extends MenuController {
     public void cancel(ActionEvent event) throws IOException {
         boolean result;
         if (!change) {
-            result = questionOkCancel("Do you really want to leave without save configuration?");
+            result = Constant.questionOkCancel("Do you really want to leave without save configuration?");
             if (result) {
                 response = configurationController.deleteConfiguration(Constant.getAuth(), configId);
                 if (checkStatusCode(statusCode)) {
-                    windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
-                            dataSetMenuController, "Dataset menu", 800, 640);
+                    windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
+                            dataSetMenuController, "DataSet menu", 800, 640);
                     getNewWindow().close();
                 }
             } else {
@@ -357,8 +358,8 @@ public class ChangeConfigurationMenuController extends MenuController {
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 response = configurationController.startGenerateConfiguration(Constant.getAuth(), configId);
-                windowsController.openWindowResizable("dataset/dataSetMenu", getStage(),
-                        dataSetMenuController, "Dataset menu", 800, 640);
+                windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
+                        dataSetMenuController, "DataSet menu", 800, 640);
                 getNewWindow().close();
             }
         }
@@ -411,12 +412,12 @@ public class ChangeConfigurationMenuController extends MenuController {
     }
 
     public void diagnosticSingleObject(ActionEvent event) throws IOException {
-        windowsController.openNewModalWindow("dataset/diagnosticMenu", getNewWindow(), diagnosticMenuController,
+        windowsController.openNewModalWindow("dataSet/diagnosticMenu", getNewWindow(), diagnosticMenuController,
                 "Diagnostic object", 670, 500);
     }
 
     public void showDetails(ActionEvent event) throws IOException {
-        windowsController.openNewResizableModalWindow("dataset/detailsResultMenu", getNewWindow(), diagnosticMenuController,
+        windowsController.openNewResizableModalWindow("dataSet/detailsResultMenu", getNewWindow(), diagnosticMenuController,
                 "Details", 670, 500);
     }
 }
