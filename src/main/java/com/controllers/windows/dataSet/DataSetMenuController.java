@@ -21,11 +21,14 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,9 +51,13 @@ public class DataSetMenuController extends MenuController {
     private int objectOnPage = 30;
     private int allPageIndex;
     private int myPageIndex;
+    private String dataSetObject;
     private ObservableList<ConfigurationEntity> allConfigurationObservableList;
     private ObservableList<ConfigurationEntity> myConfigurationObservableList;
     private ConfigurationPage configurationPage;
+    private File file;
+    private File fileBuf;
+    private ArrayList<String> filterList = new ArrayList<String>();
 
     @FXML
     private MenuBarController menuBarController;
@@ -100,16 +107,37 @@ public class DataSetMenuController extends MenuController {
     private Label label_AllCount;
     @FXML
     private Label label_MyCount;
+    @FXML
+    private AnchorPane anchorPane_Table;
+    @FXML
+    private Button button_Change;
+    @FXML
+    private StackPane stackPane_Change;
+    @FXML
+    private TextField textField_FileName;
+    @FXML
+    private Button button_Choose;
+    @FXML
+    private TextArea textArea_Content;
+    @FXML
+    private Button button_Ok;
+    @FXML
+    private Button button_Cancel;
+    @FXML
+    private TextArea textArea_Error;
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
             Constant.getInstance().getLifecycleService().shutdown();
         });
+        changePane(false);
         setStage(stage);
         menuBarController.init(this);
         List<String> list = new ArrayList<String>();
         list.add("Enabled");
         list.add("Disabled");
+        filterList.add("*.csv");
+        filterList.add("*.txt");
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
         response = dataSetController.getDataSetById(Constant.getAuth(),
@@ -141,8 +169,8 @@ public class DataSetMenuController extends MenuController {
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
 
         response = dataSetController.getDataSetObjects(Constant.getAuth(), dataSet.getId());
-        String responseString = Constant.responseToString(response);
-        tableView_Object = fillTableFromResponseString(responseString);
+        dataSetObject = Constant.responseToString(response);
+        tableView_Object = fillTableFromString(dataSetObject);
 
         allPageIndex = 1;
         allPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllConfiguration").toString());
@@ -153,6 +181,7 @@ public class DataSetMenuController extends MenuController {
         myPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllConfiguration").toString());
         setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyConfiguration.setPageFactory(this::createMyPage);
+
 
     }
 
@@ -259,6 +288,11 @@ public class DataSetMenuController extends MenuController {
                 Constant.getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
             }
         }
+        response = dataSetController.addObjectsToDataSet(Constant.getAuth(), fileBuf, dataSet.getId());
+        statusCode = response.getStatusLine().getStatusCode();
+        if (!checkStatusCode(statusCode)) {
+            Constant.getAlert(null, "Objects don`t saved!", Alert.AlertType.ERROR);
+        }
     }
 
 
@@ -274,19 +308,19 @@ public class DataSetMenuController extends MenuController {
                 "Add configuration", false, 870, 540);
     }
 
-    public TableView<List<String>> fillTableFromResponseString(String responseString) {
+    public TableView<List<String>> fillTableFromString(String string) {
         ArrayList<String> listName = new ArrayList<>();
         String[] str = dataSet.getColumns().split(",");
         for (int i = 0; i < str.length; i++) {
             listName.add(str[i]);
         }
-        String[] lines = responseString.split("\n");
+        String[] lines = string.split("\n");
         for (String line : lines) {
             // Add extra columns if necessary:
             String[] content = line.split(",");
             for (int i = tableView_Object.getColumns().size(); i < content.length; i++) {
                 TableColumn<List<String>, String> col = new TableColumn<>(listName.get(i));
-                col.setMinWidth(80);
+                col.setMinWidth(listName.get(i).length() * 10);
                 final int colIndex = i;
                 col.setCellValueFactory(data -> {
                     List<String> rowValues = data.getValue();
@@ -398,6 +432,158 @@ public class DataSetMenuController extends MenuController {
                     pagination_AllConfiguration, label_AllCount);
             createPage(myPageIndex, false, tableView_MyConfiguration, myConfigurationObservableList,
                     pagination_MyConfiguration, label_MyCount);
+        }
+    }
+
+    public void tablePaneActivity(boolean activity) {
+        tableView_Object.setDisable(!activity);
+        anchorPane_Table.setDisable(!activity);
+        anchorPane_Table.setVisible(activity);
+        button_Change.setDisable(!activity);
+        button_Change.setVisible(activity);
+    }
+
+    public void changePaneActivity(boolean activity) {
+        stackPane_Change.setDisable(!activity);
+        stackPane_Change.setVisible(activity);
+        textField_FileName.setDisable(!activity);
+        textField_FileName.setVisible(activity);
+        button_Choose.setDisable(!activity);
+        button_Choose.setVisible(activity);
+        textArea_Content.setDisable(!activity);
+        textArea_Content.setVisible(activity);
+        button_Ok.setDisable(!activity);
+        button_Ok.setVisible(activity);
+        button_Cancel.setDisable(!activity);
+        button_Cancel.setVisible(activity);
+    }
+
+    public void changePane(boolean activity) {
+        tablePaneActivity(!activity);
+        changePaneActivity(activity);
+    }
+
+    public void changeDataSetObject(ActionEvent event) {
+        changePane(true);
+        textArea_Content.clear();
+        textArea_Content.setText(dataSetObject);
+    }
+
+    public void ok(ActionEvent event) throws IOException {
+        int error = 0;
+        textArea_Error.setStyle("-fx-border-color: inherit");
+        textArea_Error.clear();
+        textArea_Error.setVisible(false);
+        String fileName = "C:\\qwwww.txt";
+        fileBuf = new File(fileName);
+        FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
+
+        String[] mainContent = textArea_Content.getText().split("\n");
+        textArea_Content.clear();
+        String[][] content = new String[mainContent.length][3];
+        for (int i = 0; i < mainContent.length; i++) {
+            String[] split = mainContent[i].split(",");
+            content[i][0] = split[0];
+            content[i][1] = mainContent[i].substring(split[0].length() + 1, mainContent[i].length());
+            content[i][2] = split[1];
+            if (!checkObjectLength(tableView_Object.getColumns().size(), content[i][0] + "," + content[i][1])) {
+                error++;
+            }
+            if (!checkObjectClass(content, i)) {
+                error++;
+            }
+        }
+        for (int i = 0; i < mainContent.length; i++) {
+            for (int j = i + 1; j < mainContent.length; j++) {
+                if (content[i][1].equals(content[j][1])) {
+                    content[j][0] = null;
+                }
+            }
+            if (content[i][0] != null) {
+                textArea_Content.appendText(content[i][0] + "," + content[i][1] + "\n");
+                writer.write(content[i][0] + "," + content[i][1] + "\r\n");
+            }
+        }
+        writer.flush();
+        writer.close();
+        if (error != 0) {
+            textArea_Error.setStyle("-fx-border-color: red");
+            textArea_Error.setStyle("-fx-text-fill: red");
+            textArea_Error.setVisible(true);
+        } else {
+            tableView_Object.getItems().clear();
+            tableView_Object = fillTableFromString(textArea_Content.getText());
+            tableView_Object.refresh();
+            dataSetObject = textArea_Content.getText();
+            changePane(false);
+        }
+    }
+
+    public void cancel(ActionEvent event) {
+        changePane(false);
+    }
+
+    public boolean checkObjectLength(int columnsCount, String object) {
+        String[] obj = object.split(",");
+        if (columnsCount > obj.length) {
+            textArea_Error.appendText("Object error! Object [" + object + "] lacks " + (columnsCount - obj.length) + "  feature!\n");
+            return false;
+        } else if (columnsCount < obj.length) {
+            textArea_Error.appendText("Object error! Object [" + object + "] have " + (obj.length - columnsCount) + " excessive feature!\n");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean checkObjectClass(String[][] content, int i) {
+        if (!content[i][2].equals("1") && !content[i][2].equals("-1")) {
+            textArea_Error.appendText("Class error! Current: " + content[i][2] + " needed: 1 or -1:\n"
+                    + "Object: " + content[i][0] + "," + content[i][1] + ";\n");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void chooseFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Files", filterList);
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        try {
+            file = fileChooser.showOpenDialog(getNewWindow());
+            if (fileChooser != null) {
+                textField_FileName.setText(file.getAbsolutePath());
+            }
+        } catch (IllegalStateException e1) {
+            System.out.println("File not chosen! Application crash!");
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+        if (textField_FileName.getText() != null) {
+            fillUpData(textField_FileName.getText());
+        }
+    }
+
+    public void fillUpData(ActionEvent event) {
+        fillUpData(textField_FileName.getText());
+    }
+
+    public void fillUpData(String fileName) {
+        try {
+            FileReader input = new FileReader(fileName);
+            BufferedReader bufRead = new BufferedReader(input);
+            String line;
+            while ((line = bufRead.readLine()) != null) {
+                textArea_Content.appendText(line + "\n");
+            }
+        } catch (FileNotFoundException e1) {
+            textArea_Error.appendText("File not found!");
+            textArea_Error.setStyle("-fx-border-color: red");
+            textArea_Error.setStyle("-fx-text-fill: red");
+            textArea_Error.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -38,23 +38,20 @@ public abstract class MenuController {
     }
 
     public boolean checkStatusCode(int statusCode) {
-        Alert alert = new Alert(Alert.AlertType.NONE);
         switch (statusCode) {
             case 200:
                 return true;
             case 201:
                 return true;
             case 401:
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Unauthorized: login or password incorrect!");
-                alert.setContentText("Error code: " + statusCode);
-                alert.showAndWait();
+                Constant.getAlert("Unauthorized: login or password incorrect!",
+                        "Error code: " + statusCode, Alert.AlertType.ERROR);
                 return false;
+            case 404:
+                Constant.getAlert("Error!", String.valueOf(statusCode), Alert.AlertType.ERROR);
             case 504:
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText("Connection to the server is missing!");
-                alert.setContentText("Error code: " + statusCode);
-                alert.showAndWait();
+                Constant.getAlert("Connection to the server is missing!",
+                        "Error code: " + statusCode, Alert.AlertType.ERROR);
                 return false;
             default:
                 return false;

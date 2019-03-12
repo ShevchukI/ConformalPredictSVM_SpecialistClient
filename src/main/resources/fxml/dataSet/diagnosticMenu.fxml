@@ -50,7 +50,7 @@
                         <TableColumn maxWidth="268.0" minWidth="260.0" prefWidth="268.0" text="Result">
                            <columns>
                               <TableColumn fx:id="tableColumn_Class" editable="false" maxWidth="143.0" minWidth="143.0" prefWidth="143.0" sortable="false" text="Class" />
-                              <TableColumn fx:id="tableColumn_Credibility" maxWidth="125.0" minWidth="117.0" prefWidth="125.0" text="Credibility" />
+                              <TableColumn fx:id="tableColumn_Credibility" maxWidth="125.0" minWidth="117.0" prefWidth="125.0" text="Confidence" />
                            </columns>
                         </TableColumn>
                      </columns>

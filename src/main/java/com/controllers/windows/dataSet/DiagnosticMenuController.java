@@ -38,13 +38,12 @@ public class DiagnosticMenuController extends MenuController {
     HttpResponse response;
 
     private DataSet dataSet;
-//    private ConfigurationEntity configurationEntity;
+    //    private ConfigurationEntity configurationEntity;
     private int statusCode;
     private int dataSetId;
     private int configurationId;
     private String[] columns;
     private DataSetController dataSetController = new DataSetController();
-//    private ConfigurationController configurationController = new ConfigurationController();
     private IllnessController illnessController = new IllnessController();
     private List<Predict> predictList = new ArrayList<>();
     private ObservableList<Predict> predicts;
@@ -118,7 +117,6 @@ public class DiagnosticMenuController extends MenuController {
             if (i != columns.length - 1) {
                 parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
             }
-
         }
         if (checkBox_Significance.isSelected()) {
             parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
@@ -147,24 +145,24 @@ public class DiagnosticMenuController extends MenuController {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
                                 if (predict.getPredictClass() != 0) {
-                                    if (predict.getRealClass() == predict.getPredictClass()) {
-                                        switch (predict.getPredictClass()) {
-                                            case 1:
-                                                predict.setVisibleClass("Positive");
-                                                break;
-                                            case -1:
-                                                predict.setVisibleClass("Negative");
-                                                break;
-                                            default:
-                                                break;
-                                        }
-//                                        predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
-//                                        predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
-                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
-                                    } else {
-                                        predict.setVisibleClass("Uncertain");
-                                        predict.setVisibleConfidence("");
-                                    }
+//                                    if (predict.getRealClass() == predict.getPredictClass()) {
+//                                        switch (predict.getPredictClass()) {
+//                                            case 1:
+//                                                predict.setVisibleClass("Positive");
+//                                                break;
+//                                            case -1:
+//                                                predict.setVisibleClass("Negative");
+//                                                break;
+//                                            default:
+//                                                break;
+//                                        }
+////                                        predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
+////                                        predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
+////                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+//                                    } else {
+//                                        predict.setVisibleClass("Uncertain");
+//                                        predict.setVisibleConfidence("");
+//                                    }
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
@@ -183,8 +181,6 @@ public class DiagnosticMenuController extends MenuController {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-//                        button_Run.setDisable(false);
                     }
                     button_Run.setDisable(false);
                     button_Ok.setDisable(false);
@@ -208,8 +204,8 @@ public class DiagnosticMenuController extends MenuController {
 //                predicts = FXCollections.observableArrayList(predictList);
 //                tableView_Result.setItems(predicts);
 //                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
-            }
         }
+    }
 
     public void cancel(ActionEvent event) {
         getNewWindow().close();

@@ -11,16 +11,16 @@ import java.util.List;
 /**
  * Created by Admin on 08.02.2019.
  */
-public class DatasetPage {
+public class DataSetPage {
     private int numberOfPages;
-    private List<DataSet> dataSetEntities;
+    private List<DataSet> datasetEntities;
 
-    public DatasetPage() {
+    public DataSetPage() {
     }
 
-    public DatasetPage(int numberOfPages, List<DataSet> dataSetEntities) {
+    public DataSetPage(int numberOfPages, List<DataSet> dataSetEntities) {
         this.numberOfPages = numberOfPages;
-        this.dataSetEntities = dataSetEntities;
+        this.datasetEntities = dataSetEntities;
     }
 
     public int getNumberOfPages() {
@@ -32,17 +32,17 @@ public class DatasetPage {
     }
 
     public List<DataSet> getDataSetEntities() {
-        return dataSetEntities;
+        return datasetEntities;
     }
 
     public void setDataSetEntities(List<DataSet> dataSetEntities) {
-        this.dataSetEntities = dataSetEntities;
+        this.datasetEntities = dataSetEntities;
     }
 
-    public DatasetPage fromJson(HttpResponse response) throws IOException {
+    public DataSetPage fromJson(HttpResponse response) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
-        return new Gson().fromJson(json, DatasetPage.class);
+        return new Gson().fromJson(json, DataSetPage.class);
     }
 
 }

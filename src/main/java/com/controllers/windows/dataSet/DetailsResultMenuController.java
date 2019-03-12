@@ -74,7 +74,7 @@ public class DetailsResultMenuController extends MenuController {
             predicts = FXCollections.observableArrayList(predictArrayList);
             tableView_Results.setItems(predicts);
             for (Predict predict : predictArrayList) {
-                predict.setVisibleParameters(predict.getDatasetObjectsEntity().getParams());
+                predict.setVisibleParameters(predict.getDataSetObjectsEntity().getParams());
             }
         }
         tableColumn_Id.setCellValueFactory(new PropertyValueFactory<Predict, Integer>("id"));

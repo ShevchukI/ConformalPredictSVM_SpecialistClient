@@ -61,7 +61,7 @@ public class RegistrationMenuController extends MenuController {
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
-                windowsController.openWindow("specialistEntity/loginMenu", getStage(), loginMenuController,
+                windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
                         "Login menu", 350, 190);
             }
         }

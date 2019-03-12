@@ -6,6 +6,8 @@ import org.apache.http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * Created by Admin on 22.02.2019.
@@ -20,7 +22,7 @@ public class Predict {
     private double credibility;
     private double alphaPositive;
     private double alphaNegative;
-    private DatasetObject datasetObjectsEntity;
+    private DataSetObject dataSetObjectsEntity;
     private String visibleClass;
     private String visibleCredibility;
     private String visibleConfidence;
@@ -101,9 +103,9 @@ public class Predict {
         this.credibility = credibility;
     }
 
-    public String getVisibleConfidence() {
-        return visibleConfidence;
-    }
+//    public String getVisibleConfidence() {
+//        return visibleConfidence;
+//    }
 
     public void setVisibleConfidence(String visibleConfidence) {
         this.visibleConfidence = visibleConfidence;
@@ -126,12 +128,27 @@ public class Predict {
     }
 
     public String getVisibleClass() {
-        return visibleClass;
+        if (getRealClass() == getPredictClass()) {
+            switch (getPredictClass()) {
+                case 1:
+                    return "Positive";
+                case -1:
+                    return "Negative";
+                default:
+                    break;
+            }
+        }
+        return "Uncertain";
+
     }
 
-    public void setVisibleClass(String visibleClass) {
-        this.visibleClass = visibleClass;
-    }
+//    public String getVisibleClass() {
+//        return visibleClass;
+//    }
+//
+//    public void setVisibleClass(String visibleClass) {
+//        this.visibleClass = visibleClass;
+//    }
 
     public String getVisibleCredibility() {
         return visibleCredibility;
@@ -141,12 +158,12 @@ public class Predict {
         this.visibleCredibility = visibleCredibility;
     }
 
-    public DatasetObject getDatasetObjectsEntity() {
-        return datasetObjectsEntity;
+    public DataSetObject getDataSetObjectsEntity() {
+        return dataSetObjectsEntity;
     }
 
-    public void setDatasetObjectsEntity(DatasetObject datasetObjectsEntity) {
-        this.datasetObjectsEntity = datasetObjectsEntity;
+    public void setDataSetObjectsEntity(DataSetObject dataSetObjectsEntity) {
+        this.dataSetObjectsEntity = dataSetObjectsEntity;
     }
 
     public String getVisibleParameters() {
@@ -161,5 +178,10 @@ public class Predict {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         String json = reader.readLine();
         return new Gson().fromJson(json, Predict.class);
+    }
+
+    public String getVisibleConfidence() {
+        NumberFormat formatter = new DecimalFormat("#00.00");
+        return String.valueOf(formatter.format(getConfidence())) + "%";
     }
 }

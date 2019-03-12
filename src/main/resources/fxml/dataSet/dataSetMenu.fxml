@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -14,6 +15,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="662.0" prefWidth="935.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.DataSetMenuController">
@@ -31,10 +33,10 @@
             <TextField fx:id="textField_Name" layoutX="106.0" layoutY="10.0" prefHeight="31.0" prefWidth="380.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="10.0" />
             <Label layoutX="17.0" layoutY="52.0" text="Description:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="52.0" />
             <TextArea fx:id="textArea_Description" layoutX="110.0" layoutY="52.0" prefHeight="70.0" prefWidth="380.0" wrapText="true" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="52.0" />
-            <Button layoutX="14.0" layoutY="179.0" mnemonicParsing="false" onAction="#addConfiguration" prefHeight="26.0" prefWidth="63.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" />
-            <Button fx:id="button_View" layoutX="100.0" layoutY="179.0" mnemonicParsing="false" onAction="#viewConfiguration" prefHeight="26.0" prefWidth="63.0" text="View" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="179.0" />
-            <Button fx:id="button_Delete" layoutX="421.0" layoutY="179.0" mnemonicParsing="false" onAction="#deleteConfiguration" prefHeight="26.0" prefWidth="63.0" text="Delete" textFill="RED" AnchorPane.topAnchor="179.0" />
-            <TabPane layoutX="14.0" layoutY="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="225.0">
+            <Button layoutX="14.0" layoutY="179.0" minWidth="80.0" mnemonicParsing="false" onAction="#addConfiguration" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="179.0" />
+            <Button fx:id="button_View" layoutX="110.0" layoutY="179.0" minWidth="80.0" mnemonicParsing="false" onAction="#viewConfiguration" text="View" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="179.0" />
+            <Button fx:id="button_Delete" layoutX="440.0" layoutY="179.0" minWidth="80.0" mnemonicParsing="false" onAction="#deleteConfiguration" text="Delete" textFill="RED" AnchorPane.topAnchor="179.0" />
+            <TabPane layoutX="14.0" layoutY="225.0" prefHeight="405.0" prefWidth="520.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="225.0">
                <tabs>
                   <Tab fx:id="tab_AllConfiguration" closable="false" text="All configuration">
                      <content>
@@ -96,15 +98,48 @@
                   </Tab>
                </tabs>
             </TabPane>
-            <Button layoutX="180.0" layoutY="179.0" mnemonicParsing="false" onAction="#save" prefHeight="26.0" prefWidth="63.0" text="Save" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="179.0" />
+            <Button layoutX="205.0" layoutY="179.0" minWidth="80.0" mnemonicParsing="false" onAction="#save" text="Save" AnchorPane.leftAnchor="205.0" AnchorPane.topAnchor="179.0" />
             <Button layoutX="552.0" layoutY="445.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="26.0" prefWidth="63.0" text="Back" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
             <Label layoutX="17.0" layoutY="136.0" prefHeight="18.0" prefWidth="60.0" text="Activate:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="135.0" />
             <ChoiceBox fx:id="choiceBox_Activate" layoutX="110.0" layoutY="132.0" prefHeight="26.0" prefWidth="135.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="130.0" />
-            <TableView fx:id="tableView_Object" layoutX="526.0" layoutY="8.0" prefHeight="481.0" prefWidth="320.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="526.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy></TableView>
-            <Button fx:id="button_Activate" layoutX="268.0" layoutY="179.0" mnemonicParsing="false" onAction="#activateConfiguration" text="Activate config" />
+            <Button fx:id="button_Activate" layoutX="300.0" layoutY="179.0" mnemonicParsing="false" onAction="#activateConfiguration" text="Activate config" />
+            <StackPane fx:id="stackPane_Table" layoutX="535.0" prefHeight="550.0" prefWidth="400.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="535.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="anchorPane_Table" visible="false">
+                     <children>
+                        <TableView fx:id="tableView_Object" prefHeight="481.0" prefWidth="320.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
+                        <Button fx:id="button_Change" minWidth="80.0" mnemonicParsing="false" onAction="#changeDataSetObject" text="Change" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <StackPane fx:id="stackPane_Change" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <AnchorPane fx:id="anchorPane_Change" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="2.0" text="File:" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0" />
+                              <TextField fx:id="textField_FileName" layoutX="60.0" layoutY="-1.0" onAction="#fillUpData" prefHeight="31.0" prefWidth="270.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="10.0" />
+                              <Button fx:id="button_Choose" layoutX="342.0" layoutY="10.0" mnemonicParsing="false" onAction="#chooseFile" text="Choose" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0" />
+                              <SplitPane fx:id="splitPane" dividerPositions="0.9018264840182648" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="60.0">
+                                <items>
+                                  <AnchorPane fx:id="anchorPane_SplitChange" minHeight="50.0" minWidth="0.0">
+                                       <children>
+                                          <TextArea fx:id="textArea_Content" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane fx:id="anchorPane_SplitError" minHeight="50.0" minWidth="0.0">
+                                       <children>
+                                          <TextArea fx:id="textArea_Error" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                              <Button fx:id="button_Ok" minWidth="80.0" mnemonicParsing="false" onAction="#ok" text="Ok" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+                              <Button fx:id="button_Cancel" minWidth="80.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="14.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </StackPane>
+               </children>
+            </StackPane>
          </children>
       </AnchorPane>
    </center>

@@ -4,7 +4,7 @@ import com.controllers.requests.DataSetController;
 import com.controllers.windows.dataSet.AddDataSetMenuController;
 import com.controllers.windows.dataSet.DataSetMenuController;
 import com.models.DataSet;
-import com.models.DatasetPage;
+import com.models.DataSetPage;
 import com.tools.Constant;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -35,7 +35,7 @@ public class MainMenuController extends MenuController {
     private DataSetController dataSetController = new DataSetController();
     private DataSetMenuController dataSetMenuController = new DataSetMenuController();
     private int statusCode;
-    private DatasetPage datasetPage;
+    private DataSetPage dataSetPage;
     private int objectOnPage = 30;
     private int allPageIndex;
     private int myPageIndex;
@@ -149,7 +149,8 @@ public class MainMenuController extends MenuController {
             allPageIndex = pageIndex + 1;
             response = dataSetController.getDataSetAllPage(Constant.getAuth(),
                     allPageIndex, objectOnPage);
-            allDataSetObservableList = getOListAfterFillPage(allPageIndex, response, allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
+            allDataSetObservableList = getOListAfterFillPage(allPageIndex, response,
+                    allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -182,9 +183,9 @@ public class MainMenuController extends MenuController {
 
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-            datasetPage = new DatasetPage().fromJson(response);
-            list = FXCollections.observableList(datasetPage.getDataSetEntities());
-            for (DataSet dataSet : datasetPage.getDataSetEntities()) {
+            dataSetPage = new DataSetPage().fromJson(response);
+            list = FXCollections.observableList(dataSetPage.getDataSetEntities());
+            for (DataSet dataSet : dataSetPage.getDataSetEntities()) {
 //                if (dataSet.isActive()) {
 //                    dataSet.setVisibleActive(true);
 //                } else {
@@ -196,7 +197,7 @@ public class MainMenuController extends MenuController {
             pagination.setPageCount(1);
             pagination.setCurrentPageIndex(1);
         } else {
-            pagination.setPageCount(datasetPage.getNumberOfPages());
+            pagination.setPageCount(dataSetPage.getNumberOfPages());
             pagination.setCurrentPageIndex(pageIndx - 1);
         }
         tableView.setItems(list);

@@ -3,17 +3,26 @@ package com.models;
 /**
  * Created by Admin on 08.02.2019.
  */
-public class DatasetObject {
+public class DataSetObject {
     private int id;
+    private int userObjectId;
     private String params;
     private int objectClass;
 
-    public DatasetObject() {
+    public DataSetObject() {
     }
 
-    public DatasetObject(int id, String content) {
+    public DataSetObject(int id, String content) {
         this.id = id;
         this.params = content;
+    }
+
+    public int getUserObjectId() {
+        return userObjectId;
+    }
+
+    public void setUserObjectId(int userObjectId) {
+        this.userObjectId = userObjectId;
     }
 
     public int getId() {
@@ -31,8 +40,6 @@ public class DatasetObject {
     public void setParams(String content) {
         this.params = content;
     }
-
-
 
     public int getObjectClass() {
         return objectClass;

@@ -128,7 +128,7 @@ public class SettingsExcel {
             cell.setCellStyle(styleStandart);
 
             cell = row.createCell(9, CellType.STRING);
-            cell.setCellValue(predicts.get(i).getDatasetObjectsEntity().getParams());
+            cell.setCellValue(predicts.get(i).getDataSetObjectsEntity().getParams());
             cell.setCellStyle(styleStandart);
         }
     }

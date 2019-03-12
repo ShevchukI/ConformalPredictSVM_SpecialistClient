@@ -182,13 +182,15 @@ public class AddDataSetMenuController extends MenuController {
                 if (checkStatusCode(statusCode)) {
                     fileBuf.delete();
                 }
+                Constant.getAlert(null, "Data Set saved!", Alert.AlertType.INFORMATION);
+                windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
+                getNewWindow().close();
             }
-            Constant.getAlert(null, "Data Set saved!", Alert.AlertType.INFORMATION);
+
 //            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //            alert.setHeaderText("DataSet saved!");
 //            alert.showAndWait();
-            windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
-            getNewWindow().close();
+
         }
     }
 
@@ -198,23 +200,6 @@ public class AddDataSetMenuController extends MenuController {
 
     public void fillUpData(ActionEvent event) {
         fillUpData(textField_FileName.getText());
-//        try {
-//            FileReader input = new FileReader((textField_FileName.getText()));
-//            BufferedReader bufRead = new BufferedReader(input);
-//            String line = bufRead.readLine();
-//            textArea_Columns.setText(line);
-//            while ((line = bufRead.readLine()) != null) {
-//                textArea_Content.appendText(line + "\n");
-//            }
-//        } catch (FileNotFoundException e1) {
-//            textArea_Error.appendText("File not found!");
-//            textArea_Error.setStyle("-fx-border-color: red");
-//            textArea_Error.setStyle("-fx-text-fill: red");
-//            textArea_Error.setVisible(true);
-//            System.out.println("file not found!");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void fillUpData(String fileName) {

@@ -31,7 +31,7 @@ public class DataSetController extends MainController {
     public HttpResponse getDataSetAllPage(String[] authorization, int page, int objectOnPage) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataSet/all/" + page + "/" + objectOnPage);
+        HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage);
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
@@ -46,7 +46,7 @@ public class DataSetController extends MainController {
     public HttpResponse getSpecialistDataSetAllPage(String[] authorization, int page, int objectOnPage) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataSet/all/" + page + "/" + objectOnPage + "/specialist");
+        HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage + "/specialist");
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
@@ -61,7 +61,7 @@ public class DataSetController extends MainController {
     public HttpResponse changeActive(String[] authorization, int datasetId, boolean active) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(getUrl() + "/dataSet/" + datasetId + "/activate");
+        HttpPut request = new HttpPut(getUrl() + "/dataset/" + datasetId + "/activate");
         request.addHeader("Authorization", basicAuthPayload);
         request.setHeader("Content-Type", "application/json");
         if (active) {
@@ -83,7 +83,7 @@ public class DataSetController extends MainController {
         String json = new Gson().toJson(dataSet);
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(getUrl() + "/dataSet/");
+        HttpPost request = new HttpPost(getUrl() + "/dataset/");
         request.addHeader("Authorization", basicAuthPayload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(new StringEntity(json));
@@ -100,7 +100,7 @@ public class DataSetController extends MainController {
     public HttpResponse addObjectsToDataSet(String[] authorization, File file, int datasetId) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(getUrl() + "/dataSet/" + datasetId + "/objects");
+        HttpPost request = new HttpPost(getUrl() + "/dataset/" + datasetId + "/objects");
         request.addHeader("Authorization", basicAuthPayload);
         MultipartEntity entity = new MultipartEntity();
         entity.addPart("file", new FileBody(file));
@@ -118,7 +118,7 @@ public class DataSetController extends MainController {
     public HttpResponse getDataSetById(String[] authorization, int datasetId) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataSet/" + datasetId);
+        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId);
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
@@ -134,7 +134,7 @@ public class DataSetController extends MainController {
         String json = new Gson().toJson(dataSet);
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(getUrl() + "/dataSet/" + dataSet.getId());
+        HttpPut request = new HttpPut(getUrl() + "/dataset/" + dataSet.getId());
         request.addHeader("Authorization", basicAuthPayload);
         request.setHeader("Content-Type", "application/json");
         request.setEntity(new StringEntity(json));
@@ -151,7 +151,7 @@ public class DataSetController extends MainController {
     public HttpResponse getDataSetObjects(String[] authorization, int datasetId) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataSet/" + datasetId + "/objects");
+        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId + "/objects");
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
@@ -166,7 +166,7 @@ public class DataSetController extends MainController {
     public HttpResponse deleteDataSet(String[] authorization, int datasetId) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpDelete request = new HttpDelete(getUrl() + "/dataSet/" + datasetId);
+        HttpDelete request = new HttpDelete(getUrl() + "/dataset/" + datasetId);
         request.addHeader("Authorization", basicAuthPayload);
         HttpResponse response = null;
         try {
