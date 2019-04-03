@@ -8,9 +8,22 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="151.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.specialist.LoginMenuController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="208.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.specialist.LoginMenuController">
    <children>
+      <FlowPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label text="Authorization">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets left="110.0" top="14.0" />
+               </FlowPane.margin>
+            </Label>
+         </children>
+      </FlowPane>
       <FlowPane prefHeight="55.0" prefWidth="318.0">
          <children>
             <Label accessibleText="sd" prefHeight="21.0" prefWidth="70.0" text="Login:">
@@ -34,7 +47,7 @@
                   <Insets bottom="10.0" left="10.0" top="10.0" />
                </FlowPane.margin>
             </Label>
-            <PasswordField fx:id="passwordField_Password" prefHeight="26.0" prefWidth="225.0" promptText="mypassword" onAction="#signIn">
+            <PasswordField fx:id="passwordField_Password" onAction="#signIn" prefHeight="26.0" prefWidth="225.0" promptText="mypassword">
                <FlowPane.margin>
                   <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
                </FlowPane.margin>
@@ -50,7 +63,7 @@
                   <Insets bottom="10.0" left="100.0" right="20.0" />
                </FlowPane.margin>
             </Button>
-            <Button fx:id="button_SignUp" mnemonicParsing="false" onAction="#signUp" text="Sign Up">
+            <Button fx:id="button_SignUp" disable="true" mnemonicParsing="false" onAction="#signUp" text="Sign Up">
                <FlowPane.margin>
                   <Insets bottom="10.0" left="20.0" right="20.0" />
                </FlowPane.margin>

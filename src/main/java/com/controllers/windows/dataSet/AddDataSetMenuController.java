@@ -31,11 +31,11 @@ public class AddDataSetMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private DataSetController dataSetController = new DataSetController();
-    private ArrayList<String> filterList = new ArrayList<String>();
+    private DataSetController dataSetController;
+    private ArrayList<String> filterList;
     private File file;
     private int statusCode;
-    private WindowsController windowsController = new WindowsController();
+    private WindowsController windowsController;
 
     @FXML
     private TextField textField_FileName;
@@ -59,9 +59,12 @@ public class AddDataSetMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         menuBarController.init(this);
+        dataSetController = new DataSetController();
+        windowsController = new WindowsController();
         textArea_Error.setEditable(false);
         textArea_Error.setVisible(false);
         textArea_Error.setWrapText(true);
+        filterList = new ArrayList<String>();
         filterList.add("*.csv");
         filterList.add("*.txt");
         textField_FileName.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -69,7 +72,7 @@ public class AddDataSetMenuController extends MenuController {
                 String fileName = file.getName().substring(0, file.getName().length() - 4);
                 textField_DataSetName.setText(fileName);
             } catch (NullPointerException e) {
-                System.out.println("bad name");
+                System.out.println(e);
             }
         });
     }

@@ -4,9 +4,11 @@ import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.SpecialistEntity;
+import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -20,8 +22,8 @@ public class RegistrationMenuController extends MenuController {
     @Autowired
     LoginMenuController loginMenuController;
 
-    private WindowsController windowsController = new WindowsController();
-    private SpecialistController specialistController = new SpecialistController();
+    private WindowsController windowsController;
+    private SpecialistController specialistController;
     private int statusCode;
 
     @FXML
@@ -45,11 +47,26 @@ public class RegistrationMenuController extends MenuController {
     @FXML
     private Tooltip tooltip_ConfirmPassword;
 
-    private Tooltip tooltipError_Name = new Tooltip();
-    private Tooltip tooltipError_Surname = new Tooltip();
-    private Tooltip tooltipError_Login = new Tooltip();
-    private Tooltip tooltipError_Password = new Tooltip();
-    private Tooltip tooltipError_ConfirmPassword = new Tooltip();
+    private Tooltip tooltipError_Name;
+    private Tooltip tooltipError_Surname;
+    private Tooltip tooltipError_Login;
+    private Tooltip tooltipError_Password;
+    private Tooltip tooltipError_ConfirmPassword;
+
+
+    public void initialize(Stage stage){
+        stage.setOnHidden(event -> {
+            Constant.getInstance().getLifecycleService().shutdown();
+        });
+        setStage(stage);
+        windowsController = new WindowsController();
+        specialistController = new SpecialistController();
+        tooltipError_Name = new Tooltip();
+        tooltipError_Surname = new Tooltip();
+        tooltipError_Login = new Tooltip();
+        tooltipError_Password = new Tooltip();
+        tooltipError_ConfirmPassword = new Tooltip();
+    }
 
     public void register(ActionEvent event) throws IOException {
         if (checkRegister()) {
@@ -62,7 +79,9 @@ public class RegistrationMenuController extends MenuController {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
                 windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
-                        "Login menu", 350, 190);
+                        "Login menu", 350, 250);
+            } else if(statusCode == 400){
+                Constant.getAlert(null, "Login already exist!", Alert.AlertType.ERROR);
             }
         }
     }
@@ -87,7 +106,7 @@ public class RegistrationMenuController extends MenuController {
 
     public void returnToLoginMenu() throws IOException {
         windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
-                "Login menu", 350, 190);
+                "Login menu", 350, 350);
     }
 
     public boolean checkRegister() {

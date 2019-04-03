@@ -13,8 +13,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
     <top>
         <VBox>
             <children>
@@ -25,7 +26,12 @@
     <center>
         <AnchorPane prefHeight="395.0" prefWidth="558.0" BorderPane.alignment="CENTER">
          <children>
-            <TabPane layoutX="145.0" layoutY="73.0" prefHeight="359.0" prefWidth="412.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
+            <Label alignment="CENTER" text="Data Set Menu" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TabPane layoutX="145.0" layoutY="115.0" prefHeight="416.0" prefWidth="558.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="115.0">
               <tabs>
                 <Tab fx:id="tab_All" text="All Data Set">
                   <content>
@@ -36,7 +42,7 @@
                                   <TableColumn fx:id="tableColumn_AllNumber" maxWidth="80.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
                                   <TableColumn fx:id="tableColumn_AllName" minWidth="80.0" style="-fx-alignment: CENTER;" text="Name" />
                                   <TableColumn fx:id="tableColumn_AllDescription" minWidth="100.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Description" />
-                                    <TableColumn fx:id="tableColumn_AllOwner" minWidth="77.0" prefWidth="77.0" text="Owner" />
+                                    <TableColumn fx:id="tableColumn_AllOwner" minWidth="77.0" prefWidth="77.0" style="-fx-alignment: CENTER;" text="Owner" />
                                   <TableColumn fx:id="tableColumn_AllActive" maxWidth="109.0" minWidth="80.0" style="-fx-alignment: CENTER;" text="Active" />
                                 </columns>
                                  <columnResizePolicy>
@@ -70,7 +76,7 @@
                                     <TableColumn fx:id="tableColumn_MyNumber" maxWidth="120.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
                                     <TableColumn fx:id="tableColumn_MyName" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Name" />
                                     <TableColumn fx:id="tableColumn_MyDescription" minWidth="80.0" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Description" />
-                                    <TableColumn fx:id="tableColumn_MyOwner" minWidth="80.0" text="Owner" />
+                                    <TableColumn fx:id="tableColumn_MyOwner" minWidth="80.0" style="-fx-alignment: CENTER;" text="Owner" />
                                     <TableColumn fx:id="tableColumn_MyActive" maxWidth="80.0" minWidth="80.0" style="-fx-alignment: CENTER;" text="Active" />
                                  </columns>
                                  <columnResizePolicy>
@@ -96,12 +102,12 @@
                 </Tab>
               </tabs>
             </TabPane>
-            <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="70.0" text="Specialist:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <Label fx:id="label_Name" layoutX="84.0" layoutY="15.0" prefHeight="18.0" prefWidth="460.0" text="placeholder" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <Button layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#addDataSet" prefHeight="26.0" prefWidth="49.0" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="40.0" />
-            <Button fx:id="button_View" layoutX="84.0" layoutY="70.0" mnemonicParsing="false" onAction="#viewDataSet" prefHeight="26.0" prefWidth="70.0" text="View" AnchorPane.leftAnchor="84.0" AnchorPane.topAnchor="40.0" />
-            <Button fx:id="button_ChangeActive" layoutX="169.0" layoutY="70.0" mnemonicParsing="false" onAction="#changeActive" prefHeight="31.0" prefWidth="125.0" text="Change Active" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="40.0" />
-            <Button fx:id="button_Delete" layoutX="479.0" layoutY="40.0" mnemonicParsing="false" onAction="#delete" text="Delete" textFill="RED" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0" />
+            <Label layoutX="14.0" layoutY="38.0" prefHeight="18.0" prefWidth="70.0" text="Specialist:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="38.0" />
+            <Label fx:id="label_Name" layoutX="84.0" layoutY="38.0" prefHeight="18.0" prefWidth="460.0" text="placeholder" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="38.0" />
+            <Button layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#addDataSet" prefHeight="26.0" prefWidth="49.0" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="button_View" layoutX="84.0" layoutY="70.0" mnemonicParsing="false" onAction="#viewDataSet" prefHeight="26.0" prefWidth="70.0" text="View" AnchorPane.leftAnchor="84.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="button_ChangeActive" layoutX="170.0" layoutY="70.0" mnemonicParsing="false" onAction="#changeActive" prefHeight="31.0" prefWidth="125.0" text="Change Active" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="button_Delete" layoutX="481.0" layoutY="70.0" mnemonicParsing="false" onAction="#delete" text="Delete" textFill="RED" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
          </children></AnchorPane>
     </center>
 </BorderPane>

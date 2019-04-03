@@ -14,6 +14,8 @@ import com.tools.Constant;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -42,13 +44,13 @@ public class DataSetMenuController extends MenuController {
     @Autowired
     MainMenuController mainMenuController;
 
-    private WindowsController windowsController = new WindowsController();
+    private WindowsController windowsController;
     private DataSet dataSet;
-    private DataSetController dataSetController = new DataSetController();
-    private ConfigurationController configurationController = new ConfigurationController();
-    private ChangeConfigurationMenuController changeConfigurationMenuController = new ChangeConfigurationMenuController();
+    private DataSetController dataSetController;
+    private ConfigurationController configurationController;
+    private ChangeConfigurationMenuController changeConfigurationMenuController;
     int statusCode;
-    private int objectOnPage = 30;
+    private int objectOnPage;
     private int allPageIndex;
     private int myPageIndex;
     private String dataSetObject;
@@ -57,7 +59,7 @@ public class DataSetMenuController extends MenuController {
     private ConfigurationPage configurationPage;
     private File file;
     private File fileBuf;
-    private ArrayList<String> filterList = new ArrayList<String>();
+    private ArrayList<String> filterList;
 
     @FXML
     private MenuBarController menuBarController;
@@ -125,6 +127,8 @@ public class DataSetMenuController extends MenuController {
     private Button button_Cancel;
     @FXML
     private TextArea textArea_Error;
+    @FXML
+    private MenuItem menuItem_AllChangeActive;
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
@@ -132,6 +136,12 @@ public class DataSetMenuController extends MenuController {
         });
         changePane(false);
         setStage(stage);
+        windowsController = new WindowsController();
+        dataSetController = new DataSetController();
+        configurationController = new ConfigurationController();
+        changeConfigurationMenuController = new ChangeConfigurationMenuController();
+        objectOnPage = 30;
+        filterList = new ArrayList<String>();
         menuBarController.init(this);
         List<String> list = new ArrayList<String>();
         list.add("Enabled");
@@ -141,15 +151,10 @@ public class DataSetMenuController extends MenuController {
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
         response = dataSetController.getDataSetById(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString()));
+                Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString()));
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
             dataSet = new DataSet().fromJson(response);
-//            if (dataSet.isActive()) {
-//                dataSet.setVisibleActive(true);
-//            } else {
-//                dataSet.setVisibleActive(false);
-//            }
             textField_Name.setText(dataSet.getName());
             textArea_Description.setText(dataSet.getDescription());
             if (dataSet.isActive()) {
@@ -161,9 +166,6 @@ public class DataSetMenuController extends MenuController {
         button_Delete.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
-        button_Activate.disableProperty()
-                .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
-                        .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
         button_View.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
@@ -173,15 +175,38 @@ public class DataSetMenuController extends MenuController {
         tableView_Object = fillTableFromString(dataSetObject);
 
         allPageIndex = 1;
-        allPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllConfiguration").toString());
+        allPageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndexAllConfiguration").toString());
         setSettingColumnTable(allPageIndex, tableView_AllConfiguration, tableColumn_AllNumber, tableColumn_AllName, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllConfiguration.setPageFactory(this::createAllPage);
 
         myPageIndex = 1;
-        myPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllConfiguration").toString());
+        myPageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndexAllConfiguration").toString());
         setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyConfiguration.setPageFactory(this::createMyPage);
 
+        choiceBox_Activate.getSelectionModel().selectedIndexProperty().addListener(
+                new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                        if (choiceBox_Activate.getSelectionModel().getSelectedIndex() == 0
+                                && (tableView_AllConfiguration.getSelectionModel().getSelectedItem()!=null)
+                                || tableView_MyConfiguration.getSelectionModel().getSelectedItem()!=null){
+                            button_Activate.setDisable(false);
+                            menuItem_AllChangeActive.setDisable(false);
+                        } else {
+                            menuItem_AllChangeActive.setDisable(true);
+                            button_Activate.setDisable(true);
+                        }
+                    }
+                }
+        );
+        if (choiceBox_Activate.getSelectionModel().getSelectedIndex() == 0){
+            button_Activate.setDisable(false);
+            menuItem_AllChangeActive.setDisable(false);
+        } else {
+            menuItem_AllChangeActive.setDisable(true);
+            button_Activate.setDisable(true);
+        }
 
     }
 
@@ -231,44 +256,18 @@ public class DataSetMenuController extends MenuController {
         label_Count.setText(String.valueOf(list.size()));
         return list;
     }
-//    public ObservableList getOListAfterFillPage(int pageIndx, HttpResponse response, ObservableList<ConfigurationEntity> list,
-//                                                Pagination pagination, TableView<ConfigurationEntity> tableView, Label label_Count) throws IOException {
-//
-//        statusCode = response.getStatusLine().getStatusCode();
-//        if (checkStatusCode(statusCode)) {
-//            configurationPage = new ConfigurationPage().fromJson(response);
-//            list = FXCollections.observableList(configurationPage.getDatasetConfigurationEntities());
-////            for (ConfigurationEntity configurationEntity : configurationPage.getDatasetConfigurationEntities()) {
-////                if (configurationEntity.isActive()) {
-////                    configurationEntity.setVisibleActive(true);
-////                } else {
-////                    configurationEntity.setVisibleActive(false);
-////                }
-////            }
-//        }
-//        if (list.isEmpty()) {
-//            pagination.setPageCount(1);
-//            pagination.setCurrentPageIndex(1);
-//        } else {
-//            pagination.setPageCount(configurationPage.getNumberOfPages());
-//            pagination.setCurrentPageIndex(pageIndx - 1);
-//        }
-//        tableView.setItems(list);
-//        label_Count.setText(String.valueOf(list.size()));
-//        return list;
-//    }
 
     public void viewConfiguration() throws IOException {
         if (tab_AllConfiguration.isSelected()) {
-            Constant.getMapByName("misc").put("configurationId",
+            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId",
                     tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId());
         }
         if (tab_MyConfiguration.isSelected()) {
-            Constant.getMapByName("misc").put("configurationId",
+            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId",
                     tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
         }
-        Constant.getMapByName("dataSet").put("name", dataSet.getName());
-        Constant.getMapByName("dataSet").put("column", dataSet.getColumns());
+        Constant.getMapByName(Constant.getDatasetMapName()).put("name", dataSet.getName());
+        Constant.getMapByName(Constant.getDatasetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", true, 870, 540);
     }
@@ -302,8 +301,8 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void addConfiguration(ActionEvent event) throws IOException {
-        Constant.getMapByName("dataSet").put("name", dataSet.getName());
-        Constant.getMapByName("dataSet").put("column", dataSet.getColumns());
+        Constant.getMapByName(Constant.getDatasetMapName()).put("name", dataSet.getName());
+        Constant.getMapByName(Constant.getDatasetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", false, 870, 540);
     }
@@ -316,10 +315,12 @@ public class DataSetMenuController extends MenuController {
         }
         String[] lines = string.split("\n");
         for (String line : lines) {
-            // Add extra columns if necessary:
             String[] content = line.split(",");
             for (int i = tableView_Object.getColumns().size(); i < content.length; i++) {
                 TableColumn<List<String>, String> col = new TableColumn<>(listName.get(i));
+                if(i == 0){
+                    col.setSortable(false);
+                }
                 col.setMinWidth(listName.get(i).length() * 10);
                 final int colIndex = i;
                 col.setCellValueFactory(data -> {
@@ -335,7 +336,6 @@ public class DataSetMenuController extends MenuController {
                 });
                 tableView_Object.getColumns().add(col);
             }
-            // add row:
             tableView_Object.getItems().add(Arrays.asList(content));
         }
         return tableView_Object;
@@ -370,13 +370,15 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void activateConfiguration(ActionEvent event) throws IOException {
-        if (tab_AllConfiguration.isSelected()) {
+        if (tab_AllConfiguration.isSelected()
+                && tableView_AllConfiguration.getSelectionModel().getSelectedItem()!=null) {
             activateConfiguration(allPageIndex, myPageIndex, true, tableView_AllConfiguration,
                     tableView_MyConfiguration, allConfigurationObservableList,
                     myConfigurationObservableList, pagination_AllConfiguration,
                     pagination_MyConfiguration, label_AllCount, label_MyCount);
         }
-        if (tab_MyConfiguration.isSelected()) {
+        if (tab_MyConfiguration.isSelected()
+                && tableView_MyConfiguration.getSelectionModel().getSelectedItem()!=null) {
             activateConfiguration(myPageIndex, allPageIndex, false, tableView_MyConfiguration,
                     tableView_AllConfiguration, myConfigurationObservableList,
                     allConfigurationObservableList, pagination_MyConfiguration,

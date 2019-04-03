@@ -126,18 +126,6 @@ public class ConfigurationEntity {
         }
     }
 
-//    public void setVisibleActive(String visibleActive) {
-//        this.visibleActive = visibleActive;
-//    }
-//
-//    public void setVisibleActive(Boolean active) {
-//        if(active) {
-//            this.visibleActive = "Enabled";
-//        } else {
-//            this.visibleActive = "Disabled";
-//        }
-//    }
-
     public void setSvmParameter(SVMParameter svmParameter) {
         this.svmParameter = svmParameter;
     }

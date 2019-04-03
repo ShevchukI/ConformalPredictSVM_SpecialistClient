@@ -18,9 +18,14 @@ import java.io.IOException;
  * Created by Admin on 10.01.2019.
  */
 public class WindowsController {
+    private Dimension sSize;
+    private Rectangle2D screenBounds;
 
-    private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    public WindowsController() {
+        sSize = Toolkit.getDefaultToolkit().getScreenSize();
+        screenBounds = Screen.getPrimary().getVisualBounds();
+    }
+
 
     public void start(Stage stage) throws IOException {
         Constant.createInstanceAndMap();
@@ -117,7 +122,7 @@ public class WindowsController {
     }
 
     public void openNewResizableModalWindow(String rootName, Stage stage, MenuController controller,
-                                   String title, int minWidth, int minHeight) throws IOException {
+                                            String title, int minWidth, int minHeight) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/" + rootName + ".fxml"));
         Pane pane = (Pane) loader.load();
         Stage newWindow = new Stage();

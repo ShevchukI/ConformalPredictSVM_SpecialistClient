@@ -145,7 +145,7 @@
       </FlowPane>
       <FlowPane layoutY="169.0" prefHeight="31.0" prefWidth="400.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="453.0" AnchorPane.topAnchor="175.0">
          <children>
-            <Label prefWidth="100.0" text="To test (%):" />
+            <Label prefWidth="100.0" text="Test part:" />
             <TextField fx:id="textField_ToTest" prefHeight="31.0" prefWidth="120.0" text="0.3" />
          </children>
       </FlowPane>

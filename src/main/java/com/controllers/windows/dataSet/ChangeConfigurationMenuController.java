@@ -36,18 +36,18 @@ public class ChangeConfigurationMenuController extends MenuController {
     DiagnosticMenuController diagnosticMenuController;
 
 
-    private WindowsController windowsController = new WindowsController();
-    private ArrayList<SVMParameter> kernelTypes = new ArrayList<>();
-    private ObservableList<SVMParameter> observableKernelTypes = FXCollections.observableArrayList();
-    private ConfigurationController configurationController = new ConfigurationController();
+    private WindowsController windowsController;
+    private ArrayList<SVMParameter> kernelTypes;
+    private ObservableList<SVMParameter> observableKernelTypes;
+    private ConfigurationController configurationController;
     private int statusCode;
     private int columnCount;
     private int configId;
     private int processId;
     private boolean change;
     private Configuration oldConfiguration;
-    private List<ConfusionMatrixRow> confusionMatrixRowList = new ArrayList<ConfusionMatrixRow>();
-    private ObservableList<ConfusionMatrixRow> confusionMatrixRowObservableList = FXCollections.observableArrayList();
+    private List<ConfusionMatrixRow> confusionMatrixRowList;
+    private ObservableList<ConfusionMatrixRow> confusionMatrixRowObservableList;
     @FXML
     private Label label_DataSetName;
     @FXML
@@ -97,16 +97,22 @@ public class ChangeConfigurationMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
             if (Constant.getInstance().getLifecycleService().isRunning()) {
-                Constant.getMapByName("dataSet").remove("name");
-                Constant.getMapByName("dataSet").remove("column");
-                Constant.getMapByName("misc").remove("configurationId");
+                Constant.getMapByName(Constant.getDatasetMapName()).remove("name");
+                Constant.getMapByName(Constant.getDatasetMapName()).remove("column");
+                Constant.getMapByName(Constant.getMiscellaneousMapName()).remove("configurationId");
                 Constant.getInstance().getLifecycleService().shutdown();
             }
         });
         setStage(stage);
         setNewWindow(newWindow);
+        windowsController = new WindowsController();
+        kernelTypes = new ArrayList<>();
+        observableKernelTypes = FXCollections.observableArrayList();
+        configurationController = new ConfigurationController();
+        confusionMatrixRowList = new ArrayList<ConfusionMatrixRow>();
+        confusionMatrixRowObservableList = FXCollections.observableArrayList();
         this.change = change;
-        label_DataSetName.setText(Constant.getMapByName("dataSet").get("name").toString());
+        label_DataSetName.setText(Constant.getMapByName(Constant.getDatasetMapName()).get("name").toString());
         response = new SVMParameterController().getAllKernel(Constant.getAuth());
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
@@ -158,7 +164,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         textField_C.disableProperty().bind(radioButton_CSVC.selectedProperty().not());
         textField_NU.disableProperty().bind(radioButton_NUSVC.selectedProperty().not());
 
-        columnCount = Constant.getCountSplitString(Constant.getMapByName("dataSet").get("column").toString(), ",") - 2;
+        columnCount = Constant.getCountSplitString(Constant.getMapByName(Constant.getDatasetMapName()).get("column").toString(), ",") - 2;
 
         textField_Gamma.setText(String.valueOf(Constant.getSvmGamma(columnCount)));
 
@@ -195,17 +201,17 @@ public class ChangeConfigurationMenuController extends MenuController {
                 return;
             }
             response = configurationController.createConfiguration(Constant.getAuth(),
-                    Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString()),
+                    Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString()),
                     configuration);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 configId = Integer.parseInt(Constant.responseToString(response));
-                Constant.getMapByName("misc").put("configurationId", configId);
+                Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId", configId);
             }
 
         } else {
 
-            configId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
+            configId = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString());
             try {
                 response = configurationController.getConfusionMatrix(Constant.getAuth(), configId);
                 confusionMatrixRowList = new ConfusionMatrixRow().listFromJson(response);
@@ -215,7 +221,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             confusionMatrixRowObservableList.clear();
             confusionMatrixRowObservableList.addAll(confusionMatrixRowList);
             response = configurationController.getConfiguration(Constant.getAuth(),
-                    Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString()));
+                    Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString()));
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 ConfigurationEntity configurationEntity = new ConfigurationEntity().fromJson(response);
@@ -288,18 +294,13 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (configuration == null) {
             return;
         }
-//        response = configurationController.createConfiguration(Constant.getAuth(),
-//                Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString()),
-//                configuration);
         response = configurationController.changeConfiguration(Constant.getAuth(), configuration, configId);
         statusCode = response.getStatusLine().getStatusCode();
         if (checkStatusCode(statusCode)) {
-//            configId = Integer.parseInt(Constant.responseToString(response));
             response = configurationController.startGenerateConfiguration(Constant.getAuth(), configId);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 processId = Integer.parseInt(Constant.responseToString(response));
-//                System.out.println(processId);
                 Thread calculation = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -370,7 +371,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         configuration.setName(textField_Name.getText());
         configuration.setEps(Double.parseDouble(textField_Epsilon.getText()));
         configuration.setKernelParameter(comboBox_KernelType.getSelectionModel().getSelectedItem().getId());
-        if (textField_ToTest.getText().matches("[0][.][0-9]{1,2}")) {
+        if (textField_ToTest.getText().matches("[0][.][0-9]{1,9}")) {
             configuration.setTestPart(Double.parseDouble(textField_ToTest.getText()));
             textField_ToTest.setStyle("-fx-border-color: inherit");
         } else {

@@ -43,9 +43,9 @@ public class DiagnosticMenuController extends MenuController {
     private int dataSetId;
     private int configurationId;
     private String[] columns;
-    private DataSetController dataSetController = new DataSetController();
-    private IllnessController illnessController = new IllnessController();
-    private List<Predict> predictList = new ArrayList<>();
+    private DataSetController dataSetController;
+    private IllnessController illnessController;
+    private List<Predict> predictList;
     private ObservableList<Predict> predicts;
     private Predict predict;
 
@@ -78,6 +78,9 @@ public class DiagnosticMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
+        dataSetController = new DataSetController();
+        illnessController = new IllnessController();
+        predictList = new ArrayList<>();
         stackPane_Table.setVisible(true);
         stackPane_Progress.setVisible(false);
         tableColumn_Class.setSortable(false);
@@ -96,8 +99,8 @@ public class DiagnosticMenuController extends MenuController {
         textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        dataSetId = Integer.parseInt(Constant.getMapByName("dataSet").get("id").toString());
-        configurationId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
+        dataSetId = Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString());
+        configurationId = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString());
         createFields(dataSetId);
     }
 
@@ -145,29 +148,10 @@ public class DiagnosticMenuController extends MenuController {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
                                 if (predict.getPredictClass() != 0) {
-//                                    if (predict.getRealClass() == predict.getPredictClass()) {
-//                                        switch (predict.getPredictClass()) {
-//                                            case 1:
-//                                                predict.setVisibleClass("Positive");
-//                                                break;
-//                                            case -1:
-//                                                predict.setVisibleClass("Negative");
-//                                                break;
-//                                            default:
-//                                                break;
-//                                        }
-////                                        predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
-////                                        predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
-////                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
-//                                    } else {
-//                                        predict.setVisibleClass("Uncertain");
-//                                        predict.setVisibleConfidence("");
-//                                    }
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
                                     tableView_Result.setItems(predicts);
-//                                    stackPane_Table.setVisible(true);
                                     stackPane_Progress.setVisible(false);
                                     tableView_Result.setOpacity(100);
 
@@ -187,23 +171,6 @@ public class DiagnosticMenuController extends MenuController {
                 }
             });
             calculation.start();
-//            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
-//            statusCode = response.getStatusLine().getStatusCode();
-//            System.out.println("Second request: " + statusCode);
-//            if (checkStatusCode(statusCode)) {
-//                Predict predict = new Predict().fromJson(response);
-//                if (predict.getRealClass() == predict.getPredictClass()) {
-//                    predict.setVisibleClass(String.valueOf(predict.getPredictClass()));
-//                    predict.setVisibleCredibility(String.valueOf(predict.getCredibility() * 100) + "%");
-//                } else {
-//                    predict.setVisibleClass("Uncertain");
-//                    predict.setVisibleCredibility("");
-//                }
-//                predictList.clear();
-//                predictList.add(predict);
-//                predicts = FXCollections.observableArrayList(predictList);
-//                tableView_Result.setItems(predicts);
-//                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
         }
     }
 

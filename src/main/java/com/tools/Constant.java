@@ -33,13 +33,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Optional;
 
-/**
- * Created by Admin on 14.02.2019.
- */
+
 public class Constant {
 
     private static final String INSTANCE_NAME = "mainSpecialistInstance";
-    private static final String USER_MAP_NAME = "user";
+    private static final String USER_MAP_NAME = "doctor";
     private static final String DATASET_MAP_NAME = "dataSet";
     private static final String KEY_MAP_NAME = "key";
     private static final String MISCELLANEOUS_MAP_NAME = "misc";
@@ -60,18 +58,12 @@ public class Constant {
         config.addMapConfig(createMapWithName(DATASET_MAP_NAME));
         config.addMapConfig(createMapWithName(KEY_MAP_NAME));
         config.addMapConfig(createMapWithName(MISCELLANEOUS_MAP_NAME));
-//        MapConfig mapConfig = new MapConfig();
-//        mapConfig.setName(USER_MAP_NAME);
         HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
     }
 
     public static HazelcastInstance getInstance() {
         return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME);
     }
-
-//    public static IMap getMap() {
-//        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(USER_MAP_NAME);
-//    }
 
     public static IMap getMapByName(String mapName) {
         return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(mapName);
@@ -86,34 +78,25 @@ public class Constant {
     public static void fillMap(SpecialistEntity specialistEntity, String login, String password) {
         String key = new Encryptor().genRandString();
         String vector = new Encryptor().genRandString();
-        getMapByName("key").put("key", key);
-        getMapByName("key").put("vector", vector);
-        getMapByName("user").put("login", new Encryptor().encrypt(key, vector, login));
-        getMapByName("user").put("password", new Encryptor().encrypt(key, vector, password));
-        getMapByName("user").put("id", specialistEntity.getId());
-        getMapByName("user").put("name", specialistEntity.getName());
-        getMapByName("user").put("surname", specialistEntity.getSurname());
-        getMapByName("misc").put("pageIndexAllDataset", "1");
-        getMapByName("misc").put("pageIndexMyDataset", "1");
-        getMapByName("misc").put("pageIndexAllConfiguration", "1");
-        getMapByName("misc").put("pageIndexMyConfiguration", "1");
-
-//        getMap().put("key", key);
-//        getMap().put("vector", vector);
-//        getMap().put("login", new Encryptor().encrypt(key, vector, login));
-//        getMap().put("password", new Encryptor().encrypt(key, vector, password));
-//        getMap().put("id", specialistEntity.getId());
-//        getMap().put("name", specialistEntity.getName());
-//        getMap().put("surname", specialistEntity.getSurname());
-//        getMap().put("pageIndex", "1");
+        getMapByName(KEY_MAP_NAME).put("key", key);
+        getMapByName(KEY_MAP_NAME).put("vector", vector);
+        getMapByName(USER_MAP_NAME).put("login", new Encryptor().encrypt(key, vector, login));
+        getMapByName(USER_MAP_NAME).put("password", new Encryptor().encrypt(key, vector, password));
+        getMapByName(USER_MAP_NAME).put("id", specialistEntity.getId());
+        getMapByName(USER_MAP_NAME).put("name", specialistEntity.getName());
+        getMapByName(USER_MAP_NAME).put("surname", specialistEntity.getSurname());
+        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllDataset", "1");
+        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyDataset", "1");
+        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllConfiguration", "1");
+        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyConfiguration", "1");
     }
 
     public static String[] getAuth() {
         String[] auth = new String[2];
-        auth[0] = new Encryptor().decrypt(getMapByName("key").get("key").toString(),
-                getMapByName("key").get("vector").toString(), getMapByName("user").get("login").toString());
+        auth[0] = new Encryptor().decrypt(getMapByName(KEY_MAP_NAME).get("key").toString(),
+                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("login").toString());
         auth[1] = new Encryptor().decrypt(getMapByName("key").get("key").toString(),
-                getMapByName("key").get("vector").toString(), getMapByName("user").get("password").toString());
+                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("password").toString());
         return auth;
     }
 
@@ -232,15 +215,15 @@ public class Constant {
         cell.setCellStyle(styleStandart);
 
         cell = row.createCell(2, CellType.STRING);
-        cell.setCellValue("Real: -1\nPredict: 1");
-        cell.setCellStyle(styleStandart);
-
-        cell = row.createCell(3, CellType.STRING);
         cell.setCellValue("Real: 1\nPredict: -1");
         cell.setCellStyle(styleStandart);
 
-        cell = row.createCell(4, CellType.STRING);
+        cell = row.createCell(3, CellType.STRING);
         cell.setCellValue("Real: -1\nPredict: -1");
+        cell.setCellStyle(styleStandart);
+
+        cell = row.createCell(4, CellType.STRING);
+        cell.setCellValue("Real: -1\nPredict: 1");
         cell.setCellStyle(styleStandart);
 
         cell = row.createCell(5, CellType.STRING);
@@ -269,13 +252,20 @@ public class Constant {
                     matrix[5] = matrix[5] + 1;
                 } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == 1) {
                     matrix[0] = matrix[0] + 1;
-                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == 1) {
-                    matrix[1] = matrix[1] + 1;
                 } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == -1) {
-                    matrix[2] = matrix[2] + 1;
+                    matrix[1] = matrix[1] + 1;
                 } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == -1) {
+                    matrix[2] = matrix[2] + 1;
+                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == 1) {
                     matrix[3] = matrix[3] + 1;
                 }
+//                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == 1) {
+//                    matrix[1] = matrix[1] + 1;
+//                } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == -1) {
+//                    matrix[2] = matrix[2] + 1;
+//                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == -1) {
+//                    matrix[3] = matrix[3] + 1;
+//                }
 
             }
             settingsExcel.createCellRowMatrixRegionPrediction(sheet, matrix, significance[i], indentRow + i);
@@ -283,8 +273,8 @@ public class Constant {
 
 //        File file = null;
 //        try {
-         File   file = new File(outputFileName + ".xlsx");
-            file.getParentFile().mkdirs();
+        File file = new File(outputFileName + ".xlsx");
+        file.getParentFile().mkdirs();
 //        } catch (NullPointerException e) {
 //            getAlert(null, "Invalid directory", Alert.AlertType.ERROR);
 //        }
@@ -300,16 +290,36 @@ public class Constant {
         alert.showAndWait();
     }
 
-    public static boolean questionOkCancel(String questionText){
+    public static boolean questionOkCancel(String questionText) {
         ButtonType ok = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert questionOfCancellation = new Alert(Alert.AlertType.WARNING, questionText, ok, cancel);
         questionOfCancellation.setHeaderText(null);
         Optional<ButtonType> result = questionOfCancellation.showAndWait();
-        if(result.orElse(cancel) == ok){
+        if (result.orElse(cancel) == ok) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public static String getInstanceName() {
+        return INSTANCE_NAME;
+    }
+
+    public static String getUserMapName() {
+        return USER_MAP_NAME;
+    }
+
+    public static String getDatasetMapName() {
+        return DATASET_MAP_NAME;
+    }
+
+    public static String getKeyMapName() {
+        return KEY_MAP_NAME;
+    }
+
+    public static String getMiscellaneousMapName() {
+        return MISCELLANEOUS_MAP_NAME;
     }
 }

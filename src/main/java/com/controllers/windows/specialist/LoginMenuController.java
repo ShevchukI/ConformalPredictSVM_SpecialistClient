@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,14 +28,23 @@ public class LoginMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private SpecialistController specialistController = new SpecialistController();
+    private SpecialistController specialistController;
     private int statusCode;
-    private WindowsController windowsController = new WindowsController();
+    private WindowsController windowsController;
 
     @FXML
     private TextField textField_Login;
     @FXML
     private PasswordField passwordField_Password;
+
+    public void initialize(Stage stage){
+        stage.setOnHidden(event -> {
+            Constant.getInstance().getLifecycleService().shutdown();
+        });
+        setStage(stage);
+        specialistController = new SpecialistController();
+        windowsController = new WindowsController();
+    }
 
     public void signIn(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -61,7 +71,7 @@ public class LoginMenuController extends MenuController {
 
     public void signUp(ActionEvent event) throws IOException {
         windowsController.openWindow("specialist/registrationMenu", getStage(),
-                registrationMenuController,"Registration", 408, 400);
+                registrationMenuController,"Registration", 408, 450);
     }
 
 }

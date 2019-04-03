@@ -32,7 +32,7 @@ public class DetailsResultMenuController extends MenuController {
 
     private int statusCode;
     private int configId;
-    private ConfigurationController configurationController = new ConfigurationController();
+    private ConfigurationController configurationController;
     private ArrayList<Predict> predictArrayList;
     private ObservableList<Predict> predicts;
 
@@ -66,6 +66,7 @@ public class DetailsResultMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
+        configurationController = new ConfigurationController();
         configId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
         response = configurationController.getDetailedResult(Constant.getAuth(), configId);
         statusCode = response.getStatusLine().getStatusCode();
@@ -77,7 +78,7 @@ public class DetailsResultMenuController extends MenuController {
                 predict.setVisibleParameters(predict.getDataSetObjectsEntity().getParams());
             }
         }
-        tableColumn_Id.setCellValueFactory(new PropertyValueFactory<Predict, Integer>("id"));
+        tableColumn_Id.setCellValueFactory(new PropertyValueFactory<Predict, Integer>("objectId"));
         tableColumn_RealClass.setCellValueFactory(new PropertyValueFactory<Predict, Integer>("realClass"));
         tableColumn_PredictClass.setCellValueFactory(new PropertyValueFactory<Predict, Integer>("predictClass"));
         tableColumn_Confidence.setCellValueFactory(new PropertyValueFactory<Predict, Double>("confidence"));
@@ -93,7 +94,7 @@ public class DetailsResultMenuController extends MenuController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File file = directoryChooser.showDialog(getNewWindow());
         if (file != null) {
-            textField_FileName.setText(file.getAbsolutePath() + Constant.getMapByName("dataSet").get("name"));
+            textField_FileName.setText(file.getAbsolutePath() + Constant.getMapByName(Constant.getDatasetMapName()).get("name"));
         }
     }
 

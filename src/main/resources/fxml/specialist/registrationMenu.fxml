@@ -6,12 +6,14 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.specialist.RegistrationMenuController">
+
+<AnchorPane prefHeight="425.0" prefWidth="406.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.specialist.RegistrationMenuController">
    <children>
-      <FlowPane prefHeight="43.0" prefWidth="600.0">
+      <FlowPane layoutY="49.0" prefHeight="43.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Name:">
                <FlowPane.margin>
@@ -25,7 +27,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="16.0" prefWidth="600.0">
+      <FlowPane layoutY="110.0" prefHeight="16.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Surname:">
                <FlowPane.margin>
@@ -39,7 +41,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="1.0" prefWidth="600.0">
+      <FlowPane layoutY="171.0" prefHeight="1.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Login:">
                <FlowPane.margin>
@@ -53,7 +55,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="0.0" prefWidth="600.0">
+      <FlowPane layoutY="232.0" prefHeight="0.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Password:">
                <FlowPane.margin>
@@ -67,7 +69,7 @@
             </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="0.0" prefWidth="600.0">
+      <FlowPane layoutY="293.0" prefHeight="0.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label prefHeight="18.0" prefWidth="125.0" text="Confirm password:">
                <FlowPane.margin>
@@ -81,7 +83,7 @@
             </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane prefHeight="40.0" prefWidth="408.0">
+      <FlowPane layoutY="354.0" prefHeight="40.0" prefWidth="408.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button fx:id="button_Register" mnemonicParsing="false" onAction="#register" text="Register">
                <FlowPane.margin>
@@ -101,5 +103,10 @@
             </Button>
          </children>
       </FlowPane>
+      <Label layoutX="136.0" layoutY="14.0" text="Registration" AnchorPane.leftAnchor="136.0" AnchorPane.rightAnchor="135.0" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
-</VBox>
+</AnchorPane>

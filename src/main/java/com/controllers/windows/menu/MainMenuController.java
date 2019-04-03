@@ -21,19 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-/**
- * Created by Admin on 07.01.2019.
- */
+
 public class MainMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
     private ObservableList<DataSet> allDataSetObservableList;
     private ObservableList<DataSet> myDataSetObservableList;
-    private AddDataSetMenuController addDataSetMenuController = new AddDataSetMenuController();
-    private WindowsController windowsController = new WindowsController();
-    private DataSetController dataSetController = new DataSetController();
-    private DataSetMenuController dataSetMenuController = new DataSetMenuController();
+    private AddDataSetMenuController addDataSetMenuController;
+    private WindowsController windowsController;
+    private DataSetController dataSetController;
+    private DataSetMenuController dataSetMenuController;
     private int statusCode;
     private DataSetPage dataSetPage;
     private int objectOnPage = 30;
@@ -55,7 +53,7 @@ public class MainMenuController extends MenuController {
     @FXML
     private TableView<DataSet> tableView_MyDataSetTable;
     @FXML
-    private TableColumn<DataSet, Number> tableColumn_AllNumber = new TableColumn<DataSet, Number>("#");
+    private TableColumn<DataSet, Number> tableColumn_AllNumber;
     @FXML
     private TableColumn tableColumn_AllName;
     @FXML
@@ -65,7 +63,7 @@ public class MainMenuController extends MenuController {
     @FXML
     private TableColumn tableColumn_AllActive;
     @FXML
-    private TableColumn<DataSet, Number> tableColumn_MyNumber = new TableColumn<DataSet, Number>("#");
+    private TableColumn<DataSet, Number> tableColumn_MyNumber;
     @FXML
     private TableColumn tableColumn_MyName;
     @FXML
@@ -92,18 +90,24 @@ public class MainMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        Constant.getMapByName("dataSet").remove("id");
+        addDataSetMenuController = new AddDataSetMenuController();
+        windowsController = new WindowsController();
+        dataSetController = new DataSetController();
+        dataSetMenuController = new DataSetMenuController();
+        tableColumn_AllNumber = new TableColumn<DataSet, Number>("#");
+        tableColumn_MyNumber = new TableColumn<DataSet, Number>("#");
+        Constant.getMapByName(Constant.getDatasetMapName()).remove("id");
         menuBarController.init(this);
 
-        label_Name.setText(Constant.getMapByName("user").get("name").toString() + " " + Constant.getMapByName("user").get("surname").toString());
+        label_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString() + " " + Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
         allPageIndex = 1;
-        allPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllDataset").toString());
+        allPageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndexAllDataset").toString());
         setSettingColumnTable(allPageIndex, tableView_AllDataSetTable, tableColumn_AllNumber,
                 tableColumn_AllName, tableColumn_AllDescription, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllDataSet.setPageFactory(this::createAllPage);
 
         myPageIndex = 1;
-        myPageIndex = Integer.parseInt(Constant.getMapByName("misc").get("pageIndexMyDataset").toString());
+        myPageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndexMyDataset").toString());
         setSettingColumnTable(myPageIndex, tableView_MyDataSetTable, tableColumn_MyNumber,
                 tableColumn_MyName, tableColumn_MyDescription, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyDataSet.setPageFactory(this::createMyPage);
@@ -117,6 +121,7 @@ public class MainMenuController extends MenuController {
         button_Delete.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
+        Constant.getMapByName(Constant.getMiscellaneousMapName()).put("objectOnPage", objectOnPage);
     }
 
 
@@ -131,14 +136,14 @@ public class MainMenuController extends MenuController {
 
     public void viewDataSet() throws IOException {
         if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            Constant.getMapByName("dataSet").put("id", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
-            Constant.getMapByName("misc").put("pageIndexAllDataset", allPageIndex);
+            Constant.getMapByName(Constant.getDatasetMapName()).put("id", tableView_AllDataSetTable.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageIndexAllDataset", allPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            Constant.getMapByName("dataSet").put("id", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
-            Constant.getMapByName("misc").put("pageIndexMyDataset", myPageIndex);
+            Constant.getMapByName(Constant.getDatasetMapName()).put("id", tableView_MyDataSetTable.getSelectionModel().getSelectedItem().getId());
+            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageIndexMyDataset", myPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
@@ -154,6 +159,7 @@ public class MainMenuController extends MenuController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Constant.getMapByName("misc").put("pageIndexAllDataset", allPageIndex);
         return tableView_AllDataSetTable;
     }
 
@@ -166,6 +172,7 @@ public class MainMenuController extends MenuController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Constant.getMapByName(Constant.getMiscellaneousMapName()).put("pageIndexMyDataset", myPageIndex);
         return tableView_MyDataSetTable;
     }
 
@@ -186,11 +193,6 @@ public class MainMenuController extends MenuController {
             dataSetPage = new DataSetPage().fromJson(response);
             list = FXCollections.observableList(dataSetPage.getDataSetEntities());
             for (DataSet dataSet : dataSetPage.getDataSetEntities()) {
-//                if (dataSet.isActive()) {
-//                    dataSet.setVisibleActive(true);
-//                } else {
-//                    dataSet.setVisibleActive(false);
-//                }
             }
         }
         if (list.isEmpty()) {
@@ -214,23 +216,19 @@ public class MainMenuController extends MenuController {
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 firstTable.getSelectionModel().getSelectedItem().setActive(false);
-//                firstTable.getSelectionModel().getSelectedItem().setVisibleActive(false);
             }
-        }
-        else {
+        } else {
             response = dataSetController.changeActive(Constant.getAuth(),
                     firstTable.getSelectionModel().getSelectedItem().getId(),
                     true);
             statusCode = response.getStatusLine().getStatusCode();
             if (checkStatusCode(statusCode)) {
                 firstTable.getSelectionModel().getSelectedItem().setActive(true);
-//                firstTable.getSelectionModel().getSelectedItem().setVisibleActive(true);
             }
         }
         for (DataSet dataSet : secondList) {
             if (dataSet.getId() == id) {
                 dataSet.setActive(firstTable.getSelectionModel().getSelectedItem().isActive());
-//                dataSet.setVisibleActive(firstTable.getSelectionModel().getSelectedItem().isActive());
             }
         }
         firstTable.refresh();

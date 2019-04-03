@@ -1,16 +1,17 @@
 package com.controllers.windows.specialist;
 
+import com.controllers.requests.DataSetController;
 import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
+import com.models.DataSet;
+import com.models.DataSetPage;
 import com.models.SpecialistEntity;
 import com.tools.Constant;
 import com.tools.Encryptor;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,17 @@ public class ChangeInfoMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private Tooltip tooltipError_CurrentPassword = new Tooltip();
-    private Tooltip tooltipError_NewPassword = new Tooltip();
-    private Tooltip tooltipError_ConfirmPassword = new Tooltip();
-    private Tooltip tooltipError_Name = new Tooltip();
-    private Tooltip tooltipError_Surname = new Tooltip();
-    private SpecialistController specialistController = new SpecialistController();
+    private Tooltip tooltipError_CurrentPassword;
+    private Tooltip tooltipError_NewPassword;
+    private Tooltip tooltipError_ConfirmPassword;
+    private Tooltip tooltipError_Name;
+    private Tooltip tooltipError_Surname;
+    private SpecialistController specialistController;
     private int statusCode;
+    private DataSetController dataSetController;
+    private ObservableList<DataSet> allDataSetObservableList;
+    private ObservableList<DataSet> myDataSetObservableList;
+    private DataSetPage dataSetPage;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -61,9 +66,16 @@ public class ChangeInfoMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
+        tooltipError_CurrentPassword = new Tooltip();
+        tooltipError_NewPassword = new Tooltip();
+        tooltipError_ConfirmPassword = new Tooltip();
+        tooltipError_Name = new Tooltip();
+        tooltipError_Surname = new Tooltip();
+        specialistController = new SpecialistController();
+        dataSetController = new DataSetController();
         if (change) {
-            textField_Name.setText(Constant.getMapByName("user").get("name").toString());
-            textField_Surname.setText(Constant.getMapByName("user").get("surname").toString());
+            textField_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
+            textField_Surname.setText(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
         }
     }
 
@@ -77,8 +89,8 @@ public class ChangeInfoMenuController extends MenuController {
                             passwordField_ConfirmPassword.getText());
                     statusCode = response.getStatusLine().getStatusCode();
                     if (checkStatusCode(statusCode)) {
-                        Constant.getMapByName("user").put("password", new Encryptor().encrypt(Constant.getMapByName("key").get("key").toString(),
-                                Constant.getMapByName("key").get("vector").toString(),
+                        Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
+                                Constant.getMapByName(Constant.getKeyMapName()).get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         alert.setContentText("Password changed!");
                         alert.showAndWait();
@@ -108,10 +120,60 @@ public class ChangeInfoMenuController extends MenuController {
             if (checkStatusCode(statusCode)) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
-                Constant.getMapByName("user").put("name", specialistEntity.getName());
-                Constant.getMapByName("user").put("surname", specialistEntity.getSurname());
+                Constant.getMapByName(Constant.getUserMapName()).put("name", specialistEntity.getName());
+                Constant.getMapByName(Constant.getUserMapName()).put("surname", specialistEntity.getSurname());
+                Label label_Name = (Label)getStage().getScene().lookup("#label_Name");
+                label_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString() + " "
+                        + Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
+                getNewWindow().close();
+                TableView<DataSet> tableView_All = (TableView)getStage().getScene().lookup("#tableView_AllDataSetTable");
+                TableView<DataSet> tableView_My = (TableView)getStage().getScene().lookup("#tableView_MyDataSetTable");
+                allDataSetObservableList = tableView_All.getItems();
+                for(DataSet dataSet:allDataSetObservableList){
+                    if(dataSet.getSpecialistEntity().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())){
+                        dataSet.getSpecialistEntity().setName(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
+                        dataSet.getSpecialistEntity().setSurname(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
+                    }
+                }
+//                tableView_All.getItems().clear();
+//                tableView_All.setItems(allDataSetObservableList);
+                tableView_All.refresh();
+
+                myDataSetObservableList = tableView_My.getItems();
+                for(DataSet dataSet:myDataSetObservableList){
+                    if(dataSet.getSpecialistEntity().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())){
+                        dataSet.getSpecialistEntity().setName(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
+                        dataSet.getSpecialistEntity().setSurname(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
+                    }
+                }
+//                tableView_My.getItems().clear();
+//                tableView_My.setItems(myDataSetObservableList);
+                tableView_My.refresh();
+
+//                tableView_All.getItems().clear();
+//                response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
+//                        Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllDataset").toString()),
+//                        Integer.parseInt(Constant.getMapByName("misc").get("objectOnPage").toString()));
+//                statusCode = response.getStatusLine().getStatusCode();
+//                if(checkStatusCode(statusCode)){
+//                    dataSetPage = new DataSetPage().fromJson(response);
+//                    allDataSetObservableList = FXCollections.observableList(dataSetPage.getDataSetEntities());
+//                    tableView_All.setItems(allDataSetObservableList);
+//                    tableView_All.refresh();
+//                }
+//
+//                tableView_My.getItems().clear();
+//                response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
+//                        Integer.parseInt(Constant.getMapByName("misc").get("pageIndexMyDataset").toString()),
+//                        Integer.parseInt(Constant.getMapByName("misc").get("objectOnPage").toString()));
+//                statusCode = response.getStatusLine().getStatusCode();
+//                if(checkStatusCode(statusCode)){
+//                    dataSetPage = new DataSetPage().fromJson(response);
+//                    myDataSetObservableList = FXCollections.observableList(dataSetPage.getDataSetEntities());
+//                    tableView_My.setItems(myDataSetObservableList);
+//                    tableView_My.refresh();
+//                }
             }
-            getNewWindow().close();
         }
     }
 

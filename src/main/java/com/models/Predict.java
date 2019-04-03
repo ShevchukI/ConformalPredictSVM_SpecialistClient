@@ -22,7 +22,7 @@ public class Predict {
     private double credibility;
     private double alphaPositive;
     private double alphaNegative;
-    private DataSetObject dataSetObjectsEntity;
+    private DataSetObject datasetObjectsEntity;
     private String visibleClass;
     private String visibleCredibility;
     private String visibleConfidence;
@@ -103,10 +103,6 @@ public class Predict {
         this.credibility = credibility;
     }
 
-//    public String getVisibleConfidence() {
-//        return visibleConfidence;
-//    }
-
     public void setVisibleConfidence(String visibleConfidence) {
         this.visibleConfidence = visibleConfidence;
     }
@@ -139,16 +135,7 @@ public class Predict {
             }
         }
         return "Uncertain";
-
     }
-
-//    public String getVisibleClass() {
-//        return visibleClass;
-//    }
-//
-//    public void setVisibleClass(String visibleClass) {
-//        this.visibleClass = visibleClass;
-//    }
 
     public String getVisibleCredibility() {
         return visibleCredibility;
@@ -159,11 +146,11 @@ public class Predict {
     }
 
     public DataSetObject getDataSetObjectsEntity() {
-        return dataSetObjectsEntity;
+        return datasetObjectsEntity;
     }
 
     public void setDataSetObjectsEntity(DataSetObject dataSetObjectsEntity) {
-        this.dataSetObjectsEntity = dataSetObjectsEntity;
+        this.datasetObjectsEntity = dataSetObjectsEntity;
     }
 
     public String getVisibleParameters() {
@@ -183,5 +170,9 @@ public class Predict {
     public String getVisibleConfidence() {
         NumberFormat formatter = new DecimalFormat("#00.00");
         return String.valueOf(formatter.format(getConfidence())) + "%";
+    }
+
+    public Integer getObjectId(){
+        return datasetObjectsEntity.getUserObjectId();
     }
 }

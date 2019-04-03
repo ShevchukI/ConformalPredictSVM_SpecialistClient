@@ -20,7 +20,7 @@ public class MenuBarController extends MenuController {
     @Autowired
     ChangeInfoMenuController changeInfoMenuController;
 
-    private WindowsController windowsController = new WindowsController();
+    private WindowsController windowsController;
 
     private MenuController menuController;
 
@@ -28,18 +28,16 @@ public class MenuBarController extends MenuController {
 
     public void init(MenuController menuController) {
         this.menuController = menuController;
+        windowsController = new WindowsController();
     }
 
     public void closeApplication(ActionEvent event) {
-//        menuController.getStage().setOnHiding(event1 -> {
-//           Constant.getInstance().shutdown();
-//        });
         menuController.getStage().close();
     }
 
     public void signOut(ActionEvent event) throws IOException {
         windowsController.openWindow("specialist/loginMenu", menuController.getStage(), loginMenuController,
-                "Login menu", 350, 190);
+                "Login menu", 350, 250);
     }
 
     public void changeName(ActionEvent event) throws IOException {
