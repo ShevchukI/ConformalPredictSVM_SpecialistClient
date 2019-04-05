@@ -2,6 +2,7 @@ package com.controllers.requests;
 
 import com.google.gson.Gson;
 import com.models.DataSet;
+import com.tools.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpStatus;
@@ -28,79 +29,102 @@ import java.util.Base64;
  */
 public class DataSetController extends MainController {
 
-    public HttpResponse getDataSetAllPage(String[] authorization, int page, int objectOnPage) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage);
-        request.addHeader("Authorization", basicAuthPayload);
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+    public static HttpResponse getDataSetAllPage(int page) throws IOException {
+        String url = getUrl() + "/dataset/all/" + page + "/" + Constant.getObjectOnPage();
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage);
+//        request.addHeader("Authorization", basicAuthPayload);
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse getSpecialistDataSetAllPage(String[] authorization, int page, int objectOnPage) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage + "/specialist");
-        request.addHeader("Authorization", basicAuthPayload);
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+    public static HttpResponse getSpecialistDataSetAllPage(int page) throws IOException {
+        String url = getUrl() + "/dataset/all/" + page + "/" + Constant.getObjectOnPage() + "/specialist";
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpGet request = new HttpGet(getUrl() + "/dataset/all/" + page + "/" + objectOnPage + "/specialist");
+//        request.addHeader("Authorization", basicAuthPayload);
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse changeActive(String[] authorization, int datasetId, boolean active) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(getUrl() + "/dataset/" + datasetId + "/activate");
-        request.addHeader("Authorization", basicAuthPayload);
-        request.setHeader("Content-Type", "application/json");
-        if (active) {
-            request.setEntity(new StringEntity("true"));
+    public static HttpResponse changeActive(int dataSetId, boolean active) throws IOException {
+        String url = getUrl() + "/dataset/" + dataSetId + "/activate";
+        String json;
+        if(active){
+            json = "true";
         } else {
-            request.setEntity(new StringEntity("false"));
+            json = "false";
         }
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+        HttpPut request = new HttpPut(url);
+        HttpResponse response = crudEntity(new StringEntity(json), null, null, request, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpPut request = new HttpPut(getUrl() + "/dataset/" + datasetId + "/activate");
+//        request.addHeader("Authorization", basicAuthPayload);
+//        request.setHeader("Content-Type", "application/json");
+//        if (active) {
+//            request.setEntity(new StringEntity("true"));
+//        } else {
+//            request.setEntity(new StringEntity("false"));
+//        }
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse createDataSet(String[] authorization, DataSet dataSet) throws IOException {
+    public static HttpResponse createDataSet(DataSet dataSet) throws IOException {
         String json = new Gson().toJson(dataSet);
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(getUrl() + "/dataset/");
-        request.addHeader("Authorization", basicAuthPayload);
-        request.setHeader("Content-Type", "application/json");
-        request.setEntity(new StringEntity(json));
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+        String url = getUrl() + "/dataset/";
+        HttpPost request = new HttpPost(url);
+        HttpResponse response = crudEntity(new StringEntity(json), request, null, null, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpPost request = new HttpPost(getUrl() + "/dataset/");
+//        request.addHeader("Authorization", basicAuthPayload);
+//        request.setHeader("Content-Type", "application/json");
+//        request.setEntity(new StringEntity(json));
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse addObjectsToDataSet(String[] authorization, File file, int datasetId) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+    public static HttpResponse addObjectsToDataSet(File file, int dataSetId) throws IOException {
+        String url = getUrl() + "/dataset/" + dataSetId + "/objects";
+//        HttpPost request = new HttpPost(url);
+//        MultipartEntity entity = new MultipartEntity();
+//        entity.addPart("file", new FileBody(file));
+//        HttpResponse response = crudEntity(entity, request, null, null, null);
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((Constant.getAuth()[0] + ":" + Constant.getAuth()[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(getUrl() + "/dataset/" + datasetId + "/objects");
+        HttpPost request = new HttpPost(getUrl() + "/dataset/" + dataSetId + "/objects");
         request.addHeader("Authorization", basicAuthPayload);
         MultipartEntity entity = new MultipartEntity();
         entity.addPart("file", new FileBody(file));
@@ -115,66 +139,78 @@ public class DataSetController extends MainController {
         return response;
     }
 
-    public HttpResponse getDataSetById(String[] authorization, int datasetId) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId);
-        request.addHeader("Authorization", basicAuthPayload);
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+    public static HttpResponse getDataSetById(int dataSetId) throws IOException {
+        String url = getUrl() + "/dataset/" + dataSetId;
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId);
+//        request.addHeader("Authorization", basicAuthPayload);
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse changeDataSet(String[] authorization, DataSet dataSet) throws IOException {
+    public static HttpResponse changeDataSet(DataSet dataSet) throws IOException {
         String json = new Gson().toJson(dataSet);
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPut request = new HttpPut(getUrl() + "/dataset/" + dataSet.getId());
-        request.addHeader("Authorization", basicAuthPayload);
-        request.setHeader("Content-Type", "application/json");
-        request.setEntity(new StringEntity(json));
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+        String url = getUrl() + "/dataset/" + dataSet.getId();
+        HttpPut request = new HttpPut(url);
+        HttpResponse response = crudEntity(new StringEntity(json),null, null, request, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpPut request = new HttpPut(getUrl() + "/dataset/" + dataSet.getId());
+//        request.addHeader("Authorization", basicAuthPayload);
+//        request.setHeader("Content-Type", "application/json");
+//        request.setEntity(new StringEntity(json));
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse getDataSetObjects(String[] authorization, int datasetId) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(getUrl() + "/dataset/" + datasetId + "/objects");
-        request.addHeader("Authorization", basicAuthPayload);
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+    public static HttpResponse getDataSetObjects(int dataSetId) throws IOException {
+        String url = getUrl() + "/dataset/" + dataSetId + "/objects";
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpGet request = new HttpGet(getUrl() + "/dataset/" + dataSetId + "/objects");
+//        request.addHeader("Authorization", basicAuthPayload);
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 
-    public HttpResponse deleteDataSet(String[] authorization, int datasetId) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpDelete request = new HttpDelete(getUrl() + "/dataset/" + datasetId);
-        request.addHeader("Authorization", basicAuthPayload);
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-        } catch (HttpHostConnectException e) {
-            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-        }
+    public static HttpResponse deleteDataSet(int dataSetId) throws IOException {
+        String url = getUrl() + "/dataset/" + dataSetId;
+        HttpDelete request = new HttpDelete(url);
+        HttpResponse response = crudEntity(null, null, null, null , request);
+//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpDelete request = new HttpDelete(getUrl() + "/dataset/" + datasetId);
+//        request.addHeader("Authorization", basicAuthPayload);
+//        HttpResponse response = null;
+//        try {
+//            response = client.execute(request);
+//        } catch (HttpHostConnectException e) {
+//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
+//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
+//        }
         return response;
     }
 }

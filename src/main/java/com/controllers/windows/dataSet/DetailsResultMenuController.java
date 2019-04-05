@@ -30,9 +30,7 @@ public class DetailsResultMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private int statusCode;
     private int configId;
-    private ConfigurationController configurationController;
     private ArrayList<Predict> predictArrayList;
     private ObservableList<Predict> predicts;
 
@@ -66,11 +64,10 @@ public class DetailsResultMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
-        configurationController = new ConfigurationController();
         configId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
-        response = configurationController.getDetailedResult(Constant.getAuth(), configId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = ConfigurationController.getDetailedResult(configId);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             predictArrayList = Constant.getPredictListFromJson(response);
             predicts = FXCollections.observableArrayList(predictArrayList);
             tableView_Results.setItems(predicts);
@@ -94,7 +91,7 @@ public class DetailsResultMenuController extends MenuController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File file = directoryChooser.showDialog(getNewWindow());
         if (file != null) {
-            textField_FileName.setText(file.getAbsolutePath() + Constant.getMapByName(Constant.getDatasetMapName()).get("name"));
+            textField_FileName.setText(file.getAbsolutePath() + Constant.getMapByName(Constant.getDataSetMapName()).get("name"));
         }
     }
 

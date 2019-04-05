@@ -39,12 +39,9 @@ public class DiagnosticMenuController extends MenuController {
 
     private DataSet dataSet;
     //    private ConfigurationEntity configurationEntity;
-    private int statusCode;
     private int dataSetId;
     private int configurationId;
     private String[] columns;
-    private DataSetController dataSetController;
-    private IllnessController illnessController;
     private List<Predict> predictList;
     private ObservableList<Predict> predicts;
     private Predict predict;
@@ -78,8 +75,6 @@ public class DiagnosticMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
-        dataSetController = new DataSetController();
-        illnessController = new IllnessController();
         predictList = new ArrayList<>();
         stackPane_Table.setVisible(true);
         stackPane_Progress.setVisible(false);
@@ -99,7 +94,7 @@ public class DiagnosticMenuController extends MenuController {
         textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        dataSetId = Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString());
+        dataSetId = Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString());
         configurationId = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString());
         createFields(dataSetId);
     }
@@ -127,10 +122,9 @@ public class DiagnosticMenuController extends MenuController {
             parameterSingleObject.setSignificance(100);
         }
         System.out.println(parameterSingleObject.toString());
-        response = illnessController.startSingleTest(Constant.getAuth(), configurationId, parameterSingleObject);
-        statusCode = response.getStatusLine().getStatusCode();
-        System.out.println("First request: " + statusCode);
-        if (checkStatusCode(statusCode)) {
+        response = IllnessController.startSingleTest(configurationId, parameterSingleObject);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
             Thread calculation = new Thread(new Runnable() {
                 @Override
@@ -141,10 +135,9 @@ public class DiagnosticMenuController extends MenuController {
 //                    double progress = 0;
                     while (predict.getPredictClass() == 0) {
                         try {
-                            response = illnessController.resultSingleTest(Constant.getAuth(), processId);
-                            statusCode = response.getStatusLine().getStatusCode();
-                            System.out.println("Second request: " + statusCode);
-                            if (statusCode == 200) {
+                            response = IllnessController.resultSingleTest(processId);
+                            setStatusCode(response.getStatusLine().getStatusCode());
+                            if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
                                 if (predict.getPredictClass() != 0) {
@@ -154,7 +147,6 @@ public class DiagnosticMenuController extends MenuController {
                                     tableView_Result.setItems(predicts);
                                     stackPane_Progress.setVisible(false);
                                     tableView_Result.setOpacity(100);
-
                                 }
                                 Thread.sleep(1000 * 1);
                             } else {
@@ -188,9 +180,9 @@ public class DiagnosticMenuController extends MenuController {
     }
 
     private void createFields(int dataSetId) throws IOException {
-        response = dataSetController.getDataSetById(Constant.getAuth(), dataSetId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = DataSetController.getDataSetById(dataSetId);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             dataSet = new DataSet().fromJson(response);
             columns = dataSet.getColumns().split(",");
             for (int i = 2; i < columns.length; i++) {

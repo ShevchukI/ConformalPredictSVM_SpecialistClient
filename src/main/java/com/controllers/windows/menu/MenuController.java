@@ -13,6 +13,7 @@ public abstract class MenuController {
 
     private Stage stage;
     private Stage newWindow;
+    private int statusCode;
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
@@ -49,6 +50,10 @@ public abstract class MenuController {
                 return false;
             case 404:
                 Constant.getAlert("Error!", String.valueOf(statusCode), Alert.AlertType.ERROR);
+                return false;
+            case 423:
+                Constant.getAlert(null, "Not allow!", Alert.AlertType.ERROR);
+                return false;
             case 504:
                 Constant.getAlert("Connection to the server is missing!",
                         "Error code: " + statusCode, Alert.AlertType.ERROR);
@@ -64,4 +69,11 @@ public abstract class MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
     }
 
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 }

@@ -31,10 +31,8 @@ public class AddDataSetMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private DataSetController dataSetController;
     private ArrayList<String> filterList;
     private File file;
-    private int statusCode;
     private WindowsController windowsController;
 
     @FXML
@@ -59,7 +57,6 @@ public class AddDataSetMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         menuBarController.init(this);
-        dataSetController = new DataSetController();
         windowsController = new WindowsController();
         textArea_Error.setEditable(false);
         textArea_Error.setVisible(false);
@@ -174,15 +171,13 @@ public class AddDataSetMenuController extends MenuController {
             DataSet dataSet = new DataSet(textField_DataSetName.getText(),
                     textArea_Description.getText(),
                     textArea_Columns.getText());
-            response = dataSetController.createDataSet(Constant.getAuth(),
-                    dataSet);
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
+            response = DataSetController.createDataSet(dataSet);
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
                 int id = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
-                response = dataSetController.addObjectsToDataSet(Constant.getAuth(),
-                        fileBuf, id);
-                statusCode = response.getStatusLine().getStatusCode();
-                if (checkStatusCode(statusCode)) {
+                response = DataSetController.addObjectsToDataSet(fileBuf, id);
+                setStatusCode(response.getStatusLine().getStatusCode());
+                if (checkStatusCode(getStatusCode())) {
                     fileBuf.delete();
                 }
                 Constant.getAlert(null, "Data Set saved!", Alert.AlertType.INFORMATION);

@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -20,11 +21,11 @@ import java.util.Optional;
 public class RegistrationMenuController extends MenuController {
 
     @Autowired
+    HttpResponse response;
+    @Autowired
     LoginMenuController loginMenuController;
 
     private WindowsController windowsController;
-    private SpecialistController specialistController;
-    private int statusCode;
 
     @FXML
     private TextField textField_Name;
@@ -60,7 +61,6 @@ public class RegistrationMenuController extends MenuController {
         });
         setStage(stage);
         windowsController = new WindowsController();
-        specialistController = new SpecialistController();
         tooltipError_Name = new Tooltip();
         tooltipError_Surname = new Tooltip();
         tooltipError_Login = new Tooltip();
@@ -72,15 +72,16 @@ public class RegistrationMenuController extends MenuController {
         if (checkRegister()) {
             SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText(),
                     textField_Login.getText(), passwordField_ConfirmPassword.getText());
-            statusCode = specialistController.specialistRegistration(specialistEntity);
+            response = SpecialistController.specialistRegistration(specialistEntity);
+            setStatusCode(response.getStatusLine().getStatusCode());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
-            if (checkStatusCode(statusCode)) {
+            if (checkStatusCode(getStatusCode())) {
                 alert.setContentText("Congratulations, you are registered!");
                 alert.showAndWait();
                 windowsController.openWindow("specialist/loginMenu", getStage(), loginMenuController,
                         "Login menu", 350, 250);
-            } else if(statusCode == 400){
+            } else if(getStatusCode() == 400){
                 Constant.getAlert(null, "Login already exist!", Alert.AlertType.ERROR);
             }
         }

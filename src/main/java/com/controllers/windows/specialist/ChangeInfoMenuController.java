@@ -1,10 +1,8 @@
 package com.controllers.windows.specialist;
 
-import com.controllers.requests.DataSetController;
 import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
 import com.models.DataSet;
-import com.models.DataSetPage;
 import com.models.SpecialistEntity;
 import com.tools.Constant;
 import com.tools.Encryptor;
@@ -31,12 +29,8 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_ConfirmPassword;
     private Tooltip tooltipError_Name;
     private Tooltip tooltipError_Surname;
-    private SpecialistController specialistController;
-    private int statusCode;
-    private DataSetController dataSetController;
     private ObservableList<DataSet> allDataSetObservableList;
     private ObservableList<DataSet> myDataSetObservableList;
-    private DataSetPage dataSetPage;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -71,8 +65,6 @@ public class ChangeInfoMenuController extends MenuController {
         tooltipError_ConfirmPassword = new Tooltip();
         tooltipError_Name = new Tooltip();
         tooltipError_Surname = new Tooltip();
-        specialistController = new SpecialistController();
-        dataSetController = new DataSetController();
         if (change) {
             textField_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
             textField_Surname.setText(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
@@ -85,10 +77,9 @@ public class ChangeInfoMenuController extends MenuController {
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    response = specialistController.changePassword(Constant.getAuth(),
-                            passwordField_ConfirmPassword.getText());
-                    statusCode = response.getStatusLine().getStatusCode();
-                    if (checkStatusCode(statusCode)) {
+                    response = SpecialistController.changePassword(passwordField_ConfirmPassword.getText());
+                    setStatusCode(response.getStatusLine().getStatusCode());
+                    if (checkStatusCode(getStatusCode())) {
                         Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
                                 Constant.getMapByName(Constant.getKeyMapName()).get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
@@ -115,9 +106,9 @@ public class ChangeInfoMenuController extends MenuController {
         alert.setHeaderText(null);
         if (checkNames()) {
             SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText());
-            response = specialistController.changeName(Constant.getAuth(), specialistEntity);
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
+            response = SpecialistController.changeName(specialistEntity);
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
                 alert.setContentText("Information changed!");
                 alert.showAndWait();
                 Constant.getMapByName(Constant.getUserMapName()).put("name", specialistEntity.getName());

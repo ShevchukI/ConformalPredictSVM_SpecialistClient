@@ -35,12 +35,9 @@ public class ChangeConfigurationMenuController extends MenuController {
     @Autowired
     DiagnosticMenuController diagnosticMenuController;
 
-
     private WindowsController windowsController;
     private ArrayList<SVMParameter> kernelTypes;
     private ObservableList<SVMParameter> observableKernelTypes;
-    private ConfigurationController configurationController;
-    private int statusCode;
     private int columnCount;
     private int configId;
     private int processId;
@@ -97,8 +94,8 @@ public class ChangeConfigurationMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
             if (Constant.getInstance().getLifecycleService().isRunning()) {
-                Constant.getMapByName(Constant.getDatasetMapName()).remove("name");
-                Constant.getMapByName(Constant.getDatasetMapName()).remove("column");
+                Constant.getMapByName(Constant.getDataSetMapName()).remove("name");
+                Constant.getMapByName(Constant.getDataSetMapName()).remove("column");
                 Constant.getMapByName(Constant.getMiscellaneousMapName()).remove("configurationId");
                 Constant.getInstance().getLifecycleService().shutdown();
             }
@@ -108,14 +105,13 @@ public class ChangeConfigurationMenuController extends MenuController {
         windowsController = new WindowsController();
         kernelTypes = new ArrayList<>();
         observableKernelTypes = FXCollections.observableArrayList();
-        configurationController = new ConfigurationController();
         confusionMatrixRowList = new ArrayList<ConfusionMatrixRow>();
         confusionMatrixRowObservableList = FXCollections.observableArrayList();
         this.change = change;
-        label_DataSetName.setText(Constant.getMapByName(Constant.getDatasetMapName()).get("name").toString());
-        response = new SVMParameterController().getAllKernel(Constant.getAuth());
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        label_DataSetName.setText(Constant.getMapByName(Constant.getDataSetMapName()).get("name").toString());
+        response = new SVMParameterController().getAllKernel();
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             kernelTypes = Constant.fillKernelType(response);
         }
         observableKernelTypes.addAll(kernelTypes);
@@ -164,7 +160,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         textField_C.disableProperty().bind(radioButton_CSVC.selectedProperty().not());
         textField_NU.disableProperty().bind(radioButton_NUSVC.selectedProperty().not());
 
-        columnCount = Constant.getCountSplitString(Constant.getMapByName(Constant.getDatasetMapName()).get("column").toString(), ",") - 2;
+        columnCount = Constant.getCountSplitString(Constant.getMapByName(Constant.getDataSetMapName()).get("column").toString(), ",") - 2;
 
         textField_Gamma.setText(String.valueOf(Constant.getSvmGamma(columnCount)));
 
@@ -200,11 +196,10 @@ public class ChangeConfigurationMenuController extends MenuController {
             if (configuration == null) {
                 return;
             }
-            response = configurationController.createConfiguration(Constant.getAuth(),
-                    Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString()),
-                    configuration);
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
+            response = ConfigurationController.createConfiguration( configuration,
+                    Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
                 configId = Integer.parseInt(Constant.responseToString(response));
                 Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId", configId);
             }
@@ -213,17 +208,16 @@ public class ChangeConfigurationMenuController extends MenuController {
 
             configId = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString());
             try {
-                response = configurationController.getConfusionMatrix(Constant.getAuth(), configId);
+                response = ConfigurationController.getConfusionMatrix(configId);
                 confusionMatrixRowList = new ConfusionMatrixRow().listFromJson(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             confusionMatrixRowObservableList.clear();
             confusionMatrixRowObservableList.addAll(confusionMatrixRowList);
-            response = configurationController.getConfiguration(Constant.getAuth(),
-                    Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString()));
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
+            response = ConfigurationController.getConfiguration(Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString()));
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
                 ConfigurationEntity configurationEntity = new ConfigurationEntity().fromJson(response);
                 if (configurationEntity.getSvmParameter().getId() == 1) {
                     radioButton_CSVC.setSelected(true);
@@ -279,9 +273,9 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (configuration == null) {
             return;
         }
-        response = configurationController.changeConfiguration(Constant.getAuth(), configuration, configId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = ConfigurationController.changeConfiguration(configuration, configId);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Configuration saved!", Alert.AlertType.INFORMATION);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
@@ -294,12 +288,12 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (configuration == null) {
             return;
         }
-        response = configurationController.changeConfiguration(Constant.getAuth(), configuration, configId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
-            response = configurationController.startGenerateConfiguration(Constant.getAuth(), configId);
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
+        response = ConfigurationController.changeConfiguration(configuration, configId);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
+            response = ConfigurationController.startGenerateConfiguration(configId);
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
                 processId = Integer.parseInt(Constant.responseToString(response));
                 Thread calculation = new Thread(new Runnable() {
                     @Override
@@ -308,7 +302,7 @@ public class ChangeConfigurationMenuController extends MenuController {
                         double progress = 0;
                         while (progress != 1) {
                             try {
-                                HttpResponse response = configurationController.getProgress(Constant.getAuth(), processId);
+                                HttpResponse response = ConfigurationController.getProgress(processId);
                                 progress = Double.parseDouble(Constant.responseToString(response)) / 100;
                                 System.out.println(progress);
                                 progressIndicator_Progress.setProgress(progress);
@@ -321,7 +315,7 @@ public class ChangeConfigurationMenuController extends MenuController {
                         }
                         button_Run.setDisable(false);
                         try {
-                            response = configurationController.getConfusionMatrix(Constant.getAuth(), configId);
+                            response = ConfigurationController.getConfusionMatrix(configId);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -345,8 +339,9 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (!change) {
             result = Constant.questionOkCancel("Do you really want to leave without save configuration?");
             if (result) {
-                response = configurationController.deleteConfiguration(Constant.getAuth(), configId);
-                if (checkStatusCode(statusCode)) {
+                response = ConfigurationController.deleteConfiguration(configId);
+                setStatusCode(response.getStatusLine().getStatusCode());
+                if (checkStatusCode(getStatusCode())) {
                     windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                             dataSetMenuController, "DataSet menu", 800, 640);
                     getNewWindow().close();
@@ -355,10 +350,10 @@ public class ChangeConfigurationMenuController extends MenuController {
                 return;
             }
         } else {
-            response = configurationController.changeConfiguration(Constant.getAuth(), oldConfiguration, configId);
-            statusCode = response.getStatusLine().getStatusCode();
-            if (checkStatusCode(statusCode)) {
-                response = configurationController.startGenerateConfiguration(Constant.getAuth(), configId);
+            response = ConfigurationController.changeConfiguration(oldConfiguration, configId);
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (checkStatusCode(getStatusCode())) {
+                response = ConfigurationController.startGenerateConfiguration(configId);
                 windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                         dataSetMenuController, "DataSet menu", 800, 640);
                 getNewWindow().close();

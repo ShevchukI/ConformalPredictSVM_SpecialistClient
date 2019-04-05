@@ -28,8 +28,6 @@ public class LoginMenuController extends MenuController {
     @Autowired
     HttpResponse response;
 
-    private SpecialistController specialistController;
-    private int statusCode;
     private WindowsController windowsController;
 
     @FXML
@@ -42,7 +40,6 @@ public class LoginMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
-        specialistController = new SpecialistController();
         windowsController = new WindowsController();
     }
 
@@ -59,9 +56,9 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            response = specialistController.specialistAuthorization(authorization);
-            statusCode = response.getStatusLine().getStatusCode();
-            if(checkStatusCode(statusCode)){
+            response = SpecialistController.specialistAuthorization(authorization);
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if(checkStatusCode(getStatusCode())){
                 Constant.fillMap(new SpecialistEntity().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
                 windowsController.openWindowResizable("menu/mainMenu", getStage(),
                         mainMenuController, "Main menu", 600, 640);

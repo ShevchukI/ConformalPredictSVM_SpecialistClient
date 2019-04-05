@@ -48,6 +48,7 @@ public class Constant {
     private static final double SVM_NU = 0.5;
     private static final double SVM_EPS = 0.001;
 
+    private static final int OBJECT_ON_PAGE = 30;
 
     public static void createInstanceAndMap() {
         Config config = new Config();
@@ -85,8 +86,8 @@ public class Constant {
         getMapByName(USER_MAP_NAME).put("id", specialistEntity.getId());
         getMapByName(USER_MAP_NAME).put("name", specialistEntity.getName());
         getMapByName(USER_MAP_NAME).put("surname", specialistEntity.getSurname());
-        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllDataset", "1");
-        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyDataset", "1");
+        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllDataSet", "1");
+        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyDataSet", "1");
         getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllConfiguration", "1");
         getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyConfiguration", "1");
     }
@@ -311,7 +312,7 @@ public class Constant {
         return USER_MAP_NAME;
     }
 
-    public static String getDatasetMapName() {
+    public static String getDataSetMapName() {
         return DATASET_MAP_NAME;
     }
 
@@ -321,5 +322,9 @@ public class Constant {
 
     public static String getMiscellaneousMapName() {
         return MISCELLANEOUS_MAP_NAME;
+    }
+
+    public static int getObjectOnPage() {
+        return OBJECT_ON_PAGE;
     }
 }

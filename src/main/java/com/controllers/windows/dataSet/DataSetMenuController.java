@@ -46,10 +46,7 @@ public class DataSetMenuController extends MenuController {
 
     private WindowsController windowsController;
     private DataSet dataSet;
-    private DataSetController dataSetController;
-    private ConfigurationController configurationController;
     private ChangeConfigurationMenuController changeConfigurationMenuController;
-    int statusCode;
     private int objectOnPage;
     private int allPageIndex;
     private int myPageIndex;
@@ -137,8 +134,6 @@ public class DataSetMenuController extends MenuController {
         changePane(false);
         setStage(stage);
         windowsController = new WindowsController();
-        dataSetController = new DataSetController();
-        configurationController = new ConfigurationController();
         changeConfigurationMenuController = new ChangeConfigurationMenuController();
         objectOnPage = 30;
         filterList = new ArrayList<String>();
@@ -150,10 +145,9 @@ public class DataSetMenuController extends MenuController {
         filterList.add("*.txt");
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
-        response = dataSetController.getDataSetById(Constant.getAuth(),
-                Integer.parseInt(Constant.getMapByName(Constant.getDatasetMapName()).get("id").toString()));
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = DataSetController.getDataSetById(Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             dataSet = new DataSet().fromJson(response);
             textField_Name.setText(dataSet.getName());
             textArea_Description.setText(dataSet.getDescription());
@@ -170,7 +164,7 @@ public class DataSetMenuController extends MenuController {
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
 
-        response = dataSetController.getDataSetObjects(Constant.getAuth(), dataSet.getId());
+        response = DataSetController.getDataSetObjects(dataSet.getId());
         dataSetObject = Constant.responseToString(response);
         tableView_Object = fillTableFromString(dataSetObject);
 
@@ -227,8 +221,7 @@ public class DataSetMenuController extends MenuController {
     private void createPage(int tablePageIndex, boolean allPage, TableView<ConfigurationEntity> tableView,
                             ObservableList<ConfigurationEntity> list, Pagination pagination, Label labelCount) {
         try {
-            response = configurationController.getConfigurationAllPage(Constant.getAuth(),
-                    dataSet.getId(), tablePageIndex, objectOnPage, allPage);
+            response = ConfigurationController.getConfigurationAllPage(dataSet.getId(), tablePageIndex, allPage);
             list = getOListAfterFillPage(tablePageIndex, response,
                     list, pagination,
                     tableView, labelCount);
@@ -240,8 +233,8 @@ public class DataSetMenuController extends MenuController {
     public ObservableList getOListAfterFillPage(int pageIndx, HttpResponse response, ObservableList<ConfigurationEntity> list,
                                                 Pagination pagination, TableView<ConfigurationEntity> tableView, Label label_Count) throws IOException {
 
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             configurationPage = new ConfigurationPage().fromJson(response);
             list = FXCollections.observableList(configurationPage.getDatasetConfigurationEntities());
         }
@@ -266,30 +259,29 @@ public class DataSetMenuController extends MenuController {
             Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId",
                     tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
         }
-        Constant.getMapByName(Constant.getDatasetMapName()).put("name", dataSet.getName());
-        Constant.getMapByName(Constant.getDatasetMapName()).put("column", dataSet.getColumns());
+        Constant.getMapByName(Constant.getDataSetMapName()).put("name", dataSet.getName());
+        Constant.getMapByName(Constant.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", true, 870, 540);
     }
 
 
     public void save(ActionEvent event) throws IOException {
-        response = dataSetController.changeDataSet(Constant.getAuth(),
-                new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
-        statusCode = response.getStatusLine().getStatusCode();
-        if (!checkStatusCode(statusCode)) {
+        response = DataSetController.changeDataSet(new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (!checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Don`t save!", Alert.AlertType.ERROR);
         }
         if (!choiceBox_Activate.getSelectionModel().getSelectedItem().equals(dataSet.getVisibleActive())) {
-            response = dataSetController.changeActive(Constant.getAuth(), dataSet.getId(), !dataSet.isActive());
-            statusCode = response.getStatusLine().getStatusCode();
-            if (!checkStatusCode(statusCode)) {
+            response = DataSetController.changeActive(dataSet.getId(), !dataSet.isActive());
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (!checkStatusCode(getStatusCode())) {
                 Constant.getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
             }
         }
-        response = dataSetController.addObjectsToDataSet(Constant.getAuth(), fileBuf, dataSet.getId());
-        statusCode = response.getStatusLine().getStatusCode();
-        if (!checkStatusCode(statusCode)) {
+        response = DataSetController.addObjectsToDataSet(fileBuf, dataSet.getId());
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (!checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Objects don`t saved!", Alert.AlertType.ERROR);
         }
     }
@@ -301,8 +293,8 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void addConfiguration(ActionEvent event) throws IOException {
-        Constant.getMapByName(Constant.getDatasetMapName()).put("name", dataSet.getName());
-        Constant.getMapByName(Constant.getDatasetMapName()).put("column", dataSet.getColumns());
+        Constant.getMapByName(Constant.getDataSetMapName()).put("name", dataSet.getName());
+        Constant.getMapByName(Constant.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", false, 870, 540);
     }
@@ -394,16 +386,17 @@ public class DataSetMenuController extends MenuController {
                                       Pagination firstPagination, Pagination secondPagination,
                                       Label firstCount, Label secondCount) throws IOException {
         int configId = firstTable.getSelectionModel().getSelectedItem().getId();
-        response = configurationController.activateConfiguration(Constant.getAuth(), configId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        response = ConfigurationController.activateConfiguration(configId);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             createPage(firstPageIndex, allPage, firstTable, firstList,
                     firstPagination, firstCount);
             createPage(secondPageIndex, !allPage, secondTable, secondList,
                     secondPagination, secondCount);
-        } else {
-            System.out.println(statusCode + " : " + configId);
         }
+//        else {
+//            System.out.println(statusCode + " : " + configId);
+//        }
     }
 
 
@@ -426,10 +419,10 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void deleteConfiguration(TableView<ConfigurationEntity> tableView) throws IOException {
-        int cofigId = tableView.getSelectionModel().getSelectedItem().getId();
-        response = configurationController.deleteConfiguration(Constant.getAuth(), cofigId);
-        statusCode = response.getStatusLine().getStatusCode();
-        if (checkStatusCode(statusCode)) {
+        int configId = tableView.getSelectionModel().getSelectedItem().getId();
+        response = ConfigurationController.deleteConfiguration(configId);
+        setStatusCode(response.getStatusLine().getStatusCode());
+        if (checkStatusCode(getStatusCode())) {
             createPage(allPageIndex, true, tableView_AllConfiguration, allConfigurationObservableList,
                     pagination_AllConfiguration, label_AllCount);
             createPage(myPageIndex, false, tableView_MyConfiguration, myConfigurationObservableList,

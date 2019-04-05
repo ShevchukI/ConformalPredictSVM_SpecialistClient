@@ -1,6 +1,5 @@
 package com.controllers.windows.menu;
 
-import com.controllers.windows.dataSet.AddDataSetMenuController;
 import com.controllers.windows.specialist.ChangeInfoMenuController;
 import com.controllers.windows.specialist.LoginMenuController;
 import com.tools.Constant;
@@ -23,8 +22,6 @@ public class MenuBarController extends MenuController {
     private WindowsController windowsController;
 
     private MenuController menuController;
-
-    private AddDataSetMenuController addDataSetMenuController;
 
     public void init(MenuController menuController) {
         this.menuController = menuController;
