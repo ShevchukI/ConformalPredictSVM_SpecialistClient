@@ -37,7 +37,7 @@ import java.util.Optional;
 public class Constant {
 
     private static final String INSTANCE_NAME = "mainSpecialistInstance";
-    private static final String USER_MAP_NAME = "doctor";
+    private static final String USER_MAP_NAME = "specialist";
     private static final String DATASET_MAP_NAME = "dataSet";
     private static final String KEY_MAP_NAME = "key";
     private static final String MISCELLANEOUS_MAP_NAME = "misc";

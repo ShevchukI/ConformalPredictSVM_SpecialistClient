@@ -90,8 +90,6 @@ public class MainMenuController extends MenuController {
         addDataSetMenuController = new AddDataSetMenuController();
         windowsController = new WindowsController();
         dataSetMenuController = new DataSetMenuController();
-        tableColumn_AllNumber = new TableColumn<DataSet, Number>("#");
-        tableColumn_MyNumber = new TableColumn<DataSet, Number>("#");
         Constant.getMapByName(Constant.getDataSetMapName()).remove("id");
         menuBarController.init(this);
 

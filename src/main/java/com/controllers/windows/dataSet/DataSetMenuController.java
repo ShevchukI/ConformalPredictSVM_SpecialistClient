@@ -340,7 +340,7 @@ public class DataSetMenuController extends MenuController {
                                       TableColumn columnActive) {
         columnNumber.setSortable(false);
         columnNumber.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Number>((tableView.getItems().
-                indexOf(column.getValue()) + 1) + (pageIndex - 1) * objectOnPage));
+                indexOf(column.getValue()) + 1) + (pageIndex - 1) * Constant.getObjectOnPage()));
         columnName.setCellValueFactory(new PropertyValueFactory<ConfigurationEntity, String>("name"));
         columnName.setSortable(false);
         columnOwner.setCellValueFactory(new PropertyValueFactory<ConfigurationEntity, String>("owner"));

@@ -196,7 +196,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             if (configuration == null) {
                 return;
             }
-            response = ConfigurationController.createConfiguration( configuration,
+            response = ConfigurationController.createConfiguration(configuration,
                     Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
@@ -350,14 +350,16 @@ public class ChangeConfigurationMenuController extends MenuController {
                 return;
             }
         } else {
-            response = ConfigurationController.changeConfiguration(oldConfiguration, configId);
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                response = ConfigurationController.startGenerateConfiguration(configId);
-                windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
-                        dataSetMenuController, "DataSet menu", 800, 640);
-                getNewWindow().close();
+            if(checkOldConfiguration()) {
+                response = ConfigurationController.changeConfiguration(oldConfiguration, configId);
+                setStatusCode(response.getStatusLine().getStatusCode());
+                if (checkStatusCode(getStatusCode())) {
+                    response = ConfigurationController.startGenerateConfiguration(configId);
+                }
             }
+            windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
+                    dataSetMenuController, "DataSet menu", 800, 640);
+            getNewWindow().close();
         }
     }
 
@@ -405,6 +407,23 @@ public class ChangeConfigurationMenuController extends MenuController {
             configuration.setProbability(0);
         }
         return configuration;
+    }
+
+    private boolean checkOldConfiguration() {
+        Configuration configuration = fillConfiguration();
+        if (configuration.getKernelParameter() == oldConfiguration.getKernelParameter()
+                && configuration.getSvmParameter() == oldConfiguration.getSvmParameter()
+                && configuration.getC() == oldConfiguration.getC()
+                && configuration.getDegree() == oldConfiguration.getDegree()
+                && configuration.getEps() == oldConfiguration.getEps()
+                && configuration.getGamma() == oldConfiguration.getGamma()
+                && configuration.getNu() == oldConfiguration.getNu()
+                && configuration.getProbability() == oldConfiguration.getProbability()
+                && configuration.getTestPart() == oldConfiguration.getTestPart()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void diagnosticSingleObject(ActionEvent event) throws IOException {
