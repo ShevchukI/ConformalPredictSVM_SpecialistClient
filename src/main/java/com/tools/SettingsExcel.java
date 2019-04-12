@@ -92,7 +92,7 @@ public class SettingsExcel {
 
             row = sheet.createRow(i + 1);
             cell = row.createCell(0, CellType.NUMERIC);
-            cell.setCellValue(predicts.get(i).getId());
+            cell.setCellValue(predicts.get(i).getDataSetObjectsEntity().getUserObjectId());
             cell.setCellStyle(styleStandart);
 
             cell = row.createCell(1, CellType.NUMERIC);
