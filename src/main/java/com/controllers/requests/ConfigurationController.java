@@ -180,20 +180,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/configuration/" + configId;
         HttpPut request = new HttpPut(url);
         HttpResponse response = crudEntity(new StringEntity(json), null, null, request, null);
-//        String json = new Gson().toJson(configuration);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpPut request = new HttpPut(getUrl() + "/configuration/" + configId);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        request.setHeader("Content-Type", "application/json");
-//        request.setEntity(new StringEntity(json));
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
