@@ -81,7 +81,7 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Class.setSortable(false);
         tableColumn_Class.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleClass"));
         tableColumn_Credibility.setSortable(false);
-        tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleCredibility"));
+        tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
         NumberFormat formatter = new DecimalFormat("#0.00");
         slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
         textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
@@ -141,6 +141,7 @@ public class DiagnosticMenuController extends MenuController {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
                                 if (predict.getPredictClass() != 0) {
+                                    predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
