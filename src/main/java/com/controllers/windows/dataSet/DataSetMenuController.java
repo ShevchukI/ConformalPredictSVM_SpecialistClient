@@ -57,6 +57,7 @@ public class DataSetMenuController extends MenuController {
     private File file;
     private File fileBuf;
     private ArrayList<String> filterList;
+    private boolean changeFile;
 
     @FXML
     private MenuBarController menuBarController;
@@ -201,6 +202,7 @@ public class DataSetMenuController extends MenuController {
             menuItem_AllChangeActive.setDisable(true);
             button_Activate.setDisable(true);
         }
+        changeFile = false;
 
     }
 
@@ -279,11 +281,14 @@ public class DataSetMenuController extends MenuController {
                 Constant.getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
             }
         }
-        response = DataSetController.addObjectsToDataSet(fileBuf, dataSet.getId());
-        setStatusCode(response.getStatusLine().getStatusCode());
-        if (!checkStatusCode(getStatusCode())) {
-            Constant.getAlert(null, "Objects don`t saved!", Alert.AlertType.ERROR);
+        if(changeFile) {
+            response = DataSetController.addObjectsToDataSet(fileBuf, dataSet.getId());
+            setStatusCode(response.getStatusLine().getStatusCode());
+            if (!checkStatusCode(getStatusCode())) {
+                Constant.getAlert(null, "Objects don`t saved!", Alert.AlertType.ERROR);
+            }
         }
+        changeFile = false;
     }
 
 
@@ -510,6 +515,7 @@ public class DataSetMenuController extends MenuController {
             tableView_Object = fillTableFromString(textArea_Content.getText());
             tableView_Object.refresh();
             dataSetObject = textArea_Content.getText();
+            changeFile = true;
             changePane(false);
         }
     }
