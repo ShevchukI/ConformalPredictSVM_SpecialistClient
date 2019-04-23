@@ -16,7 +16,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,9 +25,6 @@ import java.util.ArrayList;
  * Created by Admin on 22.02.2019.
  */
 public class DetailsResultMenuController extends MenuController {
-
-    @Autowired
-    HttpResponse response;
 
     private int configId;
     private ArrayList<Predict> predictArrayList;
@@ -65,7 +61,7 @@ public class DetailsResultMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         configId = Integer.parseInt(Constant.getMapByName("misc").get("configurationId").toString());
-        response = ConfigurationController.getDetailedResult(configId);
+        HttpResponse response = ConfigurationController.getDetailedResult(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             predictArrayList = Constant.getPredictListFromJson(response);
@@ -115,6 +111,5 @@ public class DetailsResultMenuController extends MenuController {
             }
 
         }
-//        }
     }
 }

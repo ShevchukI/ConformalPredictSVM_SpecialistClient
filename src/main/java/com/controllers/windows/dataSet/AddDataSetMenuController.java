@@ -16,7 +16,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,11 +25,7 @@ import java.util.ArrayList;
  */
 public class AddDataSetMenuController extends MenuController {
 
-    @Autowired
-    MainMenuController mainMenuController;
-    @Autowired
-    HttpResponse response;
-
+    private MainMenuController mainMenuController;
     private ArrayList<String> filterList;
     private File file;
     private WindowsController windowsController;
@@ -57,6 +52,7 @@ public class AddDataSetMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         menuBarController.init(this);
+        mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
         textArea_Error.setEditable(false);
         textArea_Error.setVisible(false);
@@ -171,7 +167,7 @@ public class AddDataSetMenuController extends MenuController {
             DataSet dataSet = new DataSet(textField_DataSetName.getText(),
                     textArea_Description.getText(),
                     textArea_Columns.getText());
-            response = DataSetController.createDataSet(dataSet);
+            HttpResponse response = DataSetController.createDataSet(dataSet);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 int id = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
@@ -184,11 +180,6 @@ public class AddDataSetMenuController extends MenuController {
                 windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
                 getNewWindow().close();
             }
-
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setHeaderText("DataSet saved!");
-//            alert.showAndWait();
-
         }
     }
 

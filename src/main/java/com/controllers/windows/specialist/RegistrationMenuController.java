@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -20,11 +19,7 @@ import java.util.Optional;
  */
 public class RegistrationMenuController extends MenuController {
 
-    @Autowired
-    HttpResponse response;
-    @Autowired
-    LoginMenuController loginMenuController;
-
+    private LoginMenuController loginMenuController;
     private WindowsController windowsController;
 
     @FXML
@@ -60,6 +55,7 @@ public class RegistrationMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        loginMenuController = new LoginMenuController();
         windowsController = new WindowsController();
         tooltipError_Name = new Tooltip();
         tooltipError_Surname = new Tooltip();
@@ -72,7 +68,7 @@ public class RegistrationMenuController extends MenuController {
         if (checkRegister()) {
             SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText(),
                     textField_Login.getText(), passwordField_ConfirmPassword.getText());
-            response = SpecialistController.specialistRegistration(specialistEntity);
+            HttpResponse response = SpecialistController.specialistRegistration(specialistEntity);
             setStatusCode(response.getStatusLine().getStatusCode());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);

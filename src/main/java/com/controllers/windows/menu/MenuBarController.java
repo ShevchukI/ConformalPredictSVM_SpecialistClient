@@ -5,7 +5,6 @@ import com.controllers.windows.specialist.LoginMenuController;
 import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -14,17 +13,16 @@ import java.io.IOException;
  */
 public class MenuBarController extends MenuController {
 
-    @Autowired
-    LoginMenuController loginMenuController;
-    @Autowired
-    ChangeInfoMenuController changeInfoMenuController;
-
+    private LoginMenuController loginMenuController;
+    private ChangeInfoMenuController changeInfoMenuController;
     private WindowsController windowsController;
 
     private MenuController menuController;
 
     public void init(MenuController menuController) {
         this.menuController = menuController;
+        loginMenuController = new LoginMenuController();
+        changeInfoMenuController = new ChangeInfoMenuController();
         windowsController = new WindowsController();
     }
 

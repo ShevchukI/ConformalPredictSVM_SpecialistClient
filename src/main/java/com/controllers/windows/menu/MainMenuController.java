@@ -17,14 +17,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 
 public class MainMenuController extends MenuController {
-    @Autowired
-    HttpResponse response;
 
     private ObservableList<DataSet> allDataSetObservableList;
     private ObservableList<DataSet> myDataSetObservableList;
@@ -145,7 +142,7 @@ public class MainMenuController extends MenuController {
     private Node createAllPage(int pageIndex) {
         try {
             allPageIndex = pageIndex + 1;
-            response = DataSetController.getDataSetAllPage(allPageIndex);
+            HttpResponse response = DataSetController.getDataSetAllPage(allPageIndex);
             allDataSetObservableList = getOListAfterFillPage(allPageIndex, response,
                     allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
         } catch (IOException e) {
@@ -158,7 +155,7 @@ public class MainMenuController extends MenuController {
     private Node createMyPage(int pageIndex) {
         try {
             myPageIndex = pageIndex + 1;
-            response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
+            HttpResponse response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
             myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
         } catch (IOException e) {
             e.printStackTrace();
@@ -199,14 +196,14 @@ public class MainMenuController extends MenuController {
     public void changeActive(TableView<DataSet> firstTable, TableView<DataSet> secondTable, ObservableList<DataSet> secondList) throws IOException {
         int id = firstTable.getSelectionModel().getSelectedItem().getId();
         if (firstTable.getSelectionModel().getSelectedItem().isActive()) {
-            response = DataSetController.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
+            HttpResponse response = DataSetController.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
                     false);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 firstTable.getSelectionModel().getSelectedItem().setActive(false);
             }
         } else {
-            response = DataSetController.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
+            HttpResponse response = DataSetController.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
                     true);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
@@ -231,13 +228,13 @@ public class MainMenuController extends MenuController {
             delete(tableView_MyDataSetTable);
         }
         try {
-            response = DataSetController.getDataSetAllPage(allPageIndex);
+            HttpResponse response = DataSetController.getDataSetAllPage(allPageIndex);
             allDataSetObservableList = getOListAfterFillPage(allPageIndex, response, allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
+            HttpResponse  response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
             myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
         } catch (IOException e) {
             e.printStackTrace();
@@ -249,7 +246,7 @@ public class MainMenuController extends MenuController {
                 + tableView.getSelectionModel().getSelectedItem().getName()
                 + "?");
         if (result) {
-            response = DataSetController.deleteDataSet(tableView.getSelectionModel().getSelectedItem().getId());
+            HttpResponse response = DataSetController.deleteDataSet(tableView.getSelectionModel().getSelectedItem().getId());
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 Constant.getAlert(null, tableView.getSelectionModel().getSelectedItem().getName()

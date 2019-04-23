@@ -22,20 +22,7 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/configuration/" + dataSetId;
         HttpPost request = new HttpPost(url);
         HttpResponse response = crudEntity(new StringEntity(json), request, null, null, null);
-//        String json = new Gson().toJson(configuration);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpPost request = new HttpPost(getUrl() + "/configuration/" + datasetId);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        request.setHeader("Content-Type", "application/json");
-//        request.setEntity(new StringEntity(json));
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
+
         return response;
     }
 
@@ -43,17 +30,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/result/general/" + configurationId + "/start";
         HttpPost request = new HttpPost(url);
         HttpResponse response = crudEntity(null, request, null, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpPost request = new HttpPost(getUrl() + "/result/general/" + configurationId + "/start");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -61,17 +37,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/result/general/" + processId + "/start";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/result/general/" + processId + "/start");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -79,17 +44,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/result/general/" + configurationId + "/confusion_matrix";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        CloseableHttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/result/general/" + configurationId + "/confusion_matrix");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -102,22 +56,6 @@ public class ConfigurationController extends MainController {
         }
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = null;
-//        if (allPage) {
-//            request = new HttpGet(getUrl() + "/configuration/all/" + datasetId + "/" + page + "/" + objectOnPage);
-//        } else {
-//            request = new HttpGet(getUrl() + "/configuration/all/" + datasetId + "/" + page + "/" + objectOnPage + "/specialist");
-//        }
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -125,17 +63,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/configuration/" + configId + "/activate";
         HttpPut request = new HttpPut(url);
         HttpResponse response = crudEntity(null, null, null, request, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpPut request = new HttpPut(getUrl() + "/configuration/" + configId + "/activate");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -143,17 +70,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/configuration/" + configId;
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/configuration/" + configId);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -161,17 +77,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/configuration/" + configId;
         HttpDelete request = new HttpDelete(url);
         HttpResponse response = crudEntity(null, null, null, null, request);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpDelete request = new HttpDelete(getUrl() + "/configuration/" + configId);
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 
@@ -187,17 +92,6 @@ public class ConfigurationController extends MainController {
         String url = getUrl() + "/result/general/" + configId+"/configuration_result";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
-//        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(getUrl() + "/result/general/" + configId+"/configuration_result");
-//        request.addHeader("Authorization", basicAuthPayload);
-//        HttpResponse response = null;
-//        try {
-//            response = client.execute(request);
-//        } catch (HttpHostConnectException e) {
-//            HttpResponseFactory httpResponseFactory = new DefaultHttpResponseFactory();
-//            response = httpResponseFactory.newHttpResponse(new BasicStatusLine(HttpVersion.HTTP_1_1, HttpStatus.SC_GATEWAY_TIMEOUT, null), null);
-//        }
         return response;
     }
 }

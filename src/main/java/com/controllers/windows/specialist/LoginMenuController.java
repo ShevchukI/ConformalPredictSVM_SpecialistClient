@@ -13,7 +13,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -21,13 +20,8 @@ import java.io.IOException;
  * Created by Admin on 06.01.2019.
  */
 public class LoginMenuController extends MenuController {
-    @Autowired
-    RegistrationMenuController registrationMenuController;
-    @Autowired
-    MainMenuController mainMenuController;
-    @Autowired
-    HttpResponse response;
 
+    private MainMenuController mainMenuController;
     private WindowsController windowsController;
 
     @FXML
@@ -40,6 +34,7 @@ public class LoginMenuController extends MenuController {
             Constant.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
+        mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
     }
 
@@ -56,7 +51,7 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            response = SpecialistController.specialistAuthorization(authorization);
+            HttpResponse response = SpecialistController.specialistAuthorization(authorization);
             setStatusCode(response.getStatusLine().getStatusCode());
             if(checkStatusCode(getStatusCode())){
                 Constant.fillMap(new SpecialistEntity().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
@@ -64,11 +59,6 @@ public class LoginMenuController extends MenuController {
                         mainMenuController, "Main menu", 600, 640);
             }
         }
-    }
-
-    public void signUp(ActionEvent event) throws IOException {
-        windowsController.openWindow("specialist/registrationMenu", getStage(),
-                registrationMenuController,"Registration", 408, 450);
     }
 
 }

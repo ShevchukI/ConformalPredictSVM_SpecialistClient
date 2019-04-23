@@ -20,7 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,13 +27,8 @@ import java.util.List;
 
 public class ChangeConfigurationMenuController extends MenuController {
 
-    @Autowired
-    HttpResponse response;
-    @Autowired
-    DataSetMenuController dataSetMenuController;
-    @Autowired
-    DiagnosticMenuController diagnosticMenuController;
-
+    private DiagnosticMenuController diagnosticMenuController;
+    private DataSetMenuController dataSetMenuController;
     private WindowsController windowsController;
     private ArrayList<SVMParameter> kernelTypes;
     private ObservableList<SVMParameter> observableKernelTypes;
@@ -102,6 +96,8 @@ public class ChangeConfigurationMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
+        DataSetMenuController dataSetMenuController = new DataSetMenuController();
+        DiagnosticMenuController diagnosticMenuController = new DiagnosticMenuController();
         windowsController = new WindowsController();
         kernelTypes = new ArrayList<>();
         observableKernelTypes = FXCollections.observableArrayList();
@@ -109,7 +105,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         confusionMatrixRowObservableList = FXCollections.observableArrayList();
         this.change = change;
         label_DataSetName.setText(Constant.getMapByName(Constant.getDataSetMapName()).get("name").toString());
-        response = new SVMParameterController().getAllKernel();
+        HttpResponse response = new SVMParameterController().getAllKernel();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             kernelTypes = Constant.fillKernelType(response);
@@ -273,7 +269,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (configuration == null) {
             return;
         }
-        response = ConfigurationController.changeConfiguration(configuration, configId);
+        HttpResponse response = ConfigurationController.changeConfiguration(configuration, configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Configuration saved!", Alert.AlertType.INFORMATION);
@@ -288,7 +284,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (configuration == null) {
             return;
         }
-        response = ConfigurationController.changeConfiguration(configuration, configId);
+        HttpResponse response = ConfigurationController.changeConfiguration(configuration, configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             response = ConfigurationController.startGenerateConfiguration(configId);
@@ -315,11 +311,7 @@ public class ChangeConfigurationMenuController extends MenuController {
                         }
                         button_Run.setDisable(false);
                         try {
-                            response = ConfigurationController.getConfusionMatrix(configId);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
+                            HttpResponse response = ConfigurationController.getConfusionMatrix(configId);
                             confusionMatrixRowList = new ConfusionMatrixRow().listFromJson(response);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -339,7 +331,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (!change) {
             result = Constant.questionOkCancel("Do you really want to leave without save configuration?");
             if (result) {
-                response = ConfigurationController.deleteConfiguration(configId);
+                HttpResponse response = ConfigurationController.deleteConfiguration(configId);
                 setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(getStatusCode())) {
                     windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
@@ -351,7 +343,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             }
         } else {
             if(checkOldConfiguration()) {
-                response = ConfigurationController.changeConfiguration(oldConfiguration, configId);
+                HttpResponse response = ConfigurationController.changeConfiguration(oldConfiguration, configId);
                 setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(getStatusCode())) {
                     response = ConfigurationController.startGenerateConfiguration(configId);

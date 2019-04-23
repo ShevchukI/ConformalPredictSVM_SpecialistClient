@@ -28,7 +28,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -39,11 +38,8 @@ import java.util.List;
  * Created by Admin on 12.02.2019.
  */
 public class DataSetMenuController extends MenuController {
-    @Autowired
-    HttpResponse response;
-    @Autowired
-    MainMenuController mainMenuController;
 
+    private MainMenuController mainMenuController;
     private WindowsController windowsController;
     private DataSet dataSet;
     private ChangeConfigurationMenuController changeConfigurationMenuController;
@@ -134,6 +130,7 @@ public class DataSetMenuController extends MenuController {
         });
         changePane(false);
         setStage(stage);
+        mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
         changeConfigurationMenuController = new ChangeConfigurationMenuController();
         objectOnPage = 30;
@@ -146,7 +143,7 @@ public class DataSetMenuController extends MenuController {
         filterList.add("*.txt");
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
-        response = DataSetController.getDataSetById(Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
+        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             dataSet = new DataSet().fromJson(response);
@@ -223,7 +220,7 @@ public class DataSetMenuController extends MenuController {
     private void createPage(int tablePageIndex, boolean allPage, TableView<ConfigurationEntity> tableView,
                             ObservableList<ConfigurationEntity> list, Pagination pagination, Label labelCount) {
         try {
-            response = ConfigurationController.getConfigurationAllPage(dataSet.getId(), tablePageIndex, allPage);
+            HttpResponse response = ConfigurationController.getConfigurationAllPage(dataSet.getId(), tablePageIndex, allPage);
             list = getOListAfterFillPage(tablePageIndex, response,
                     list, pagination,
                     tableView, labelCount);
@@ -269,7 +266,7 @@ public class DataSetMenuController extends MenuController {
 
 
     public void save(ActionEvent event) throws IOException {
-        response = DataSetController.changeDataSet(new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
+        HttpResponse response = DataSetController.changeDataSet(new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
         setStatusCode(response.getStatusLine().getStatusCode());
         if (!checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Don`t save!", Alert.AlertType.ERROR);
@@ -391,7 +388,7 @@ public class DataSetMenuController extends MenuController {
                                       Pagination firstPagination, Pagination secondPagination,
                                       Label firstCount, Label secondCount) throws IOException {
         int configId = firstTable.getSelectionModel().getSelectedItem().getId();
-        response = ConfigurationController.activateConfiguration(configId);
+        HttpResponse response = ConfigurationController.activateConfiguration(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             createPage(firstPageIndex, allPage, firstTable, firstList,
@@ -399,9 +396,6 @@ public class DataSetMenuController extends MenuController {
             createPage(secondPageIndex, !allPage, secondTable, secondList,
                     secondPagination, secondCount);
         }
-//        else {
-//            System.out.println(statusCode + " : " + configId);
-//        }
     }
 
 
@@ -425,7 +419,7 @@ public class DataSetMenuController extends MenuController {
 
     public void deleteConfiguration(TableView<ConfigurationEntity> tableView) throws IOException {
         int configId = tableView.getSelectionModel().getSelectedItem().getId();
-        response = ConfigurationController.deleteConfiguration(configId);
+        HttpResponse response = ConfigurationController.deleteConfiguration(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             createPage(allPageIndex, true, tableView_AllConfiguration, allConfigurationObservableList,

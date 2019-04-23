@@ -21,7 +21,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -34,8 +33,8 @@ import java.util.List;
  */
 public class DiagnosticMenuController extends MenuController {
 
-    @Autowired
-    HttpResponse response;
+//    @Autowired
+//    HttpResponse response;
 
     private DataSet dataSet;
     //    private ConfigurationEntity configurationEntity;
@@ -122,7 +121,7 @@ public class DiagnosticMenuController extends MenuController {
             parameterSingleObject.setSignificance(100);
         }
         System.out.println(parameterSingleObject.toString());
-        response = IllnessController.startSingleTest(configurationId, parameterSingleObject);
+        HttpResponse response = IllnessController.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
@@ -135,7 +134,7 @@ public class DiagnosticMenuController extends MenuController {
 //                    double progress = 0;
                     while (predict.getPredictClass() == 0) {
                         try {
-                            response = IllnessController.resultSingleTest(processId);
+                            HttpResponse response = IllnessController.resultSingleTest(processId);
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
@@ -181,7 +180,7 @@ public class DiagnosticMenuController extends MenuController {
     }
 
     private void createFields(int dataSetId) throws IOException {
-        response = DataSetController.getDataSetById(dataSetId);
+        HttpResponse response = DataSetController.getDataSetById(dataSetId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             dataSet = new DataSet().fromJson(response);
@@ -201,5 +200,6 @@ public class DiagnosticMenuController extends MenuController {
             }
         }
     }
+
 }
 

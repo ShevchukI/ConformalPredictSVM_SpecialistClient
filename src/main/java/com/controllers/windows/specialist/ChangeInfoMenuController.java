@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -20,9 +19,6 @@ import java.io.IOException;
  * Created by Admin on 29.01.2019.
  */
 public class ChangeInfoMenuController extends MenuController {
-
-    @Autowired
-    HttpResponse response;
 
     private Tooltip tooltipError_CurrentPassword;
     private Tooltip tooltipError_NewPassword;
@@ -77,7 +73,7 @@ public class ChangeInfoMenuController extends MenuController {
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    response = SpecialistController.changePassword(passwordField_ConfirmPassword.getText());
+                    HttpResponse response = SpecialistController.changePassword(passwordField_ConfirmPassword.getText());
                     setStatusCode(response.getStatusLine().getStatusCode());
                     if (checkStatusCode(getStatusCode())) {
                         Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
@@ -106,7 +102,7 @@ public class ChangeInfoMenuController extends MenuController {
         alert.setHeaderText(null);
         if (checkNames()) {
             SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText());
-            response = SpecialistController.changeName(specialistEntity);
+            HttpResponse response = SpecialistController.changeName(specialistEntity);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 alert.setContentText("Information changed!");
@@ -126,8 +122,6 @@ public class ChangeInfoMenuController extends MenuController {
                         dataSet.getSpecialistEntity().setSurname(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
                     }
                 }
-//                tableView_All.getItems().clear();
-//                tableView_All.setItems(allDataSetObservableList);
                 tableView_All.refresh();
 
                 myDataSetObservableList = tableView_My.getItems();
@@ -137,33 +131,7 @@ public class ChangeInfoMenuController extends MenuController {
                         dataSet.getSpecialistEntity().setSurname(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
                     }
                 }
-//                tableView_My.getItems().clear();
-//                tableView_My.setItems(myDataSetObservableList);
                 tableView_My.refresh();
-
-//                tableView_All.getItems().clear();
-//                response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
-//                        Integer.parseInt(Constant.getMapByName("misc").get("pageIndexAllDataset").toString()),
-//                        Integer.parseInt(Constant.getMapByName("misc").get("objectOnPage").toString()));
-//                statusCode = response.getStatusLine().getStatusCode();
-//                if(checkStatusCode(statusCode)){
-//                    dataSetPage = new DataSetPage().fromJson(response);
-//                    allDataSetObservableList = FXCollections.observableList(dataSetPage.getDataSetEntities());
-//                    tableView_All.setItems(allDataSetObservableList);
-//                    tableView_All.refresh();
-//                }
-//
-//                tableView_My.getItems().clear();
-//                response = dataSetController.getSpecialistDataSetAllPage(Constant.getAuth(),
-//                        Integer.parseInt(Constant.getMapByName("misc").get("pageIndexMyDataset").toString()),
-//                        Integer.parseInt(Constant.getMapByName("misc").get("objectOnPage").toString()));
-//                statusCode = response.getStatusLine().getStatusCode();
-//                if(checkStatusCode(statusCode)){
-//                    dataSetPage = new DataSetPage().fromJson(response);
-//                    myDataSetObservableList = FXCollections.observableList(dataSetPage.getDataSetEntities());
-//                    tableView_My.setItems(myDataSetObservableList);
-//                    tableView_My.refresh();
-//                }
             }
         }
     }
