@@ -14,10 +14,13 @@ import com.models.SpecialistEntity;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.ImageView;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -41,6 +44,20 @@ public class Constant {
     private static final String DATASET_MAP_NAME = "dataSet";
     private static final String KEY_MAP_NAME = "key";
     private static final String MISCELLANEOUS_MAP_NAME = "misc";
+
+    //Icons
+    private final static String SIGN_IN_ICON = "/img/icons/signIn.png";
+    private final static String APPLICATION_ICON = "img/icons/icon.png";
+    private final static String ADD_ICON = "img/icons/add.png";
+    private final static String CANCEL_ICON = "img/icons/cancel.png";
+    private final static String DELETE_ICON = "img/icons/delete.png";
+    private final static String INFO_ICON = "img/icons/info.png";
+    private final static String OK_ICON = "img/icons/ok.png";
+    private final static String RETURN_ICON = "img/icons/return.png";
+    private final static String RUN_ICON = "img/icons/run.png";
+    private final static String SEARCH_ICON = "img/icons/search.png";
+    private final static String EDIT_ICON = "img/icons/edit.png";
+
 
     private static final int SVM_DEGREE = 3;
     private static final double SVM_GAMMA = 1;
@@ -326,5 +343,49 @@ public class Constant {
 
     public static int getObjectOnPage() {
         return OBJECT_ON_PAGE;
+    }
+
+    public static ImageView signInIcon() {
+        return new ImageView(SIGN_IN_ICON);
+    }
+
+    public static ImageView applicationIcon() {
+        return new ImageView(APPLICATION_ICON);
+    }
+
+    public static ImageView addIcon() {
+        return new ImageView(ADD_ICON);
+    }
+
+    public static ImageView cancelIcon() {
+        return new ImageView(CANCEL_ICON);
+    }
+
+    public static ImageView deleteIcon() {
+        return new ImageView(DELETE_ICON);
+    }
+
+    public static ImageView infoIcon() {
+        return new ImageView(INFO_ICON);
+    }
+
+    public static ImageView okIcon() {
+        return new ImageView(OK_ICON);
+    }
+
+    public static ImageView returnIcon() {
+        return new ImageView(RETURN_ICON);
+    }
+
+    public static ImageView runIcon() {
+        return new ImageView(RUN_ICON);
+    }
+
+    public static ImageView searchIcon() {
+        return new ImageView(SEARCH_ICON);
+    }
+
+    public static ImageView editIcon() {
+        return new ImageView(EDIT_ICON);
     }
 }

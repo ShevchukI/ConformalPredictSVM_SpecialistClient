@@ -123,7 +123,7 @@ public class AddDataSetMenuController extends MenuController {
         if (!checkColumns(textArea_Columns.getText())) {
             error++;
         }
-        String fileName = "C:\\qwwww.txt";
+        String fileName = "file.txt";
         File fileBuf = new File(fileName);
         FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
         FileReader input = new FileReader(textField_FileName.getText());

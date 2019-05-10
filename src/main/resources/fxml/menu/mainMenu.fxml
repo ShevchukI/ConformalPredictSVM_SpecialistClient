@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="558.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="754.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MainMenuController">
     <top>
         <VBox>
             <children>
@@ -52,8 +52,6 @@
                                     <Cursor fx:constant="DEFAULT" />
                                  </cursor>
                               </TableView>
-                              <Label prefHeight="21.0" prefWidth="25.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-                              <Label fx:id="label_AllCount" layoutX="40.0" layoutY="302.0" prefHeight="18.0" prefWidth="80.0" text="placeholder" AnchorPane.bottomAnchor="15.600000000000023" AnchorPane.leftAnchor="40.0" />
                               <Pagination fx:id="pagination_AllDataSet" layoutY="244.0" prefHeight="62.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
                                  <contextMenu>
                                     <ContextMenu>
@@ -86,8 +84,6 @@
                                     <Cursor fx:constant="DEFAULT" />
                                  </cursor>
                               </TableView>
-                              <Label prefHeight="21.0" prefWidth="25.0" text="All:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-                              <Label fx:id="label_MyCount" layoutX="40.0" layoutY="302.0" prefHeight="18.0" prefWidth="80.0" text="placeholder" AnchorPane.bottomAnchor="15.600000000000023" AnchorPane.leftAnchor="40.0" />
                               <Pagination fx:id="pagination_MyDataSet" layoutY="245.0" prefHeight="61.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
                                  <contextMenu>
                                     <ContextMenu>
@@ -103,11 +99,11 @@
               </tabs>
             </TabPane>
             <Label layoutX="14.0" layoutY="38.0" prefHeight="18.0" prefWidth="70.0" text="Specialist:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="38.0" />
-            <Label fx:id="label_Name" layoutX="84.0" layoutY="38.0" prefHeight="18.0" prefWidth="460.0" text="placeholder" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="38.0" />
-            <Button layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#addDataSet" prefHeight="26.0" prefWidth="49.0" text="Add" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="70.0" />
-            <Button fx:id="button_View" layoutX="84.0" layoutY="70.0" mnemonicParsing="false" onAction="#viewDataSet" prefHeight="26.0" prefWidth="70.0" text="View" AnchorPane.leftAnchor="84.0" AnchorPane.topAnchor="70.0" />
-            <Button fx:id="button_ChangeActive" layoutX="170.0" layoutY="70.0" mnemonicParsing="false" onAction="#changeActive" prefHeight="31.0" prefWidth="125.0" text="Change Active" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="70.0" />
-            <Button fx:id="button_Delete" layoutX="481.0" layoutY="70.0" mnemonicParsing="false" onAction="#delete" text="Delete" textFill="RED" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
+            <Label fx:id="label_Name" layoutX="84.0" layoutY="38.0" prefHeight="18.0" prefWidth="460.0" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="38.0" />
+            <Button fx:id="button_Add" layoutX="14.0" layoutY="70.0" minWidth="80.0" mnemonicParsing="false" onAction="#addDataSet" text="Add Data Set" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="button_View" layoutX="162.0" layoutY="70.0" minWidth="80.0" mnemonicParsing="false" onAction="#viewDataSet" text="View Data Set" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="button_ChangeActive" layoutX="324.0" layoutY="70.0" minWidth="80.0" mnemonicParsing="false" onAction="#changeActive" text="Change Active Data Set" AnchorPane.leftAnchor="324.0" AnchorPane.topAnchor="70.0" />
+            <Button fx:id="button_Delete" layoutX="481.0" layoutY="70.0" minWidth="80.0" mnemonicParsing="false" onAction="#delete" text="Delete" textFill="RED" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
          </children></AnchorPane>
     </center>
 </BorderPane>

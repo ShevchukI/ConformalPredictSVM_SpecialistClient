@@ -61,12 +61,7 @@ public class DataSetMenuController extends MenuController {
     private TextField textField_Name;
     @FXML
     private TextArea textArea_Description;
-    @FXML
-    private Button button_View;
-    @FXML
-    private Button button_Delete;
-    @FXML
-    private Button button_Activate;
+
     @FXML
     private Tab tab_AllConfiguration;
     @FXML
@@ -100,10 +95,6 @@ public class DataSetMenuController extends MenuController {
     @FXML
     private Pagination pagination_MyConfiguration;
     @FXML
-    private Label label_AllCount;
-    @FXML
-    private Label label_MyCount;
-    @FXML
     private AnchorPane anchorPane_Table;
     @FXML
     private Button button_Change;
@@ -116,9 +107,19 @@ public class DataSetMenuController extends MenuController {
     @FXML
     private TextArea textArea_Content;
     @FXML
+    private Button button_Add;
+    @FXML
+    private Button button_View;
+    @FXML
+    private Button button_Delete;
+    @FXML
+    private Button button_Activate;
+    @FXML
     private Button button_Ok;
     @FXML
     private Button button_Cancel;
+    @FXML
+    private Button button_Back;
     @FXML
     private TextArea textArea_Error;
     @FXML
@@ -201,36 +202,44 @@ public class DataSetMenuController extends MenuController {
         }
         changeFile = false;
 
+        button_Add.setGraphic(Constant.addIcon());
+        button_View.setGraphic(Constant.infoIcon());
+        button_Change.setGraphic(Constant.editIcon());
+        button_Ok.setGraphic(Constant.okIcon());
+        button_Cancel.setGraphic(Constant.cancelIcon());
+        button_Back.setGraphic(Constant.returnIcon());
+        button_Delete.setGraphic(Constant.deleteIcon());
+
     }
 
     private Node createAllPage(int pageIndex) {
         allPageIndex = pageIndex + 1;
         createPage(allPageIndex, true, tableView_AllConfiguration, allConfigurationObservableList,
-                pagination_AllConfiguration, label_AllCount);
+                pagination_AllConfiguration);
         return tableView_AllConfiguration;
     }
 
     private Node createMyPage(int pageIndex) {
         myPageIndex = pageIndex + 1;
         createPage(myPageIndex, false, tableView_MyConfiguration, myConfigurationObservableList,
-                pagination_MyConfiguration, label_MyCount);
+                pagination_MyConfiguration);
         return tableView_MyConfiguration;
     }
 
     private void createPage(int tablePageIndex, boolean allPage, TableView<ConfigurationEntity> tableView,
-                            ObservableList<ConfigurationEntity> list, Pagination pagination, Label labelCount) {
+                            ObservableList<ConfigurationEntity> list, Pagination pagination) {
         try {
             HttpResponse response = ConfigurationController.getConfigurationAllPage(dataSet.getId(), tablePageIndex, allPage);
             list = getOListAfterFillPage(tablePageIndex, response,
                     list, pagination,
-                    tableView, labelCount);
+                    tableView);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public ObservableList getOListAfterFillPage(int pageIndx, HttpResponse response, ObservableList<ConfigurationEntity> list,
-                                                Pagination pagination, TableView<ConfigurationEntity> tableView, Label label_Count) throws IOException {
+                                                Pagination pagination, TableView<ConfigurationEntity> tableView) throws IOException {
 
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -245,7 +254,6 @@ public class DataSetMenuController extends MenuController {
             pagination.setCurrentPageIndex(pageIndx - 1);
         }
         tableView.setItems(list);
-        label_Count.setText(String.valueOf(list.size()));
         return list;
     }
 
@@ -369,14 +377,14 @@ public class DataSetMenuController extends MenuController {
             activateConfiguration(allPageIndex, myPageIndex, true, tableView_AllConfiguration,
                     tableView_MyConfiguration, allConfigurationObservableList,
                     myConfigurationObservableList, pagination_AllConfiguration,
-                    pagination_MyConfiguration, label_AllCount, label_MyCount);
+                    pagination_MyConfiguration);
         }
         if (tab_MyConfiguration.isSelected()
                 && tableView_MyConfiguration.getSelectionModel().getSelectedItem()!=null) {
             activateConfiguration(myPageIndex, allPageIndex, false, tableView_MyConfiguration,
                     tableView_AllConfiguration, myConfigurationObservableList,
                     allConfigurationObservableList, pagination_MyConfiguration,
-                    pagination_AllConfiguration, label_MyCount, label_AllCount);
+                    pagination_AllConfiguration);
         }
     }
 
@@ -385,16 +393,15 @@ public class DataSetMenuController extends MenuController {
                                       TableView<ConfigurationEntity> secondTable,
                                       ObservableList<ConfigurationEntity> firstList,
                                       ObservableList<ConfigurationEntity> secondList,
-                                      Pagination firstPagination, Pagination secondPagination,
-                                      Label firstCount, Label secondCount) throws IOException {
+                                      Pagination firstPagination, Pagination secondPagination) throws IOException {
         int configId = firstTable.getSelectionModel().getSelectedItem().getId();
         HttpResponse response = ConfigurationController.activateConfiguration(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             createPage(firstPageIndex, allPage, firstTable, firstList,
-                    firstPagination, firstCount);
+                    firstPagination);
             createPage(secondPageIndex, !allPage, secondTable, secondList,
-                    secondPagination, secondCount);
+                    secondPagination);
         }
     }
 
@@ -423,9 +430,9 @@ public class DataSetMenuController extends MenuController {
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             createPage(allPageIndex, true, tableView_AllConfiguration, allConfigurationObservableList,
-                    pagination_AllConfiguration, label_AllCount);
+                    pagination_AllConfiguration);
             createPage(myPageIndex, false, tableView_MyConfiguration, myConfigurationObservableList,
-                    pagination_MyConfiguration, label_MyCount);
+                    pagination_MyConfiguration);
         }
     }
 
@@ -468,7 +475,7 @@ public class DataSetMenuController extends MenuController {
         textArea_Error.setStyle("-fx-border-color: inherit");
         textArea_Error.clear();
         textArea_Error.setVisible(false);
-        String fileName = "C:\\qwwww.txt";
+        String fileName = "file.txt";
         fileBuf = new File(fileName);
         FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
 
@@ -480,6 +487,9 @@ public class DataSetMenuController extends MenuController {
             content[i][0] = split[0];
             content[i][1] = mainContent[i].substring(split[0].length() + 1, mainContent[i].length());
             content[i][2] = split[1];
+            if(!checkObjectFormat(mainContent[i])){
+                error++;
+            }
             if (!checkObjectLength(tableView_Object.getColumns().size(), content[i][0] + "," + content[i][1])) {
                 error++;
             }
@@ -514,11 +524,22 @@ public class DataSetMenuController extends MenuController {
         }
     }
 
+    private boolean checkObjectFormat(String object) {
+        String[] obj = object.split(",");
+        for (int i = 2; i<obj.length; i++){
+            if(!obj[i].matches("[0-9]{1,3}")){
+                textArea_Error.appendText("Object error! Object [" + object + "] has invalid characters!\n");
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void cancel(ActionEvent event) {
         changePane(false);
     }
 
-    public boolean checkObjectLength(int columnsCount, String object) {
+    private boolean checkObjectLength(int columnsCount, String object) {
         String[] obj = object.split(",");
         if (columnsCount > obj.length) {
             textArea_Error.appendText("Object error! Object [" + object + "] lacks " + (columnsCount - obj.length) + "  feature!\n");
@@ -531,7 +552,7 @@ public class DataSetMenuController extends MenuController {
         }
     }
 
-    public boolean checkObjectClass(String[][] content, int i) {
+    private boolean checkObjectClass(String[][] content, int i) {
         if (!content[i][2].equals("1") && !content[i][2].equals("-1")) {
             textArea_Error.appendText("Class error! Current: " + content[i][2] + " needed: 1 or -1:\n"
                     + "Object: " + content[i][0] + "," + content[i][1] + ";\n");

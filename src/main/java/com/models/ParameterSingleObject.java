@@ -5,7 +5,7 @@ package com.models;
  */
 public class ParameterSingleObject {
     private String params;
-    private double significance;
+    private Double significance;
 
     public ParameterSingleObject() {
     }
@@ -23,11 +23,11 @@ public class ParameterSingleObject {
         this.params = params;
     }
 
-    public double getSignificance() {
+    public Double getSignificance() {
         return significance;
     }
 
-    public void setSignificance(double significance) {
+    public void setSignificance(Double significance) {
         this.significance = significance;
     }
 

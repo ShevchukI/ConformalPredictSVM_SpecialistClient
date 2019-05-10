@@ -67,11 +67,9 @@ public class MainMenuController extends MenuController {
     @FXML
     private TableColumn tableColumn_MyActive;
     @FXML
-    private Label label_AllCount;
-    @FXML
-    private Label label_MyCount;
-    @FXML
     private Label label_Name;
+    @FXML
+    private Button button_Add;
     @FXML
     private Button button_View;
     @FXML
@@ -112,6 +110,10 @@ public class MainMenuController extends MenuController {
         button_Delete.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
+
+        button_Add.setGraphic(Constant.addIcon());
+        button_View.setGraphic(Constant.infoIcon());
+        button_Delete.setGraphic(Constant.deleteIcon());
     }
 
 
@@ -144,7 +146,7 @@ public class MainMenuController extends MenuController {
             allPageIndex = pageIndex + 1;
             HttpResponse response = DataSetController.getDataSetAllPage(allPageIndex);
             allDataSetObservableList = getOListAfterFillPage(allPageIndex, response,
-                    allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
+                    allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,7 +158,7 @@ public class MainMenuController extends MenuController {
         try {
             myPageIndex = pageIndex + 1;
             HttpResponse response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
-            myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
+            myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,7 +176,7 @@ public class MainMenuController extends MenuController {
     }
 
     public ObservableList getOListAfterFillPage(int pageIndex, HttpResponse response, ObservableList<DataSet> list,
-                                                Pagination pagination, TableView<DataSet> tableView, Label label_Count) throws IOException {
+                                                Pagination pagination, TableView<DataSet> tableView) throws IOException {
 
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -189,7 +191,6 @@ public class MainMenuController extends MenuController {
             pagination.setCurrentPageIndex(pageIndex - 1);
         }
         tableView.setItems(list);
-        label_Count.setText(String.valueOf(list.size()));
         return list;
     }
 
@@ -229,13 +230,13 @@ public class MainMenuController extends MenuController {
         }
         try {
             HttpResponse response = DataSetController.getDataSetAllPage(allPageIndex);
-            allDataSetObservableList = getOListAfterFillPage(allPageIndex, response, allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable, label_AllCount);
+            allDataSetObservableList = getOListAfterFillPage(allPageIndex, response, allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             HttpResponse  response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
-            myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable, label_MyCount);
+            myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -6,8 +6,6 @@ import org.apache.http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 /**
  * Created by Admin on 22.02.2019.
@@ -168,9 +166,13 @@ public class Predict {
     }
 
     public String getVisibleConfidence() {
-        NumberFormat formatter = new DecimalFormat("#00.00");
-        return String.valueOf(formatter.format(getConfidence())) + "%";
+        return visibleConfidence;
     }
+
+//    public String getVisibleConfidence() {
+//        NumberFormat formatter = new DecimalFormat("#00.00");
+//        return String.valueOf(formatter.format(getConfidence())) + "%";
+//    }
 
     public Integer getObjectId(){
         return datasetObjectsEntity.getUserObjectId();

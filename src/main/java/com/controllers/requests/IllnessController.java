@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class IllnessController extends MainController {
 
-    public static HttpResponse startSingleTest(int configurationId, ParameterSingleObject parameterSingleObject) throws IOException {
+    public HttpResponse startSingleTest(int configurationId, ParameterSingleObject parameterSingleObject) throws IOException {
         String json = new Gson().toJson(parameterSingleObject);
         String url = getLocalhostUrl() + "/doctor-system/doctor/illness/result/" + configurationId + "/start";
         HttpPost request = new HttpPost(url);
@@ -23,7 +23,7 @@ public class IllnessController extends MainController {
         return response;
     }
 
-    public static HttpResponse resultSingleTest(int processId) throws IOException {
+    public HttpResponse resultSingleTest(int processId) throws IOException {
         String url = getLocalhostUrl() + "/doctor-system/doctor/illness/result/" + processId + "/start";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);

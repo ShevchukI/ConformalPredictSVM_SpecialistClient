@@ -4,22 +4,22 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.menu.MenuBarController">
+<MenuBar xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="com.controllers.windows.menu.MenuBarController">
     <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="Sign Out">
             <items>
-                <MenuItem mnemonicParsing="false" onAction="#signOut" text="Sign Out" />
-                <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close" />
+                <MenuItem mnemonicParsing="false" onAction="#signOut" text="Sign Out"/>
+                <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close"/>
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
             <items>
-            <Menu mnemonicParsing="false" text="Change">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Name/Surname" onAction="#changeName"/>
-                  <MenuItem mnemonicParsing="false" text="Password" onAction="#changePassword"/>
-              </items>
-            </Menu>
+                <Menu mnemonicParsing="false" text="Change">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Password" onAction="#changePassword"/>
+                    </items>
+                </Menu>
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

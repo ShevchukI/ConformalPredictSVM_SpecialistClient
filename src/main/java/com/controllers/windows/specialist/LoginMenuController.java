@@ -9,6 +9,7 @@ import com.tools.Constant;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -28,6 +29,8 @@ public class LoginMenuController extends MenuController {
     private TextField textField_Login;
     @FXML
     private PasswordField passwordField_Password;
+    @FXML
+    private Button button_SignIn;
 
     public void initialize(Stage stage){
         stage.setOnHidden(event -> {
@@ -36,6 +39,7 @@ public class LoginMenuController extends MenuController {
         setStage(stage);
         mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
+        button_SignIn.setGraphic(Constant.signInIcon());
     }
 
     public void signIn(ActionEvent event) throws IOException {
@@ -56,7 +60,7 @@ public class LoginMenuController extends MenuController {
             if(checkStatusCode(getStatusCode())){
                 Constant.fillMap(new SpecialistEntity().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
                 windowsController.openWindowResizable("menu/mainMenu", getStage(),
-                        mainMenuController, "Main menu", 600, 640);
+                        mainMenuController, "Main menu", 1100, 640);
             }
         }
     }

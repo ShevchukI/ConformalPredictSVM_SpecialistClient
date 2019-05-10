@@ -38,6 +38,7 @@ public class DiagnosticMenuController extends MenuController {
 
     private DataSet dataSet;
     //    private ConfigurationEntity configurationEntity;
+    private IllnessController illnessController;
     private int dataSetId;
     private int configurationId;
     private String[] columns;
@@ -74,6 +75,7 @@ public class DiagnosticMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
+        illnessController = new IllnessController();
         predictList = new ArrayList<>();
         stackPane_Table.setVisible(true);
         stackPane_Progress.setVisible(false);
@@ -118,10 +120,10 @@ public class DiagnosticMenuController extends MenuController {
         if (checkBox_Significance.isSelected()) {
             parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
         } else {
-            parameterSingleObject.setSignificance(100);
+//            parameterSingleObject.setSignificance(100);
+            parameterSingleObject.setSignificance(null);
         }
-        System.out.println(parameterSingleObject.toString());
-        HttpResponse response = IllnessController.startSingleTest(configurationId, parameterSingleObject);
+        HttpResponse response = illnessController.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
@@ -134,13 +136,32 @@ public class DiagnosticMenuController extends MenuController {
 //                    double progress = 0;
                     while (predict.getPredictClass() == 0) {
                         try {
-                            HttpResponse response = IllnessController.resultSingleTest(processId);
+                            HttpResponse response = illnessController.resultSingleTest(processId);
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
-                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getCredibility());
+                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + parameterSingleObject.getSignificance());
                                 if (predict.getPredictClass() != 0) {
-                                    predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
+//                                        switch (predict.getPredictClass()) {
+//                                            case 1:
+//                                                predict.setVisibleClass("Positive");
+//                                                break;
+//                                            case -1:
+//                                                predict.setVisibleClass("Negative");
+//                                                break;
+//                                            default:
+//                                                break;
+//                                        }
+                                        NumberFormat formatter = new DecimalFormat("#00.00");
+//                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+                                        predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+                                    } else {
+//                                        predict.setVisibleClass("Uncertain");
+                                        predict.setVisibleConfidence("");
+                                    }
+//
+//                                    predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
