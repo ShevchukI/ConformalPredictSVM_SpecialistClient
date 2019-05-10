@@ -114,6 +114,7 @@ public class MainMenuController extends MenuController {
         button_Add.setGraphic(Constant.addIcon());
         button_View.setGraphic(Constant.infoIcon());
         button_Delete.setGraphic(Constant.deleteIcon());
+
     }
 
 

@@ -2,33 +2,30 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.ChangeConfigurationMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.ChangeConfigurationMenuController">
    <children>
-      <FlowPane prefHeight="22.0" prefWidth="837.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+      <FlowPane layoutX="14.0" layoutY="52.0" prefHeight="22.0" prefWidth="837.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="52.0">
          <children>
             <Label prefHeight="21.0" prefWidth="100.0" text="Dataset name:">
                <FlowPane.margin>
                   <Insets />
                </FlowPane.margin>
             </Label>
-            <Label fx:id="label_DataSetName" text="placeholder" />
+            <Label fx:id="label_DataSetName" />
          </children>
       </FlowPane>
-      <FlowPane layoutX="186.0" layoutY="23.0" prefHeight="31.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0">
+      <FlowPane layoutX="14.0" layoutY="88.0" prefHeight="31.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="88.0">
          <children>
             <Label prefWidth="100.0" text="Name:">
                <FlowPane.margin>
@@ -42,85 +39,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane layoutX="14.0" layoutY="81.0" prefHeight="9.0" prefWidth="839.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="90.0">
-         <children>
-            <Label prefHeight="21.0" prefWidth="100.0" text="SVM type:">
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin></Label>
-            <VBox prefHeight="42.0" prefWidth="50.0">
-               <children>
-                  <RadioButton fx:id="radioButton_CSVC" mnemonicParsing="false" selected="true">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                     <toggleGroup>
-                        <ToggleGroup fx:id="svmType" />
-                     </toggleGroup>
-                     <tooltip>
-                        <Tooltip text="Set type of SVM" />
-                     </tooltip>
-                  </RadioButton>
-                  <Label prefHeight="21.0" prefWidth="50.0" text="C-SVC" />
-               </children>
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin>
-            </VBox>
-            <VBox prefHeight="42.0" prefWidth="50.0">
-               <children>
-                  <RadioButton fx:id="radioButton_NUSVC" mnemonicParsing="false" toggleGroup="$svmType">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin>
-                     <tooltip>
-                        <Tooltip text="Set type of SVM" />
-                     </tooltip>
-                  </RadioButton>
-                  <Label text="nu-SVC" />
-               </children>
-               <FlowPane.margin>
-                  <Insets left="20.0" />
-               </FlowPane.margin>
-            </VBox>
-            <Label prefHeight="22.0" prefWidth="60.0" text="C:">
-               <FlowPane.margin>
-                  <Insets left="20.0" />
-               </FlowPane.margin>
-            </Label>
-            <TextField fx:id="textField_C" prefHeight="31.0" prefWidth="100.0" text="1">
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Set the parameter C of C-SVC (default 1)" />
-               </tooltip>
-            </TextField>
-            <Label prefWidth="60.0" text="nu:">
-               <FlowPane.margin>
-                  <Insets left="20.0" />
-               </FlowPane.margin>
-            </Label>
-            <TextField fx:id="textField_NU" prefHeight="31.0" prefWidth="100.0" text="0.5">
-               <tooltip>
-                  <Tooltip text="Set the parameter nu of nu-SVC (default 0.5)" />
-               </tooltip></TextField>
-            <Label prefHeight="22.0" prefWidth="80.0" text="Epsilon:">
-               <FlowPane.margin>
-                  <Insets left="20.0" />
-               </FlowPane.margin>
-            </Label>
-            <TextField fx:id="textField_Epsilon" prefHeight="31.0" prefWidth="155.0" text="0.001">
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Set tolerance of termination criterion (default 0.001)" />
-               </tooltip>
-            </TextField>
-         </children>
-      </FlowPane>
-      <FlowPane prefHeight="35.0" prefWidth="839.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="135.0">
+      <FlowPane layoutX="14.0" layoutY="127.0" prefHeight="35.0" prefWidth="839.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="127.0">
          <children>
             <Label prefHeight="22.0" prefWidth="100.0" text="Kernel type:">
                <FlowPane.margin>
@@ -157,47 +76,18 @@
                   <Tooltip text="Set degree in kernel function (default 3)" />
                </tooltip>
             </TextField>
-            <Label prefHeight="22.0" prefWidth="80.0" text="Probability:">
+            <Label prefWidth="100.0" text="Test part:">
                <FlowPane.margin>
                   <Insets left="20.0" />
-               </FlowPane.margin>
-            </Label>
-            <CheckBox fx:id="checkBox_Probability" mnemonicParsing="false" prefHeight="21.0" prefWidth="150.0">
-               <FlowPane.margin>
-                  <Insets />
-               </FlowPane.margin>
-               <tooltip>
-                  <Tooltip text="Whether to train a SVC model for probability estimates, on or off (default off)" />
-               </tooltip></CheckBox>
+               </FlowPane.margin></Label>
+            <TextField fx:id="textField_ToTest" prefHeight="31.0" prefWidth="136.0" text="0.3" />
          </children>
       </FlowPane>
-      <FlowPane layoutY="169.0" prefHeight="31.0" prefWidth="400.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="453.0" AnchorPane.topAnchor="175.0">
-         <children>
-            <Label prefWidth="100.0" text="Test part:" />
-            <TextField fx:id="textField_ToTest" prefHeight="31.0" prefWidth="120.0" text="0.3" />
-         </children>
-      </FlowPane>
-      <FlowPane prefHeight="52.0" prefWidth="220.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="215.0">
-         <children>
-            <Button fx:id="button_Run" mnemonicParsing="false" onAction="#run" prefHeight="26.0" prefWidth="50.0" text="Run" />
-            <ProgressIndicator fx:id="progressIndicator_Progress" progress="0.0">
-               <FlowPane.margin>
-                  <Insets left="50.0" />
-               </FlowPane.margin>
-            </ProgressIndicator>
-            <Button fx:id="button_Test" mnemonicParsing="false" onAction="#diagnosticSingleObject" prefHeight="26.0" prefWidth="50.0" text="Test">
-               <FlowPane.margin>
-                  <Insets left="35.0" />
-               </FlowPane.margin>
-            </Button>
-            <Button fx:id="button_ShowDetails" mnemonicParsing="false" onAction="#showDetails" text="Show details">
-               <FlowPane.margin>
-                  <Insets left="515.0" />
-               </FlowPane.margin>
-            </Button>
-         </children>
-      </FlowPane>
-      <TableView fx:id="tableView_RegionMatrix" layoutX="14.0" layoutY="273.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="283.0" prefWidth="839.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="273.0">
+      <Button fx:id="button_Run" layoutX="14.0" layoutY="183.0" minWidth="80.0" mnemonicParsing="false" onAction="#run" text="Run model" />
+      <ProgressIndicator fx:id="progressIndicator_Progress" layoutX="157.0" layoutY="172.0" progress="0.0" />
+      <Button fx:id="button_Test" layoutX="228.0" layoutY="183.0" minWidth="80.0" mnemonicParsing="false" onAction="#diagnosticSingleObject" text="Test single object" />
+      <Button fx:id="button_ShowDetails" layoutX="694.0" layoutY="183.0" minWidth="80.0" mnemonicParsing="false" onAction="#showDetails" text="Show full objects info" />
+      <TableView fx:id="tableView_RegionMatrix" layoutX="14.0" layoutY="269.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="206.0" prefWidth="842.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="269.0">
          <columns>
             <TableColumn fx:id="column_Significance" maxWidth="104.00001525878906" minWidth="90.0" prefWidth="102.00001525878906" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Significance" />
             <TableColumn fx:id="column_RealClassTrue" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" resizable="false" sortable="false" text="Real class: 1">
@@ -219,7 +109,17 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button layoutX="14.0" layoutY="480.0" mnemonicParsing="false" onAction="#save" text="Save" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-      <Button layoutX="801.0" layoutY="480.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <Button fx:id="button_Save" layoutX="14.0" layoutY="388.0" minWidth="80.0" mnemonicParsing="false" onAction="#save" text="Save" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+      <Button fx:id="button_Cancel" layoutX="792.0" layoutY="388.0" minWidth="80.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <Label layoutX="367.0" layoutY="17.0" text="Model menu">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="407.0" layoutY="224.0" text="Matrix">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

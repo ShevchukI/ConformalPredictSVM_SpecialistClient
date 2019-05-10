@@ -43,7 +43,6 @@ public class DataSetMenuController extends MenuController {
     private WindowsController windowsController;
     private DataSet dataSet;
     private ChangeConfigurationMenuController changeConfigurationMenuController;
-    private int objectOnPage;
     private int allPageIndex;
     private int myPageIndex;
     private String dataSetObject;
@@ -134,7 +133,6 @@ public class DataSetMenuController extends MenuController {
         mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
         changeConfigurationMenuController = new ChangeConfigurationMenuController();
-        objectOnPage = 30;
         filterList = new ArrayList<String>();
         menuBarController.init(this);
         List<String> list = new ArrayList<String>();

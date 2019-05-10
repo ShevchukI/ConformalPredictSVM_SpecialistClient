@@ -37,6 +37,15 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="263.0" prefWidth="334.0">
                            <children>
+                              <Pagination fx:id="pagination_AllDataSet" layoutY="244.0" prefHeight="62.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="menuItem_AllChangeActive" mnemonicParsing="false" onAction="#changeActive" text="Change active" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
+                              </Pagination>
                               <TableView fx:id="tableView_AllDataSetTable" prefHeight="207.0" prefWidth="529.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
                                 <columns>
                                   <TableColumn fx:id="tableColumn_AllNumber" maxWidth="80.0" minWidth="30.0" style="-fx-alignment: CENTER;" text="#" />
@@ -52,15 +61,6 @@
                                     <Cursor fx:constant="DEFAULT" />
                                  </cursor>
                               </TableView>
-                              <Pagination fx:id="pagination_AllDataSet" layoutY="244.0" prefHeight="62.0" prefWidth="530.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0">
-                                 <contextMenu>
-                                    <ContextMenu>
-                                      <items>
-                                        <MenuItem fx:id="menuItem_AllChangeActive" mnemonicParsing="false" onAction="#changeActive" text="Change active" />
-                                      </items>
-                                    </ContextMenu>
-                                 </contextMenu>
-                              </Pagination>
                            </children>
                         </AnchorPane>
                   </content>

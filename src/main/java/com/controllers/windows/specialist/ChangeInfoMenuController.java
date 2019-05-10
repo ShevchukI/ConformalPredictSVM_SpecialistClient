@@ -2,14 +2,14 @@ package com.controllers.windows.specialist;
 
 import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
-import com.models.DataSet;
-import com.models.SpecialistEntity;
 import com.tools.Constant;
 import com.tools.Encryptor;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import org.apache.http.HttpResponse;
 
@@ -23,10 +23,6 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_CurrentPassword;
     private Tooltip tooltipError_NewPassword;
     private Tooltip tooltipError_ConfirmPassword;
-    private Tooltip tooltipError_Name;
-    private Tooltip tooltipError_Surname;
-    private ObservableList<DataSet> allDataSetObservableList;
-    private ObservableList<DataSet> myDataSetObservableList;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -35,22 +31,19 @@ public class ChangeInfoMenuController extends MenuController {
     @FXML
     private PasswordField passwordField_ConfirmPassword;
     @FXML
-    private TextField textField_Name;
-    @FXML
-    private TextField textField_Surname;
-    @FXML
     private Tooltip tooltip_CurrentPassword;
     @FXML
     private Tooltip tooltip_NewPassword;
     @FXML
     private Tooltip tooltip_ConfirmPassword;
     @FXML
-    private Tooltip tooltip_Name;
+    private Button button_Ok;
     @FXML
-    private Tooltip tooltip_Surname;
+    private Button button_Cancel;
+
 
     @FXML
-    public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
+    public void initialize(Stage stage, Stage newWindow) throws IOException {
         stage.setOnHidden(event -> {
             Constant.getInstance().getLifecycleService().shutdown();
         });
@@ -59,17 +52,11 @@ public class ChangeInfoMenuController extends MenuController {
         tooltipError_CurrentPassword = new Tooltip();
         tooltipError_NewPassword = new Tooltip();
         tooltipError_ConfirmPassword = new Tooltip();
-        tooltipError_Name = new Tooltip();
-        tooltipError_Surname = new Tooltip();
-        if (change) {
-            textField_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
-            textField_Surname.setText(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
-        }
+        button_Ok.setGraphic(Constant.okIcon());
+        button_Cancel.setGraphic(Constant.cancelIcon());
     }
 
     public void savePassword(ActionEvent event) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
@@ -79,15 +66,12 @@ public class ChangeInfoMenuController extends MenuController {
                         Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
                                 Constant.getMapByName(Constant.getKeyMapName()).get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
-                        alert.setContentText("Password changed!");
-                        alert.showAndWait();
+                        Constant.getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
                         getNewWindow().close();
                     }
                 }
             } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setContentText("Error! Current password incorrect, please try again.");
-                alert.showAndWait();
+                Constant.getAlert(null, "Error! Current password incorrect, please try again.", Alert.AlertType.ERROR);
             }
         }
 
@@ -97,44 +81,6 @@ public class ChangeInfoMenuController extends MenuController {
         getNewWindow().close();
     }
 
-    public void saveName(ActionEvent event) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        if (checkNames()) {
-            SpecialistEntity specialistEntity = new SpecialistEntity(textField_Name.getText(), textField_Surname.getText());
-            HttpResponse response = SpecialistController.changeName(specialistEntity);
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                alert.setContentText("Information changed!");
-                alert.showAndWait();
-                Constant.getMapByName(Constant.getUserMapName()).put("name", specialistEntity.getName());
-                Constant.getMapByName(Constant.getUserMapName()).put("surname", specialistEntity.getSurname());
-                Label label_Name = (Label)getStage().getScene().lookup("#label_Name");
-                label_Name.setText(Constant.getMapByName(Constant.getUserMapName()).get("name").toString() + " "
-                        + Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
-                getNewWindow().close();
-                TableView<DataSet> tableView_All = (TableView)getStage().getScene().lookup("#tableView_AllDataSetTable");
-                TableView<DataSet> tableView_My = (TableView)getStage().getScene().lookup("#tableView_MyDataSetTable");
-                allDataSetObservableList = tableView_All.getItems();
-                for(DataSet dataSet:allDataSetObservableList){
-                    if(dataSet.getSpecialistEntity().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())){
-                        dataSet.getSpecialistEntity().setName(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
-                        dataSet.getSpecialistEntity().setSurname(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
-                    }
-                }
-                tableView_All.refresh();
-
-                myDataSetObservableList = tableView_My.getItems();
-                for(DataSet dataSet:myDataSetObservableList){
-                    if(dataSet.getSpecialistEntity().getId() == Integer.parseInt(Constant.getMapByName(Constant.getUserMapName()).get("id").toString())){
-                        dataSet.getSpecialistEntity().setName(Constant.getMapByName(Constant.getUserMapName()).get("name").toString());
-                        dataSet.getSpecialistEntity().setSurname(Constant.getMapByName(Constant.getUserMapName()).get("surname").toString());
-                    }
-                }
-                tableView_My.refresh();
-            }
-        }
-    }
 
     public boolean checkPasswords() {
         if (passwordField_CurrentPassword.getText().equals("")) {
@@ -170,28 +116,4 @@ public class ChangeInfoMenuController extends MenuController {
         }
     }
 
-    public boolean checkNames() {
-        if (textField_Name.getText().equals("")) {
-            tooltipError_Name.setText("You name is empty!");
-            textField_Name.setTooltip(tooltipError_Name);
-            textField_Name.setStyle("-fx-border-color: red");
-        } else {
-            textField_Name.setTooltip(tooltip_Name);
-            textField_Name.setStyle("-fx-border-color: inherit");
-        }
-        if (textField_Surname.getText().equals("")) {
-            tooltipError_Surname.setText("You surname is empty!");
-            textField_Surname.setTooltip(tooltipError_Surname);
-            textField_Surname.setStyle("-fx-border-color: red");
-        } else {
-            textField_Surname.setTooltip(tooltip_Surname);
-            textField_Surname.setStyle("-fx-border-color: inherit");
-        }
-        if (textField_Name.getStyle().equals("-fx-border-color: inherit")
-                && textField_Surname.getStyle().equals("-fx-border-color: inherit")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

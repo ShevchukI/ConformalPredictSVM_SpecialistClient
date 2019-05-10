@@ -44,27 +44,14 @@ public class ChangeConfigurationMenuController extends MenuController {
     @FXML
     private TextField textField_Name;
     @FXML
-    private RadioButton radioButton_CSVC;
-    @FXML
-    private RadioButton radioButton_NUSVC;
-    @FXML
-    private TextField textField_C;
-    @FXML
-    private TextField textField_NU;
-    @FXML
     private ComboBox<SVMParameter> comboBox_KernelType;
     @FXML
     private TextField textField_Gamma;
     @FXML
     private TextField textField_Degree;
     @FXML
-    private TextField textField_Epsilon;
-    @FXML
-    private CheckBox checkBox_Probability;
-    @FXML
     private TextField textField_ToTest;
-    @FXML
-    private Button button_Run;
+
     @FXML
     private ProgressIndicator progressIndicator_Progress;
     @FXML
@@ -83,6 +70,14 @@ public class ChangeConfigurationMenuController extends MenuController {
     private TableColumn column_Empty;
     @FXML
     private TableColumn column_Uncertain;
+
+    @FXML
+    private Button button_Run;
+    @FXML
+    private Button button_Save;
+    @FXML
+    private Button button_Cancel;
+
 
 
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
@@ -152,10 +147,6 @@ public class ChangeConfigurationMenuController extends MenuController {
 
         comboBox_KernelType.setVisibleRowCount(5);
 
-
-        textField_C.disableProperty().bind(radioButton_CSVC.selectedProperty().not());
-        textField_NU.disableProperty().bind(radioButton_NUSVC.selectedProperty().not());
-
         columnCount = Constant.getCountSplitString(Constant.getMapByName(Constant.getDataSetMapName()).get("column").toString(), ",") - 2;
 
         textField_Gamma.setText(String.valueOf(Constant.getSvmGamma(columnCount)));
@@ -215,11 +206,6 @@ public class ChangeConfigurationMenuController extends MenuController {
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 ConfigurationEntity configurationEntity = new ConfigurationEntity().fromJson(response);
-                if (configurationEntity.getSvmParameter().getId() == 1) {
-                    radioButton_CSVC.setSelected(true);
-                } else if (configurationEntity.getSvmParameter().getId() == 4) {
-                    radioButton_NUSVC.setSelected(true);
-                }
                 for (int i = 0; i < observableKernelTypes.size(); i++) {
                     if (configurationEntity.getKernelParameter().getId() == observableKernelTypes.get(i).getId()) {
                         comboBox_KernelType.getSelectionModel().select(i);
@@ -227,18 +213,16 @@ public class ChangeConfigurationMenuController extends MenuController {
                     }
                 }
                 textField_Name.setText(configurationEntity.getName());
-                textField_C.setText(String.valueOf(configurationEntity.getC()));
-                textField_NU.setText(String.valueOf(configurationEntity.getNu()));
                 textField_Degree.setText(String.valueOf(configurationEntity.getDegree()));
                 textField_Gamma.setText(String.valueOf(configurationEntity.getGamma()));
-                textField_Epsilon.setText(String.valueOf(configurationEntity.getEps()));
-                if (configurationEntity.getProbability() == 1) {
-                    checkBox_Probability.setSelected(true);
-                }
                 textField_ToTest.setText(String.valueOf(configurationEntity.getTestPart()));
                 oldConfiguration = fillConfiguration();
             }
         }
+
+        button_Run.setGraphic(Constant.runIcon());
+        button_Save.setGraphic(Constant.okIcon());
+        button_Cancel.setGraphic(Constant.cancelIcon());
     }
 
     public void rulesOfDisable(String string) {
@@ -276,6 +260,8 @@ public class ChangeConfigurationMenuController extends MenuController {
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
             getNewWindow().close();
+        } else if(getStatusCode()==400){
+            Constant.getAlert(null, "You can`t change this model!", Alert.AlertType.ERROR);
         }
     }
 
@@ -358,8 +344,27 @@ public class ChangeConfigurationMenuController extends MenuController {
     public Configuration fillConfiguration() {
         Configuration configuration = new Configuration();
         configuration.setName(textField_Name.getText());
-        configuration.setEps(Double.parseDouble(textField_Epsilon.getText()));
+        configuration.setEps(Constant.getSvmEps());
         configuration.setKernelParameter(comboBox_KernelType.getSelectionModel().getSelectedItem().getId());
+//        NumberFormat formatter = new DecimalFormat("#0.000000000");
+//        String[] gammaNumber = textField_Gamma.getText().split(".");
+//        if(gammaNumber[1].length()>=9){
+//            textField_Gamma.setText(formatter.format(textField_Gamma.getText()));
+//        }
+        if(textField_Gamma.getText().matches("[0-9]{1,3}[.]?[0-9]{1,20}")){
+            configuration.setTestPart(Double.parseDouble(textField_Gamma.getText()));
+            textField_Gamma.setStyle("-fx-border-color: inherit");
+        } else {
+            textField_Gamma.setStyle("-fx-border-color: red");
+            return null;
+        }
+        if(textField_Degree.getText().matches("([0-9]{1,3})|([0-9]{1,3}[.]?[0-9]{1,9})")){
+            configuration.setTestPart(Double.parseDouble(textField_Degree.getText()));
+            textField_Degree.setStyle("-fx-border-color: inherit");
+        } else {
+            textField_Degree.setStyle("-fx-border-color: red");
+            return null;
+        }
         if (textField_ToTest.getText().matches("[0][.][0-9]{1,9}")) {
             configuration.setTestPart(Double.parseDouble(textField_ToTest.getText()));
             textField_ToTest.setStyle("-fx-border-color: inherit");
@@ -367,12 +372,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             textField_ToTest.setStyle("-fx-border-color: red");
             return null;
         }
-        if (radioButton_CSVC.isSelected()) {
-            configuration.setSvmParameter(1);
-        }
-        if (radioButton_NUSVC.isSelected()) {
-            configuration.setSvmParameter(4);
-        }
+        configuration.setSvmParameter(1);
         if (textField_Gamma.isDisable()) {
             configuration.setGamma(Constant.getSvmGamma(columnCount));
         } else {
@@ -383,21 +383,9 @@ public class ChangeConfigurationMenuController extends MenuController {
         } else {
             configuration.setDegree(Integer.parseInt(textField_Degree.getText()));
         }
-        if (textField_C.isDisable()) {
-            configuration.setC(Constant.getSvmC());
-        } else {
-            configuration.setC(Double.parseDouble(textField_C.getText()));
-        }
-        if (textField_NU.isDisable()) {
-            configuration.setNu(Constant.getSvmNu());
-        } else {
-            configuration.setNu(Double.parseDouble(textField_NU.getText()));
-        }
-        if (checkBox_Probability.isSelected()) {
-            configuration.setProbability(1);
-        } else {
-            configuration.setProbability(0);
-        }
+        configuration.setC(Constant.getSvmC());
+        configuration.setNu(Constant.getSvmNu());
+        configuration.setProbability(0);
         return configuration;
     }
 
