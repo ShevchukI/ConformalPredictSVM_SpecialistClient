@@ -6,11 +6,12 @@ import org.apache.http.HttpResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 
 /**
  * Created by Admin on 03.02.2019.
  */
-public class SpecialistEntity {
+public class SpecialistEntity implements Serializable{
 
     private int id;
     private String name;

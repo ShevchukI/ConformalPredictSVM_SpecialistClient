@@ -2,15 +2,9 @@ package com.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.hazelcast.config.Config;
 import com.hazelcast.config.MapConfig;
-import com.hazelcast.config.NetworkConfig;
-import com.hazelcast.core.Hazelcast;
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
 import com.models.Predict;
 import com.models.SVMParameter;
-import com.models.SpecialistEntity;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -39,11 +33,23 @@ import java.util.Optional;
 
 public class Constant {
 
-    private static final String INSTANCE_NAME = "mainSpecialistInstance";
-    private static final String USER_MAP_NAME = "specialist";
-    private static final String DATASET_MAP_NAME = "dataSet";
-    private static final String KEY_MAP_NAME = "key";
-    private static final String MISCELLANEOUS_MAP_NAME = "misc";
+    //Hazelcast
+    public final static String KEY = "key";
+    public final static String VECTOR = "vector";
+    public final static String LOGIN = "login";
+    public final static String PASSWORD = "password";
+    public final static String PAGE_INDEX_ALL_DATASET = "pageIndexAllDataSet";
+    public final static String PAGE_INDEX_MY_DATASET = "pageIndexMyDataSet";
+    public final static String PAGE_INDEX_ALL_MODEL = "pageIndexAllModel";
+    public final static String PAGE_INDEX_MY_MODEL = "pageIndexMyModel";
+
+
+
+//    private static final String INSTANCE_NAME = "mainSpecialistInstance";
+//    private static final String USER_MAP_NAME = "specialist";
+//    private static final String DATASET_MAP_NAME = "dataSet";
+//    private static final String KEY_MAP_NAME = "key";
+//    private static final String MISCELLANEOUS_MAP_NAME = "misc";
 
     //Icons
     private final static String SIGN_IN_ICON = "/img/icons/signIn.png";
@@ -67,25 +73,25 @@ public class Constant {
 
     private static final int OBJECT_ON_PAGE = 30;
 
-    public static void createInstanceAndMap() {
-        Config config = new Config();
-        config.setInstanceName(INSTANCE_NAME);
-        NetworkConfig networkConfig = config.getNetworkConfig();
-        networkConfig.setPort(1488);
-        config.addMapConfig(createMapWithName(USER_MAP_NAME));
-        config.addMapConfig(createMapWithName(DATASET_MAP_NAME));
-        config.addMapConfig(createMapWithName(KEY_MAP_NAME));
-        config.addMapConfig(createMapWithName(MISCELLANEOUS_MAP_NAME));
-        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
-    }
+//    public static void createInstanceAndMap() {
+//        Config config = new Config();
+//        config.setInstanceName(INSTANCE_NAME);
+//        NetworkConfig networkConfig = config.getNetworkConfig();
+//        networkConfig.setPort(1488);
+//        config.addMapConfig(createMapWithName(USER_MAP_NAME));
+//        config.addMapConfig(createMapWithName(DATASET_MAP_NAME));
+//        config.addMapConfig(createMapWithName(KEY_MAP_NAME));
+//        config.addMapConfig(createMapWithName(MISCELLANEOUS_MAP_NAME));
+//        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
+//    }
 
-    public static HazelcastInstance getInstance() {
-        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME);
-    }
+//    public static HazelcastInstance getInstance() {
+//        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME);
+//    }
 
-    public static IMap getMapByName(String mapName) {
-        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(mapName);
-    }
+//    public static IMap getMapByName(String mapName) {
+//        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(mapName);
+//    }
 
     private static MapConfig createMapWithName(String mapName) {
         MapConfig mapConfig = new MapConfig();
@@ -93,30 +99,41 @@ public class Constant {
         return mapConfig;
     }
 
-    public static void fillMap(SpecialistEntity specialistEntity, String login, String password) {
-        String key = new Encryptor().genRandString();
-        String vector = new Encryptor().genRandString();
-        getMapByName(KEY_MAP_NAME).put("key", key);
-        getMapByName(KEY_MAP_NAME).put("vector", vector);
-        getMapByName(USER_MAP_NAME).put("login", new Encryptor().encrypt(key, vector, login));
-        getMapByName(USER_MAP_NAME).put("password", new Encryptor().encrypt(key, vector, password));
-        getMapByName(USER_MAP_NAME).put("id", specialistEntity.getId());
-        getMapByName(USER_MAP_NAME).put("name", specialistEntity.getName());
-        getMapByName(USER_MAP_NAME).put("surname", specialistEntity.getSurname());
-        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllDataSet", "1");
-        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyDataSet", "1");
-        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllConfiguration", "1");
-        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyConfiguration", "1");
-    }
+//    public static void fillMap(SpecialistEntity specialistEntity, String login, String password) {
+//        String key = new Encryptor().genRandString();
+//        String vector = new Encryptor().genRandString();
+//        getMapByName(KEY_MAP_NAME).put("key", key);
+//        getMapByName(KEY_MAP_NAME).put("vector", vector);
+//        getMapByName(USER_MAP_NAME).put("login", new Encryptor().encrypt(key, vector, login));
+//        getMapByName(USER_MAP_NAME).put("password", new Encryptor().encrypt(key, vector, password));
+//        getMapByName(USER_MAP_NAME).put("id", specialistEntity.getId());
+//        getMapByName(USER_MAP_NAME).put("name", specialistEntity.getName());
+//        getMapByName(USER_MAP_NAME).put("surname", specialistEntity.getSurname());
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllDataSet", "1");
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyDataSet", "1");
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllConfiguration", "1");
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyConfiguration", "1");
+//    }
 
     public static String[] getAuth() {
         String[] auth = new String[2];
-        auth[0] = new Encryptor().decrypt(getMapByName(KEY_MAP_NAME).get("key").toString(),
-                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("login").toString());
-        auth[1] = new Encryptor().decrypt(getMapByName("key").get("key").toString(),
-                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("password").toString());
+        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
+                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
+        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
+                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
+        auth[0] = login;
+        auth[1] = password;
         return auth;
     }
+
+//    public static String[] getAuth() {
+//        String[] auth = new String[2];
+//        auth[0] = new Encryptor().decrypt(getMapByName(KEY_MAP_NAME).get("key").toString(),
+//                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("login").toString());
+//        auth[1] = new Encryptor().decrypt(getMapByName("key").get("key").toString(),
+//                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("password").toString());
+//        return auth;
+//    }
 
     public static ArrayList<SVMParameter> fillKernelType(HttpResponse response) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -321,25 +338,25 @@ public class Constant {
         }
     }
 
-    public static String getInstanceName() {
-        return INSTANCE_NAME;
-    }
-
-    public static String getUserMapName() {
-        return USER_MAP_NAME;
-    }
-
-    public static String getDataSetMapName() {
-        return DATASET_MAP_NAME;
-    }
-
-    public static String getKeyMapName() {
-        return KEY_MAP_NAME;
-    }
-
-    public static String getMiscellaneousMapName() {
-        return MISCELLANEOUS_MAP_NAME;
-    }
+//    public static String getInstanceName() {
+//        return INSTANCE_NAME;
+//    }
+//
+//    public static String getUserMapName() {
+//        return USER_MAP_NAME;
+//    }
+//
+//    public static String getDataSetMapName() {
+//        return DATASET_MAP_NAME;
+//    }
+//
+//    public static String getKeyMapName() {
+//        return KEY_MAP_NAME;
+//    }
+//
+//    public static String getMiscellaneousMapName() {
+//        return MISCELLANEOUS_MAP_NAME;
+//    }
 
     public static int getObjectOnPage() {
         return OBJECT_ON_PAGE;

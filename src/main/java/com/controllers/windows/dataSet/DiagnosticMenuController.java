@@ -7,8 +7,7 @@ import com.models.DataSet;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
 import com.tools.Constant;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import com.tools.HazelCastMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,11 +32,8 @@ import java.util.List;
  */
 public class DiagnosticMenuController extends MenuController {
 
-//    @Autowired
-//    HttpResponse response;
 
     private DataSet dataSet;
-    //    private ConfigurationEntity configurationEntity;
     private IllnessController illnessController;
     private int dataSetId;
     private int configurationId;
@@ -46,12 +42,7 @@ public class DiagnosticMenuController extends MenuController {
     private ObservableList<Predict> predicts;
     private Predict predict;
 
-    @FXML
-    private CheckBox checkBox_Significance;
-    @FXML
-    private Slider slider_Significance;
-    @FXML
-    private TextField textField_Significance;
+
     @FXML
     private ScrollPane scrollPane_Data;
     @FXML
@@ -68,11 +59,15 @@ public class DiagnosticMenuController extends MenuController {
     private StackPane stackPane_Progress;
     @FXML
     private Button button_Run;
-    @FXML
-    private Button button_Ok;
 
     @FXML
     public void initialize(Stage stage, Stage newWindow) throws IOException {
+        newWindow.setOnHidden(event -> {
+            HazelCastMap.getDataSetMap().clear();
+        });
+        stage.setOnHidden(event -> {
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
+        });
         setStage(stage);
         setNewWindow(newWindow);
         illnessController = new IllnessController();
@@ -83,20 +78,11 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Class.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleClass"));
         tableColumn_Credibility.setSortable(false);
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
-        NumberFormat formatter = new DecimalFormat("#0.00");
-        slider_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        textField_Significance.disableProperty().bind(checkBox_Significance.selectedProperty().not());
-        slider_Significance.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(new_val))).replace(",", ".")));
-            }
-        });
-        textField_Significance.setText(String.valueOf(formatter.format(Double.parseDouble(String.valueOf(slider_Significance.getValue()))).replace(",", ".")));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        dataSetId = Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString());
-        configurationId = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString());
+        dataSetId = HazelCastMap.getDataSetMap().get(1).getId();
+//        dataSetId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString());
+        configurationId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString());
         createFields(dataSetId);
     }
 
@@ -117,12 +103,6 @@ public class DiagnosticMenuController extends MenuController {
                 parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
             }
         }
-        if (checkBox_Significance.isSelected()) {
-            parameterSingleObject.setSignificance((100 - Double.parseDouble(textField_Significance.getText())) / 100);
-        } else {
-//            parameterSingleObject.setSignificance(100);
-            parameterSingleObject.setSignificance(null);
-        }
         HttpResponse response = illnessController.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -142,33 +122,48 @@ public class DiagnosticMenuController extends MenuController {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + parameterSingleObject.getSignificance());
                                 if (predict.getPredictClass() != 0) {
-                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
-//                                        switch (predict.getPredictClass()) {
-//                                            case 1:
-//                                                predict.setVisibleClass("Positive");
-//                                                break;
-//                                            case -1:
-//                                                predict.setVisibleClass("Negative");
-//                                                break;
-//                                            default:
-//                                                break;
+//                                        if (predict.getRealClass() == predict.getPredictClass()) {
+                                    NumberFormat formatter = new DecimalFormat("#00.00");
+                                    predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+//                                        } else {
+//                                            predict.setVisibleConfidence("");
 //                                        }
-                                        NumberFormat formatter = new DecimalFormat("#00.00");
-//                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
-                                        predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
-                                    } else {
-//                                        predict.setVisibleClass("Uncertain");
-                                        predict.setVisibleConfidence("");
-                                    }
-//
-//                                    predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
                                     tableView_Result.setItems(predicts);
                                     stackPane_Progress.setVisible(false);
                                     tableView_Result.setOpacity(100);
+
                                 }
+//                                if (predict.getPredictClass() != 0) {
+//                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
+////                                        switch (predict.getPredictClass()) {
+////                                            case 1:
+////                                                predict.setVisibleClass("Positive");
+////                                                break;
+////                                            case -1:
+////                                                predict.setVisibleClass("Negative");
+////                                                break;
+////                                            default:
+////                                                break;
+////                                        }
+//                                        NumberFormat formatter = new DecimalFormat("#00.00");
+////                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+//                                        predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
+//                                    } else {
+////                                        predict.setVisibleClass("Uncertain");
+//                                        predict.setVisibleConfidence("");
+//                                    }
+////
+////                                    predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
+//                                    predictList.clear();
+//                                    predictList.add(predict);
+//                                    predicts = FXCollections.observableArrayList(predictList);
+//                                    tableView_Result.setItems(predicts);
+//                                    stackPane_Progress.setVisible(false);
+//                                    tableView_Result.setOpacity(100);
+//                                }
                                 Thread.sleep(1000 * 1);
                             } else {
                                 return;
@@ -180,7 +175,6 @@ public class DiagnosticMenuController extends MenuController {
                         }
                     }
                     button_Run.setDisable(false);
-                    button_Ok.setDisable(false);
                 }
             });
             calculation.start();
@@ -191,14 +185,6 @@ public class DiagnosticMenuController extends MenuController {
         getNewWindow().close();
     }
 
-
-    public void setSignificanceValue(ActionEvent event) {
-        setSignificanceValue();
-    }
-
-    public void setSignificanceValue() {
-        slider_Significance.setValue(Double.parseDouble(textField_Significance.getText()));
-    }
 
     private void createFields(int dataSetId) throws IOException {
         HttpResponse response = DataSetController.getDataSetById(dataSetId);

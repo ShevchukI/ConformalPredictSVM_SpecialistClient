@@ -122,18 +122,29 @@ public class Predict {
     }
 
     public String getVisibleClass() {
-        if (getRealClass() == getPredictClass()) {
-            switch (getPredictClass()) {
-                case 1:
-                    return "Positive";
-                case -1:
-                    return "Negative";
-                default:
-                    break;
-            }
+        switch (getPredictClass()) {
+            case 1:
+                return "Positive";
+            case -1:
+                return "Negative";
+            default:
+                return "Uncertain";
         }
-        return "Uncertain";
     }
+
+//    public String getVisibleClass() {
+//        if (getRealClass() == getPredictClass()) {
+//            switch (getPredictClass()) {
+//                case 1:
+//                    return "Positive";
+//                case -1:
+//                    return "Negative";
+//                default:
+//                    break;
+//            }
+//        }
+//        return "Uncertain";
+//    }
 
     public String getVisibleCredibility() {
         return visibleCredibility;

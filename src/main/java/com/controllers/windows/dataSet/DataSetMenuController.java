@@ -11,6 +11,7 @@ import com.models.ConfigurationPage;
 import com.models.DataSet;
 import com.sun.javafx.collections.ObservableListWrapper;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -126,7 +127,7 @@ public class DataSetMenuController extends MenuController {
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         changePane(false);
         setStage(stage);
@@ -142,18 +143,27 @@ public class DataSetMenuController extends MenuController {
         filterList.add("*.txt");
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
-        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
-        setStatusCode(response.getStatusLine().getStatusCode());
-        if (checkStatusCode(getStatusCode())) {
-            dataSet = new DataSet().fromJson(response);
-            textField_Name.setText(dataSet.getName());
-            textArea_Description.setText(dataSet.getDescription());
-            if (dataSet.isActive()) {
-                choiceBox_Activate.setValue(list.get(0));
-            } else {
-                choiceBox_Activate.setValue(list.get(1));
-            }
+//        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(String.valueOf(HazelCastMap.getDataSetMap().get(1).getId())));
+//        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString()));
+//        setStatusCode(response.getStatusLine().getStatusCode());
+        dataSet = HazelCastMap.getDataSetMap().get(1);
+        textField_Name.setText(dataSet.getName());
+        textArea_Description.setText(dataSet.getDescription());
+        if (dataSet.isActive()) {
+            choiceBox_Activate.setValue(list.get(0));
+        } else {
+            choiceBox_Activate.setValue(list.get(1));
         }
+//        if (checkStatusCode(getStatusCode())) {
+//            dataSet = new DataSet().fromJson(response);
+//            textField_Name.setText(dataSet.getName());
+//            textArea_Description.setText(dataSet.getDescription());
+//            if (dataSet.isActive()) {
+//                choiceBox_Activate.setValue(list.get(0));
+//            } else {
+//                choiceBox_Activate.setValue(list.get(1));
+//            }
+//        }
         button_Delete.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
@@ -161,17 +171,17 @@ public class DataSetMenuController extends MenuController {
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
 
-        response = DataSetController.getDataSetObjects(dataSet.getId());
+        HttpResponse response = DataSetController.getDataSetObjects(dataSet.getId());
         dataSetObject = Constant.responseToString(response);
         tableView_Object = fillTableFromString(dataSetObject);
 
         allPageIndex = 1;
-        allPageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndexAllConfiguration").toString());
+        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_ALL_MODEL).toString());
         setSettingColumnTable(allPageIndex, tableView_AllConfiguration, tableColumn_AllNumber, tableColumn_AllName, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllConfiguration.setPageFactory(this::createAllPage);
 
         myPageIndex = 1;
-        myPageIndex = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("pageIndexAllConfiguration").toString());
+        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_MY_MODEL).toString());
         setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyConfiguration.setPageFactory(this::createMyPage);
 
@@ -257,15 +267,16 @@ public class DataSetMenuController extends MenuController {
 
     public void viewConfiguration() throws IOException {
         if (tab_AllConfiguration.isSelected()) {
-            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId",
+            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
                     tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId());
         }
         if (tab_MyConfiguration.isSelected()) {
-            Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId",
+            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
                     tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
         }
-        Constant.getMapByName(Constant.getDataSetMapName()).put("name", dataSet.getName());
-        Constant.getMapByName(Constant.getDataSetMapName()).put("column", dataSet.getColumns());
+        HazelCastMap.getDataSetMap().put(1, dataSet);
+//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("name", dataSet.getName());
+//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", true, 870, 540);
     }
@@ -301,8 +312,9 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void addConfiguration(ActionEvent event) throws IOException {
-        Constant.getMapByName(Constant.getDataSetMapName()).put("name", dataSet.getName());
-        Constant.getMapByName(Constant.getDataSetMapName()).put("column", dataSet.getColumns());
+        HazelCastMap.getDataSetMap().put(1, dataSet);
+//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("name", dataSet.getName());
+//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", false, 870, 540);
     }

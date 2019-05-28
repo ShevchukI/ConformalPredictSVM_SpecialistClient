@@ -1,6 +1,7 @@
 package com.controllers.windows.menu;
 
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
@@ -17,7 +18,7 @@ public abstract class MenuController {
 
     public void initialize(Stage stage) throws IOException {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
     }
@@ -59,6 +60,8 @@ public abstract class MenuController {
                         "Error code: " + statusCode, Alert.AlertType.ERROR);
                 return false;
             default:
+                Constant.getAlert(null,
+                        "Error code: " + statusCode, Alert.AlertType.ERROR);
                 return false;
         }
     }

@@ -4,6 +4,7 @@ import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
 import com.tools.Constant;
 import com.tools.Encryptor;
+import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -45,7 +46,7 @@ public class ChangeInfoMenuController extends MenuController {
     @FXML
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         setNewWindow(newWindow);
@@ -63,8 +64,8 @@ public class ChangeInfoMenuController extends MenuController {
                     HttpResponse response = SpecialistController.changePassword(passwordField_ConfirmPassword.getText());
                     setStatusCode(response.getStatusLine().getStatusCode());
                     if (checkStatusCode(getStatusCode())) {
-                        Constant.getMapByName(Constant.getUserMapName()).put("password", new Encryptor().encrypt(Constant.getMapByName(Constant.getKeyMapName()).get("key").toString(),
-                                Constant.getMapByName(Constant.getKeyMapName()).get("vector").toString(),
+                        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", new Encryptor().encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
+                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
                                 passwordField_ConfirmPassword.getText().toString()));
                         Constant.getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
                         getNewWindow().close();

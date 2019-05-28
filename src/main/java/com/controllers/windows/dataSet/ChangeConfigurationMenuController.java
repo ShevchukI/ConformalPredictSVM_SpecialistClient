@@ -9,6 +9,7 @@ import com.models.ConfigurationEntity;
 import com.models.ConfusionMatrixRow;
 import com.models.SVMParameter;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -82,11 +83,11 @@ public class ChangeConfigurationMenuController extends MenuController {
 
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
-            if (Constant.getInstance().getLifecycleService().isRunning()) {
-                Constant.getMapByName(Constant.getDataSetMapName()).remove("name");
-                Constant.getMapByName(Constant.getDataSetMapName()).remove("column");
-                Constant.getMapByName(Constant.getMiscellaneousMapName()).remove("configurationId");
-                Constant.getInstance().getLifecycleService().shutdown();
+            if (HazelCastMap.getInstance().getLifecycleService().isRunning()) {
+//                HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).remove("name");
+//                HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).remove("column");
+                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).remove("configurationId");
+                HazelCastMap.getInstance().getLifecycleService().shutdown();
             }
         });
         setStage(stage);
@@ -99,7 +100,8 @@ public class ChangeConfigurationMenuController extends MenuController {
         confusionMatrixRowList = new ArrayList<ConfusionMatrixRow>();
         confusionMatrixRowObservableList = FXCollections.observableArrayList();
         this.change = change;
-        label_DataSetName.setText(Constant.getMapByName(Constant.getDataSetMapName()).get("name").toString());
+        label_DataSetName.setText(HazelCastMap.getDataSetMap().get(1).getName());
+//        label_DataSetName.setText(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("name").toString());
         HttpResponse response = new SVMParameterController().getAllKernel();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -147,7 +149,8 @@ public class ChangeConfigurationMenuController extends MenuController {
 
         comboBox_KernelType.setVisibleRowCount(5);
 
-        columnCount = Constant.getCountSplitString(Constant.getMapByName(Constant.getDataSetMapName()).get("column").toString(), ",") - 2;
+        columnCount = Constant.getCountSplitString(HazelCastMap.getDataSetMap().get(1).getColumns(), ",") - 2;
+//        columnCount = Constant.getCountSplitString(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("column").toString(), ",") - 2;
 
         textField_Gamma.setText(String.valueOf(Constant.getSvmGamma(columnCount)));
 
@@ -184,16 +187,17 @@ public class ChangeConfigurationMenuController extends MenuController {
                 return;
             }
             response = ConfigurationController.createConfiguration(configuration,
-                    Integer.parseInt(Constant.getMapByName(Constant.getDataSetMapName()).get("id").toString()));
+                    Integer.parseInt(String.valueOf(HazelCastMap.getDataSetMap().get(1).getId())));
+//                    Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString()));
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 configId = Integer.parseInt(Constant.responseToString(response));
-                Constant.getMapByName(Constant.getMiscellaneousMapName()).put("configurationId", configId);
+                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId", configId);
             }
 
         } else {
 
-            configId = Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString());
+            configId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString());
             try {
                 response = ConfigurationController.getConfusionMatrix(configId);
                 confusionMatrixRowList = new ConfusionMatrixRow().listFromJson(response);
@@ -202,7 +206,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             }
             confusionMatrixRowObservableList.clear();
             confusionMatrixRowObservableList.addAll(confusionMatrixRowList);
-            response = ConfigurationController.getConfiguration(Integer.parseInt(Constant.getMapByName(Constant.getMiscellaneousMapName()).get("configurationId").toString()));
+            response = ConfigurationController.getConfiguration(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString()));
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 ConfigurationEntity configurationEntity = new ConfigurationEntity().fromJson(response);
@@ -385,7 +389,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         }
         configuration.setC(Constant.getSvmC());
         configuration.setNu(Constant.getSvmNu());
-        configuration.setProbability(0);
+        configuration.setProbability(1);
         return configuration;
     }
 

@@ -7,6 +7,7 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.DataSet;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -47,7 +48,7 @@ public class AddDataSetMenuController extends MenuController {
 
     public void initialize(Stage stage, Stage newWindow) {
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         setNewWindow(newWindow);

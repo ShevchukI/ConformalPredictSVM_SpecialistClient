@@ -1,7 +1,7 @@
 package com.controllers.windows.menu;
 
 import com.controllers.windows.specialist.LoginMenuController;
-import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -28,7 +28,7 @@ public class WindowsController {
 
 
     public void start(Stage stage) throws IOException {
-        Constant.createInstanceAndMap();
+        HazelCastMap.createInstanceAndMap();
         FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/specialist/loginMenu.fxml"));
         Pane loginMenuPane = (Pane) loginMenuLoader.load();
         Scene loginMenuScene = new Scene(loginMenuPane);

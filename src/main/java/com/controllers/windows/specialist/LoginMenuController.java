@@ -6,6 +6,7 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.SpecialistEntity;
 import com.tools.Constant;
+import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -34,7 +35,7 @@ public class LoginMenuController extends MenuController {
 
     public void initialize(Stage stage){
         stage.setOnHidden(event -> {
-            Constant.getInstance().getLifecycleService().shutdown();
+            HazelCastMap.getInstance().getLifecycleService().shutdown();
         });
         setStage(stage);
         mainMenuController = new MainMenuController();
@@ -58,7 +59,7 @@ public class LoginMenuController extends MenuController {
             HttpResponse response = SpecialistController.specialistAuthorization(authorization);
             setStatusCode(response.getStatusLine().getStatusCode());
             if(checkStatusCode(getStatusCode())){
-                Constant.fillMap(new SpecialistEntity().fromJson(response), textField_Login.getText(), passwordField_Password.getText());
+                HazelCastMap.fillMap(new SpecialistEntity().fromJson(response), authorization);
                 windowsController.openWindowResizable("menu/mainMenu", getStage(),
                         mainMenuController, "Main menu", 1100, 640);
             }
