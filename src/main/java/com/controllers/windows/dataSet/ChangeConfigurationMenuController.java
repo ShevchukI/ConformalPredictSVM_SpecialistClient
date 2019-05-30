@@ -389,7 +389,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         }
         configuration.setC(Constant.getSvmC());
         configuration.setNu(Constant.getSvmNu());
-        configuration.setProbability(1);
+        configuration.setProbability(0);
         return configuration;
     }
 
