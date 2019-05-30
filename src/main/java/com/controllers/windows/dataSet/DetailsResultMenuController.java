@@ -61,7 +61,7 @@ public class DetailsResultMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
-        configId = Integer.parseInt(HazelCastMap.getMapByName("misc").get("configurationId").toString());
+        configId = Integer.parseInt(HazelCastMap.getMiscellaneousMap().get("configurationId").toString());
         HttpResponse response = ConfigurationController.getDetailedResult(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
