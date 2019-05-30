@@ -127,10 +127,10 @@ public class AddDataSetMenuController extends MenuController {
         String fileName = "file.txt";
         File fileBuf = new File(fileName);
         FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
-        FileReader input = new FileReader(textField_FileName.getText());
-        BufferedReader bufRead = new BufferedReader(input);
-        String line = bufRead.readLine();
-        textArea_Columns.setText(line);
+//        FileReader input = new FileReader(textField_FileName.getText());
+//        BufferedReader bufRead = new BufferedReader(input);
+//        String line = bufRead.readLine();
+//        textArea_Columns.setText(line);
         String[] mainContent = textArea_Content.getText().split("\n");
         textArea_Content.clear();
         String[][] content = new String[mainContent.length][3];
@@ -199,6 +199,8 @@ public class AddDataSetMenuController extends MenuController {
             String line = bufRead.readLine();
             textArea_Columns.setText(line);
             while ((line = bufRead.readLine()) != null) {
+                line = line.replaceAll("M", "-1");
+                line = line.replaceAll("B", "1");
                 textArea_Content.appendText(line + "\n");
             }
         } catch (FileNotFoundException e1) {
@@ -236,6 +238,11 @@ public class AddDataSetMenuController extends MenuController {
     }
 
     public boolean checkObjectClass(String[][] content, int i) {
+        if (content[i][2].equals("M")) {
+            content[i][2] = content[i][2].replace("M", "-1");
+        } else if (content[i][2].equals("B")) {
+            content[i][2] = content[i][2].replace("B", "1");
+        }
         if (!content[i][2].equals("1") && !content[i][2].equals("-1")) {
             textArea_Error.appendText("Class error! Current: " + content[i][2] + " needed: 1 or -1:\n"
                     + "Object: " + content[i][0] + "," + content[i][1] + ";\n");
@@ -244,5 +251,6 @@ public class AddDataSetMenuController extends MenuController {
             return true;
         }
     }
+
 
 }
