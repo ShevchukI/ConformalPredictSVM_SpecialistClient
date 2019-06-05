@@ -1,12 +1,11 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.ConfigurationController;
 import com.controllers.requests.SVMParameterController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
-import com.models.Configuration;
 import com.models.ConfigurationEntity;
 import com.models.ConfusionMatrixRow;
+import com.models.Model;
 import com.models.SVMParameter;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
@@ -28,6 +27,7 @@ import java.util.List;
 
 public class ChangeConfigurationMenuController extends MenuController {
 
+    private Model model;
     private DiagnosticMenuController diagnosticMenuController;
     private DataSetMenuController dataSetMenuController;
     private WindowsController windowsController;
@@ -37,7 +37,7 @@ public class ChangeConfigurationMenuController extends MenuController {
     private int configId;
     private int processId;
     private boolean change;
-    private Configuration oldConfiguration;
+    private Model oldModel;
     private List<ConfusionMatrixRow> confusionMatrixRowList;
     private ObservableList<ConfusionMatrixRow> confusionMatrixRowObservableList;
     @FXML
@@ -100,6 +100,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         confusionMatrixRowList = new ArrayList<ConfusionMatrixRow>();
         confusionMatrixRowObservableList = FXCollections.observableArrayList();
         this.change = change;
+        model = new Model();
         label_DataSetName.setText(HazelCastMap.getDataSetMap().get(1).getName());
 //        label_DataSetName.setText(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("name").toString());
         HttpResponse response = new SVMParameterController().getAllKernel();
@@ -182,11 +183,11 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (!this.change) {
             rulesOfDisable(kernelTypes.get(0).getName());
             comboBox_KernelType.getSelectionModel().select(0);
-            Configuration configuration = fillConfiguration();
-            if (configuration == null) {
+            model = fillConfiguration();
+            if (model == null) {
                 return;
             }
-            response = ConfigurationController.createConfiguration(configuration,
+            response = model.createConfiguration(model,
                     Integer.parseInt(String.valueOf(HazelCastMap.getDataSetMap().get(1).getId())));
 //                    Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString()));
             setStatusCode(response.getStatusLine().getStatusCode());
@@ -199,14 +200,14 @@ public class ChangeConfigurationMenuController extends MenuController {
 
             configId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString());
             try {
-                response = ConfigurationController.getConfusionMatrix(configId);
+                response = model.getConfusionMatrix(configId);
                 confusionMatrixRowList = new ConfusionMatrixRow().listFromJson(response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             confusionMatrixRowObservableList.clear();
             confusionMatrixRowObservableList.addAll(confusionMatrixRowList);
-            response = ConfigurationController.getConfiguration(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString()));
+            response = model.getModel(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString()));
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 ConfigurationEntity configurationEntity = new ConfigurationEntity().fromJson(response);
@@ -220,7 +221,7 @@ public class ChangeConfigurationMenuController extends MenuController {
                 textField_Degree.setText(String.valueOf(configurationEntity.getDegree()));
                 textField_Gamma.setText(String.valueOf(configurationEntity.getGamma()));
                 textField_ToTest.setText(String.valueOf(configurationEntity.getTestPart()));
-                oldConfiguration = fillConfiguration();
+                oldModel = fillConfiguration();
             }
         }
 
@@ -253,14 +254,14 @@ public class ChangeConfigurationMenuController extends MenuController {
     }
 
     public void save(ActionEvent event) throws IOException {
-        Configuration configuration = fillConfiguration();
-        if (configuration == null) {
+        model = fillConfiguration();
+        if (model == null) {
             return;
         }
-        HttpResponse response = ConfigurationController.changeConfiguration(configuration, configId);
+        HttpResponse response = model.changeModel(model, configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
-            Constant.getAlert(null, "Configuration saved!", Alert.AlertType.INFORMATION);
+            Constant.getAlert(null, "Model saved!", Alert.AlertType.INFORMATION);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
             getNewWindow().close();
@@ -270,14 +271,14 @@ public class ChangeConfigurationMenuController extends MenuController {
     }
 
     public void run(ActionEvent event) throws IOException {
-        Configuration configuration = fillConfiguration();
-        if (configuration == null) {
+        model = fillConfiguration();
+        if (model == null) {
             return;
         }
-        HttpResponse response = ConfigurationController.changeConfiguration(configuration, configId);
+        HttpResponse response = model.changeModel(model, configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
-            response = ConfigurationController.startGenerateConfiguration(configId);
+            response = model.startGenerateConfiguration(configId);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 processId = Integer.parseInt(Constant.responseToString(response));
@@ -288,7 +289,7 @@ public class ChangeConfigurationMenuController extends MenuController {
                         double progress = 0;
                         while (progress != 1) {
                             try {
-                                HttpResponse response = ConfigurationController.getProgress(processId);
+                                HttpResponse response = model.getProgress(processId);
                                 progress = Double.parseDouble(Constant.responseToString(response)) / 100;
                                 System.out.println(progress);
                                 progressIndicator_Progress.setProgress(progress);
@@ -301,7 +302,7 @@ public class ChangeConfigurationMenuController extends MenuController {
                         }
                         button_Run.setDisable(false);
                         try {
-                            HttpResponse response = ConfigurationController.getConfusionMatrix(configId);
+                            HttpResponse response = model.getConfusionMatrix(configId);
                             confusionMatrixRowList = new ConfusionMatrixRow().listFromJson(response);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -321,7 +322,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         if (!change) {
             result = Constant.questionOkCancel("Do you really want to leave without save configuration?");
             if (result) {
-                HttpResponse response = ConfigurationController.deleteConfiguration(configId);
+                HttpResponse response = Model.deleteModel(configId);
                 setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(getStatusCode())) {
                     windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
@@ -333,10 +334,10 @@ public class ChangeConfigurationMenuController extends MenuController {
             }
         } else {
             if(checkOldConfiguration()) {
-                HttpResponse response = ConfigurationController.changeConfiguration(oldConfiguration, configId);
+                HttpResponse response = model.changeModel(oldModel, configId);
                 setStatusCode(response.getStatusLine().getStatusCode());
                 if (checkStatusCode(getStatusCode())) {
-                    response = ConfigurationController.startGenerateConfiguration(configId);
+                    response = model.startGenerateConfiguration(configId);
                 }
             }
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
@@ -345,65 +346,65 @@ public class ChangeConfigurationMenuController extends MenuController {
         }
     }
 
-    public Configuration fillConfiguration() {
-        Configuration configuration = new Configuration();
-        configuration.setName(textField_Name.getText());
-        configuration.setEps(Constant.getSvmEps());
-        configuration.setKernelParameter(comboBox_KernelType.getSelectionModel().getSelectedItem().getId());
+    public Model fillConfiguration() {
+        Model model = new Model();
+        model.setName(textField_Name.getText());
+        model.setEps(Constant.getSvmEps());
+        model.setKernelParameter(comboBox_KernelType.getSelectionModel().getSelectedItem().getId());
 //        NumberFormat formatter = new DecimalFormat("#0.000000000");
 //        String[] gammaNumber = textField_Gamma.getText().split(".");
 //        if(gammaNumber[1].length()>=9){
 //            textField_Gamma.setText(formatter.format(textField_Gamma.getText()));
 //        }
         if(textField_Gamma.getText().matches("[0-9]{1,3}[.]?[0-9]{1,20}")){
-            configuration.setTestPart(Double.parseDouble(textField_Gamma.getText()));
+            model.setTestPart(Double.parseDouble(textField_Gamma.getText()));
             textField_Gamma.setStyle("-fx-border-color: inherit");
         } else {
             textField_Gamma.setStyle("-fx-border-color: red");
             return null;
         }
         if(textField_Degree.getText().matches("([0-9]{1,3})|([0-9]{1,3}[.]?[0-9]{1,9})")){
-            configuration.setTestPart(Double.parseDouble(textField_Degree.getText()));
+            model.setTestPart(Double.parseDouble(textField_Degree.getText()));
             textField_Degree.setStyle("-fx-border-color: inherit");
         } else {
             textField_Degree.setStyle("-fx-border-color: red");
             return null;
         }
         if (textField_ToTest.getText().matches("[0][.][0-9]{1,9}")) {
-            configuration.setTestPart(Double.parseDouble(textField_ToTest.getText()));
+            model.setTestPart(Double.parseDouble(textField_ToTest.getText()));
             textField_ToTest.setStyle("-fx-border-color: inherit");
         } else {
             textField_ToTest.setStyle("-fx-border-color: red");
             return null;
         }
-        configuration.setSvmParameter(1);
+        model.setSvmParameter(1);
         if (textField_Gamma.isDisable()) {
-            configuration.setGamma(Constant.getSvmGamma(columnCount));
+            model.setGamma(Constant.getSvmGamma(columnCount));
         } else {
-            configuration.setGamma(Double.parseDouble(textField_Gamma.getText()));
+            model.setGamma(Double.parseDouble(textField_Gamma.getText()));
         }
         if (textField_Degree.isDisable()) {
-            configuration.setDegree(Constant.getSvmDegree());
+            model.setDegree(Constant.getSvmDegree());
         } else {
-            configuration.setDegree(Integer.parseInt(textField_Degree.getText()));
+            model.setDegree(Integer.parseInt(textField_Degree.getText()));
         }
-        configuration.setC(Constant.getSvmC());
-        configuration.setNu(Constant.getSvmNu());
-        configuration.setProbability(0);
-        return configuration;
+        model.setC(Constant.getSvmC());
+        model.setNu(Constant.getSvmNu());
+        model.setProbability(0);
+        return model;
     }
 
     private boolean checkOldConfiguration() {
-        Configuration configuration = fillConfiguration();
-        if (configuration.getKernelParameter() == oldConfiguration.getKernelParameter()
-                && configuration.getSvmParameter() == oldConfiguration.getSvmParameter()
-                && configuration.getC() == oldConfiguration.getC()
-                && configuration.getDegree() == oldConfiguration.getDegree()
-                && configuration.getEps() == oldConfiguration.getEps()
-                && configuration.getGamma() == oldConfiguration.getGamma()
-                && configuration.getNu() == oldConfiguration.getNu()
-                && configuration.getProbability() == oldConfiguration.getProbability()
-                && configuration.getTestPart() == oldConfiguration.getTestPart()) {
+        Model model = fillConfiguration();
+        if (model.getKernelParameter() == oldModel.getKernelParameter()
+                && model.getSvmParameter() == oldModel.getSvmParameter()
+                && model.getC() == oldModel.getC()
+                && model.getDegree() == oldModel.getDegree()
+                && model.getEps() == oldModel.getEps()
+                && model.getGamma() == oldModel.getGamma()
+                && model.getNu() == oldModel.getNu()
+                && model.getProbability() == oldModel.getProbability()
+                && model.getTestPart() == oldModel.getTestPart()) {
             return false;
         } else {
             return true;

@@ -1,6 +1,5 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.DataSetController;
 import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
 import com.models.DataSet;
@@ -187,7 +186,7 @@ public class DiagnosticMenuController extends MenuController {
 
 
     private void createFields(int dataSetId) throws IOException {
-        HttpResponse response = DataSetController.getDataSetById(dataSetId);
+        HttpResponse response = dataSet.getDataSetById(dataSetId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             dataSet = new DataSet().fromJson(response);

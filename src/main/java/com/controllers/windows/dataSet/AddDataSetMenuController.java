@@ -1,6 +1,5 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.DataSetController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -15,8 +14,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,6 +27,7 @@ public class AddDataSetMenuController extends MenuController {
     private ArrayList<String> filterList;
     private File file;
     private WindowsController windowsController;
+    private DataSet dataSet;
 
     @FXML
     private TextField textField_FileName;
@@ -55,6 +53,7 @@ public class AddDataSetMenuController extends MenuController {
         menuBarController.init(this);
         mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
+        dataSet = new DataSet();
         textArea_Error.setEditable(false);
         textArea_Error.setVisible(false);
         textArea_Error.setWrapText(true);
@@ -165,22 +164,16 @@ public class AddDataSetMenuController extends MenuController {
             textArea_Error.setStyle("-fx-text-fill: red");
             textArea_Error.setVisible(true);
         } else {
-            DataSet dataSet = new DataSet(textField_DataSetName.getText(),
+            int statusCode = dataSet.addNew(textField_DataSetName.getText(),
                     textArea_Description.getText(),
-                    textArea_Columns.getText());
-            HttpResponse response = DataSetController.createDataSet(dataSet);
-            setStatusCode(response.getStatusLine().getStatusCode());
-            if (checkStatusCode(getStatusCode())) {
-                int id = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
-                response = DataSetController.addObjectsToDataSet(fileBuf, id);
-                setStatusCode(response.getStatusLine().getStatusCode());
-                if (checkStatusCode(getStatusCode())) {
-                    fileBuf.delete();
-                }
-                Constant.getAlert(null, "Data Set saved!", Alert.AlertType.INFORMATION);
-                windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
-                getNewWindow().close();
+                    textArea_Columns.getText(), fileBuf);
+
+            if (checkStatusCode(statusCode)) {
+                fileBuf.delete();
             }
+            Constant.getAlert(null, "Data Set saved!", Alert.AlertType.INFORMATION);
+            windowsController.openWindowResizable("menu/mainMenu", getStage(), mainMenuController, "Main menu", 600, 640);
+            getNewWindow().close();
         }
     }
 

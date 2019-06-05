@@ -1,6 +1,5 @@
 package com.controllers.windows.menu;
 
-import com.controllers.requests.DataSetController;
 import com.controllers.windows.dataSet.AddDataSetMenuController;
 import com.controllers.windows.dataSet.DataSetMenuController;
 import com.models.DataSet;
@@ -32,6 +31,7 @@ public class MainMenuController extends MenuController {
     private DataSetPage dataSetPage;
     private int allPageIndex;
     private int myPageIndex;
+    private DataSet dataSet;
 
     @FXML
     private MenuBarController menuBarController;
@@ -88,6 +88,7 @@ public class MainMenuController extends MenuController {
         dataSetMenuController = new DataSetMenuController();
         HazelCastMap.getDataSetMap().clear();
         menuBarController.init(this);
+        dataSet = new DataSet();
 
         label_Name.setText(HazelCastMap.getSpecialistMap().get(1).getSurname() + " " + HazelCastMap.getSpecialistMap().get(1).getName());
         allPageIndex = 1;
@@ -146,7 +147,7 @@ public class MainMenuController extends MenuController {
     private Node createAllPage(int pageIndex) {
         try {
             allPageIndex = pageIndex + 1;
-            HttpResponse response = DataSetController.getDataSetAllPage(allPageIndex);
+            HttpResponse response = DataSet.getDataSetAllPage(allPageIndex);
             allDataSetObservableList = getOListAfterFillPage(allPageIndex, response,
                     allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable);
         } catch (IOException e) {
@@ -159,7 +160,7 @@ public class MainMenuController extends MenuController {
     private Node createMyPage(int pageIndex) {
         try {
             myPageIndex = pageIndex + 1;
-            HttpResponse response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
+            HttpResponse response = DataSet.getSpecialistDataSetAllPage(myPageIndex);
             myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
@@ -199,14 +200,14 @@ public class MainMenuController extends MenuController {
     public void changeActive(TableView<DataSet> firstTable, TableView<DataSet> secondTable, ObservableList<DataSet> secondList) throws IOException {
         int id = firstTable.getSelectionModel().getSelectedItem().getId();
         if (firstTable.getSelectionModel().getSelectedItem().isActive()) {
-            HttpResponse response = DataSetController.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
+            HttpResponse response = dataSet.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
                     false);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 firstTable.getSelectionModel().getSelectedItem().setActive(false);
             }
         } else {
-            HttpResponse response = DataSetController.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
+            HttpResponse response = dataSet.changeActive(firstTable.getSelectionModel().getSelectedItem().getId(),
                     true);
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
@@ -231,13 +232,13 @@ public class MainMenuController extends MenuController {
             delete(tableView_MyDataSetTable);
         }
         try {
-            HttpResponse response = DataSetController.getDataSetAllPage(allPageIndex);
+            HttpResponse response = DataSet.getDataSetAllPage(allPageIndex);
             allDataSetObservableList = getOListAfterFillPage(allPageIndex, response, allDataSetObservableList, pagination_AllDataSet, tableView_AllDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            HttpResponse response = DataSetController.getSpecialistDataSetAllPage(myPageIndex);
+            HttpResponse response = DataSet.getSpecialistDataSetAllPage(myPageIndex);
             myDataSetObservableList = getOListAfterFillPage(myPageIndex, response, myDataSetObservableList, pagination_MyDataSet, tableView_MyDataSetTable);
         } catch (IOException e) {
             e.printStackTrace();
@@ -249,7 +250,7 @@ public class MainMenuController extends MenuController {
                 + tableView.getSelectionModel().getSelectedItem().getName()
                 + "?");
         if (result) {
-            HttpResponse response = DataSetController.deleteDataSet(tableView.getSelectionModel().getSelectedItem().getId());
+            HttpResponse response = dataSet.deleteDataSet(tableView.getSelectionModel().getSelectedItem().getId());
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 Constant.getAlert(null, tableView.getSelectionModel().getSelectedItem().getName()

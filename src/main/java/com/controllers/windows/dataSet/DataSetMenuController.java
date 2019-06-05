@@ -1,7 +1,5 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.ConfigurationController;
-import com.controllers.requests.DataSetController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuBarController;
 import com.controllers.windows.menu.MenuController;
@@ -9,6 +7,7 @@ import com.controllers.windows.menu.WindowsController;
 import com.models.ConfigurationEntity;
 import com.models.ConfigurationPage;
 import com.models.DataSet;
+import com.models.Model;
 import com.sun.javafx.collections.ObservableListWrapper;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
@@ -171,7 +170,7 @@ public class DataSetMenuController extends MenuController {
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
 
-        HttpResponse response = DataSetController.getDataSetObjects(dataSet.getId());
+        HttpResponse response = dataSet.getDataSetObjects(dataSet.getId());
         dataSetObject = Constant.responseToString(response);
         tableView_Object = fillTableFromString(dataSetObject);
 
@@ -237,7 +236,7 @@ public class DataSetMenuController extends MenuController {
     private void createPage(int tablePageIndex, boolean allPage, TableView<ConfigurationEntity> tableView,
                             ObservableList<ConfigurationEntity> list, Pagination pagination) {
         try {
-            HttpResponse response = ConfigurationController.getConfigurationAllPage(dataSet.getId(), tablePageIndex, allPage);
+            HttpResponse response = Model.getModelAllPage(dataSet.getId(), tablePageIndex, allPage);
             list = getOListAfterFillPage(tablePageIndex, response,
                     list, pagination,
                     tableView);
@@ -283,20 +282,20 @@ public class DataSetMenuController extends MenuController {
 
 
     public void save(ActionEvent event) throws IOException {
-        HttpResponse response = DataSetController.changeDataSet(new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
+        HttpResponse response = dataSet.changeDataSet(new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
         setStatusCode(response.getStatusLine().getStatusCode());
         if (!checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Don`t save!", Alert.AlertType.ERROR);
         }
         if (!choiceBox_Activate.getSelectionModel().getSelectedItem().equals(dataSet.getVisibleActive())) {
-            response = DataSetController.changeActive(dataSet.getId(), !dataSet.isActive());
+            response = dataSet.changeActive(dataSet.getId(), !dataSet.isActive());
             setStatusCode(response.getStatusLine().getStatusCode());
             if (!checkStatusCode(getStatusCode())) {
                 Constant.getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
             }
         }
         if(changeFile) {
-            response = DataSetController.addObjectsToDataSet(fileBuf, dataSet.getId());
+            response = dataSet.addObjectsToDataSet(fileBuf, dataSet.getId());
             setStatusCode(response.getStatusLine().getStatusCode());
             if (!checkStatusCode(getStatusCode())) {
                 Constant.getAlert(null, "Objects don`t saved!", Alert.AlertType.ERROR);
@@ -405,7 +404,7 @@ public class DataSetMenuController extends MenuController {
                                       ObservableList<ConfigurationEntity> secondList,
                                       Pagination firstPagination, Pagination secondPagination) throws IOException {
         int configId = firstTable.getSelectionModel().getSelectedItem().getId();
-        HttpResponse response = ConfigurationController.activateConfiguration(configId);
+        HttpResponse response = Model.activateModel(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             createPage(firstPageIndex, allPage, firstTable, firstList,
@@ -436,7 +435,7 @@ public class DataSetMenuController extends MenuController {
 
     public void deleteConfiguration(TableView<ConfigurationEntity> tableView) throws IOException {
         int configId = tableView.getSelectionModel().getSelectedItem().getId();
-        HttpResponse response = ConfigurationController.deleteConfiguration(configId);
+        HttpResponse response = Model.deleteModel(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             createPage(allPageIndex, true, tableView_AllConfiguration, allConfigurationObservableList,

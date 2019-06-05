@@ -1,7 +1,7 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.ConfigurationController;
 import com.controllers.windows.menu.MenuController;
+import com.models.Model;
 import com.models.Predict;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
@@ -62,7 +62,7 @@ public class DetailsResultMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         configId = Integer.parseInt(HazelCastMap.getMiscellaneousMap().get("configurationId").toString());
-        HttpResponse response = ConfigurationController.getDetailedResult(configId);
+        HttpResponse response = Model.getDetailedResult(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             predictArrayList = Constant.getPredictListFromJson(response);
