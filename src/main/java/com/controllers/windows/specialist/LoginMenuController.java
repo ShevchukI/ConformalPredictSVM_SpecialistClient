@@ -1,9 +1,9 @@
 package com.controllers.windows.specialist;
 
-import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MainMenuController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
+import com.models.ModelDeveloper;
 import com.models.SpecialistEntity;
 import com.tools.Constant;
 import com.tools.HazelCastMap;
@@ -25,6 +25,7 @@ public class LoginMenuController extends MenuController {
 
     private MainMenuController mainMenuController;
     private WindowsController windowsController;
+    private ModelDeveloper modelDeveloper;
 
     @FXML
     private TextField textField_Login;
@@ -40,6 +41,7 @@ public class LoginMenuController extends MenuController {
         setStage(stage);
         mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
+        modelDeveloper = new ModelDeveloper();
         button_SignIn.setGraphic(Constant.signInIcon());
     }
 
@@ -56,7 +58,7 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            HttpResponse response = SpecialistController.specialistAuthorization(authorization);
+            HttpResponse response = modelDeveloper.specialistAuthorization(authorization);
             setStatusCode(response.getStatusLine().getStatusCode());
             if(checkStatusCode(getStatusCode())){
                 HazelCastMap.fillMap(new SpecialistEntity().fromJson(response), authorization);

@@ -1,7 +1,7 @@
 package com.controllers.windows.specialist;
 
-import com.controllers.requests.SpecialistController;
 import com.controllers.windows.menu.MenuController;
+import com.models.ModelDeveloper;
 import com.tools.Constant;
 import com.tools.Encryptor;
 import com.tools.HazelCastMap;
@@ -24,6 +24,7 @@ public class ChangeInfoMenuController extends MenuController {
     private Tooltip tooltipError_CurrentPassword;
     private Tooltip tooltipError_NewPassword;
     private Tooltip tooltipError_ConfirmPassword;
+    private ModelDeveloper modelDeveloper;
 
     @FXML
     private PasswordField passwordField_CurrentPassword;
@@ -50,6 +51,7 @@ public class ChangeInfoMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
+        modelDeveloper = new ModelDeveloper();
         tooltipError_CurrentPassword = new Tooltip();
         tooltipError_NewPassword = new Tooltip();
         tooltipError_ConfirmPassword = new Tooltip();
@@ -61,7 +63,7 @@ public class ChangeInfoMenuController extends MenuController {
         if (checkPasswords()) {
             if (passwordField_CurrentPassword.getText().equals(Constant.getAuth()[0])) {
                 if (passwordField_NewPassword.getText().equals(passwordField_ConfirmPassword.getText())) {
-                    HttpResponse response = SpecialistController.changePassword(passwordField_ConfirmPassword.getText());
+                    HttpResponse response = modelDeveloper.changePassword(passwordField_ConfirmPassword.getText());
                     setStatusCode(response.getStatusLine().getStatusCode());
                     if (checkStatusCode(getStatusCode())) {
                         HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", new Encryptor().encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),

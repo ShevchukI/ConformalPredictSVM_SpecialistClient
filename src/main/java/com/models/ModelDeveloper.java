@@ -1,14 +1,11 @@
-package com.controllers.requests;
+package com.models;
 
-import com.google.gson.Gson;
-import com.models.SpecialistEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
@@ -19,12 +16,17 @@ import org.apache.http.message.BasicStatusLine;
 import java.io.IOException;
 import java.util.Base64;
 
-/**
- * Created by Admin on 03.02.2019.
- */
-public class SpecialistController extends MainController{
+import static com.tools.Constant.crudEntity;
+import static com.tools.Constant.getUrl;
 
-    public static HttpResponse specialistAuthorization(String[] authorization) throws IOException {
+public class ModelDeveloper {
+    private int id;
+    private String name;
+    private String surname;
+    private String login;
+    private String password;
+
+    public HttpResponse specialistAuthorization(String[] authorization) throws IOException {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/authorization");
@@ -39,26 +41,11 @@ public class SpecialistController extends MainController{
         return response;
     }
 
-    public static HttpResponse specialistRegistration(SpecialistEntity specialistEntity) throws IOException {
-        String json = new Gson().toJson(specialistEntity);
-        String url = getUrl()+ "/registration";
-        HttpPost request = new HttpPost(url);
-        HttpResponse response = crudEntity(new StringEntity(json), request, null, null, null);
-        return response;
-    }
-
-    public static HttpResponse changePassword(String newPassword) throws IOException {
+    public HttpResponse changePassword(String newPassword) throws IOException {
         String url = getUrl()+ "/psw";
         HttpPut request = new HttpPut(url);
         HttpResponse response = crudEntity(new StringEntity(newPassword), null, null, request, null);
         return response;
     }
 
-    public static HttpResponse changeName(SpecialistEntity specialistEntity) throws IOException {
-        String json = new Gson().toJson(specialistEntity);
-        String url = getUrl();
-        HttpPut request = new HttpPut(url);
-        HttpResponse response = crudEntity(new StringEntity(json), null, null, request, null);
-        return response;
-    }
 }

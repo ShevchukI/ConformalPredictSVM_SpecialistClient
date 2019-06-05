@@ -1,6 +1,6 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.IllnessController;
+//import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
 import com.models.DataSet;
 import com.models.ParameterSingleObject;
@@ -33,7 +33,7 @@ public class DiagnosticMenuController extends MenuController {
 
 
     private DataSet dataSet;
-    private IllnessController illnessController;
+//    private IllnessController illnessController;
     private int dataSetId;
     private int configurationId;
     private String[] columns;
@@ -69,7 +69,8 @@ public class DiagnosticMenuController extends MenuController {
         });
         setStage(stage);
         setNewWindow(newWindow);
-        illnessController = new IllnessController();
+//        illnessController = new IllnessController();
+        predict = new Predict();
         predictList = new ArrayList<>();
         stackPane_Table.setVisible(true);
         stackPane_Progress.setVisible(false);
@@ -102,7 +103,7 @@ public class DiagnosticMenuController extends MenuController {
                 parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
             }
         }
-        HttpResponse response = illnessController.startSingleTest(configurationId, parameterSingleObject);
+        HttpResponse response = predict.startSingleTest(configurationId, parameterSingleObject);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
@@ -115,7 +116,7 @@ public class DiagnosticMenuController extends MenuController {
 //                    double progress = 0;
                     while (predict.getPredictClass() == 0) {
                         try {
-                            HttpResponse response = illnessController.resultSingleTest(processId);
+                            HttpResponse response = predict.resultSingleTest(processId);
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);

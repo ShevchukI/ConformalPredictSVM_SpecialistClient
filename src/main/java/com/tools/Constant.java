@@ -81,7 +81,7 @@ public class Constant {
     private final static String DOCTOR_URL = "/doctor-system/specialist";
     private final static String URL = LOCALHOST_URL + DOCTOR_URL;
 
-    protected static String getLocalhostUrl() {
+    public static String getLocalhostUrl() {
         return LOCALHOST_URL;
     }
 

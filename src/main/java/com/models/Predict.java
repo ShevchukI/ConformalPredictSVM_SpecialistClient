@@ -2,10 +2,16 @@ package com.models;
 
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import static com.tools.Constant.crudEntity;
+import static com.tools.Constant.getLocalhostUrl;
 
 /**
  * Created by Admin on 22.02.2019.
@@ -43,6 +49,21 @@ public class Predict {
         this.credibility = credibility;
         this.alphaPositive = alphaPositive;
         this.alphaNegative = alphaNegative;
+    }
+
+    public HttpResponse startSingleTest(int configurationId, ParameterSingleObject parameterSingleObject) throws IOException {
+        String json = new Gson().toJson(parameterSingleObject);
+        String url = getLocalhostUrl() + "/doctor-system/doctor/illness/result/" + configurationId + "/start";
+        HttpPost request = new HttpPost(url);
+        HttpResponse response = crudEntity(new StringEntity(json), request, null, null, null);
+        return response;
+    }
+
+    public HttpResponse resultSingleTest(int processId) throws IOException {
+        String url = getLocalhostUrl() + "/doctor-system/doctor/illness/result/" + processId + "/start";
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = crudEntity(null, null, request, null, null);
+        return response;
     }
 
     public int getId() {

@@ -1,6 +1,5 @@
 package com.controllers.windows.dataSet;
 
-import com.controllers.requests.SVMParameterController;
 import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.ConfigurationEntity;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChangeConfigurationMenuController extends MenuController {
+
 
     private Model model;
     private DiagnosticMenuController diagnosticMenuController;
@@ -103,7 +103,7 @@ public class ChangeConfigurationMenuController extends MenuController {
         model = new Model();
         label_DataSetName.setText(HazelCastMap.getDataSetMap().get(1).getName());
 //        label_DataSetName.setText(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("name").toString());
-        HttpResponse response = new SVMParameterController().getAllKernel();
+        HttpResponse response = SVMParameter.getAllKernel();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             kernelTypes = Constant.fillKernelType(response);
