@@ -41,7 +41,7 @@ public class LoginMenuController extends MenuController {
         setStage(stage);
         mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
-        modelDeveloper = new ModelDeveloper();
+//        modelDeveloper = new ModelDeveloper();
         button_SignIn.setGraphic(Constant.signInIcon());
     }
 
@@ -58,7 +58,8 @@ public class LoginMenuController extends MenuController {
             String[] authorization = new String[2];
             authorization[0] = textField_Login.getText();
             authorization[1] = passwordField_Password.getText();
-            HttpResponse response = modelDeveloper.specialistAuthorization(authorization);
+            modelDeveloper = new ModelDeveloper(textField_Login.getText(), passwordField_Password.getText());
+            HttpResponse response = modelDeveloper.authorization();
             setStatusCode(response.getStatusLine().getStatusCode());
             if(checkStatusCode(getStatusCode())){
                 HazelCastMap.fillMap(new SpecialistEntity().fromJson(response), authorization);

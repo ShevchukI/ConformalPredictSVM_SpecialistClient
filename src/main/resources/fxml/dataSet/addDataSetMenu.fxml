@@ -7,12 +7,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="548.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.AddDataSetMenuController">
+<BorderPane prefHeight="620.0" prefWidth="819.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.AddDataSetMenuController">
    <top>
       <VBox>
          <children>
             <fx:include fx:id="menuBar" source="../menu/menuBar.fxml" />
+            <AnchorPane prefHeight="0.0" prefWidth="819.0">
+               <children>
+                  <Label layoutX="316.0" layoutY="14.0" text="Add new Data set" AnchorPane.bottomAnchor="14.0" AnchorPane.topAnchor="14.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
          </children>
       </VBox>
    </top>
@@ -20,7 +30,7 @@
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="518.0" prefWidth="818.0">
          <children>
             <Label layoutX="14.0" layoutY="14.0" text="File:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-            <TextField fx:id="textField_FileName" layoutX="95.0" layoutY="9.0" prefHeight="26.0" prefWidth="230.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0" onAction="#fillUpData"/>
+            <TextField fx:id="textField_FileName" layoutX="95.0" layoutY="9.0" onAction="#fillUpData" prefHeight="26.0" prefWidth="230.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0" />
             <Label layoutX="15.0" layoutY="59.0" text="Name:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="59.0" />
             <TextField fx:id="textField_DataSetName" layoutX="101.0" layoutY="54.0" prefHeight="31.0" prefWidth="315.0" AnchorPane.leftAnchor="101.0" AnchorPane.topAnchor="54.0" />
             <Label layoutX="15.0" layoutY="103.0" text="Description:" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="103.0" />

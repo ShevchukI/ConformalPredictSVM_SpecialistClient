@@ -282,7 +282,8 @@ public class DataSetMenuController extends MenuController {
 
 
     public void save(ActionEvent event) throws IOException {
-        HttpResponse response = dataSet.changeDataSet(new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns()));
+        dataSet = new DataSet(dataSet.getId(), textField_Name.getText(), textArea_Description.getText(), dataSet.getColumns());
+        HttpResponse response = dataSet.changeDataSet();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (!checkStatusCode(getStatusCode())) {
             Constant.getAlert(null, "Don`t save!", Alert.AlertType.ERROR);

@@ -20,14 +20,20 @@ import static com.tools.Constant.crudEntity;
 import static com.tools.Constant.getUrl;
 
 public class ModelDeveloper {
-    private int id;
-    private String name;
-    private String surname;
+
     private String login;
     private String password;
 
-    public HttpResponse specialistAuthorization(String[] authorization) throws IOException {
-        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((authorization[0] + ":" + authorization[1]).getBytes());
+    public ModelDeveloper() {
+    }
+
+    public ModelDeveloper(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
+    public HttpResponse authorization() throws IOException {
+        String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((this.login + ":" + this.password).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(getUrl()+"/authorization");
         request.addHeader("Authorization", basicAuthPayload);

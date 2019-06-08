@@ -120,7 +120,7 @@ public class DataSet implements Serializable {
         return response;
     }
 
-    public static HttpResponse createDataSet(DataSet dataSet) throws IOException {
+    private HttpResponse createDataSet(DataSet dataSet) throws IOException {
         String json = new Gson().toJson(dataSet);
         String url = getUrl() + "/dataset/";
         HttpPost request = new HttpPost(url);
@@ -155,9 +155,9 @@ public class DataSet implements Serializable {
         return response;
     }
 
-    public static HttpResponse changeDataSet(DataSet dataSet) throws IOException {
-        String json = new Gson().toJson(dataSet);
-        String url = getUrl() + "/dataset/" + dataSet.getId();
+    public HttpResponse changeDataSet() throws IOException {
+        String json = new Gson().toJson(this);
+        String url = getUrl() + "/dataset/" + this.getId();
         HttpPut request = new HttpPut(url);
         HttpResponse response = crudEntity(new StringEntity(json), null, null, request, null);
         return response;
@@ -170,8 +170,8 @@ public class DataSet implements Serializable {
         return response;
     }
 
-    public static HttpResponse deleteDataSet(int dataSetId) throws IOException {
-        String url = getUrl() + "/dataset/" + dataSetId;
+    public HttpResponse deleteDataSet() throws IOException {
+        String url = getUrl() + "/dataset/" + this.id;
         HttpDelete request = new HttpDelete(url);
         HttpResponse response = crudEntity(null, null, null, null, request);
         return response;

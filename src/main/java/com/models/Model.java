@@ -18,16 +18,16 @@ import static com.tools.Constant.getUrl;
  * Created by Admin on 17.02.2019.
  */
 public class Model {
-    protected String name;
-    protected double c;
-    protected int degree;
-    protected double eps;
-    protected double gamma;
+    private String name;
+    private double c;
+    private int degree;
+    private double eps;
+    private double gamma;
     private int kernelParameter;
-    protected double nu;
-    protected int probability;
+    private double nu;
+    private int probability;
     private int svmParameter;
-    protected double testPart;
+    private double testPart;
 
     public Model() {
     }
@@ -64,7 +64,7 @@ public class Model {
 
     public static HttpResponse getModelAllPage(int dataSetId, int page, boolean allPage) throws IOException {
         String url;
-        if(allPage){
+        if (allPage) {
             url = getUrl() + "/configuration/all/" + dataSetId + "/" + page + "/" + Constant.getObjectOnPage();
         } else {
             url = getUrl() + "/configuration/all/" + dataSetId + "/" + page + "/" + Constant.getObjectOnPage() + "/specialist";
@@ -104,7 +104,7 @@ public class Model {
     }
 
     public static HttpResponse getDetailedResult(int configId) throws IOException {
-        String url = getUrl() + "/result/general/" + configId+"/configuration_result";
+        String url = getUrl() + "/result/general/" + configId + "/configuration_result";
         HttpGet request = new HttpGet(url);
         HttpResponse response = crudEntity(null, null, request, null, null);
         return response;

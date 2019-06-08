@@ -91,19 +91,19 @@ public class DiagnosticMenuController extends MenuController {
         tableView_Result.setOpacity(0);
         stackPane_Progress.setVisible(true);
         button_Run.setDisable(true);
-        ParameterSingleObject parameterSingleObject = new ParameterSingleObject("", 0);
+        ParameterSingleObject objectParameters = new ParameterSingleObject("", 0);
         for (int i = 2; i < columns.length; i++) {
             TextField textField = (TextField) gridPane_Data.lookup("#parameter" + i);
             if (!textField.getText().equals("")) {
-                parameterSingleObject.setParams(parameterSingleObject.getParams() + textField.getText());
+                objectParameters.setParams(objectParameters.getParams() + textField.getText());
             } else {
-                parameterSingleObject.setParams(parameterSingleObject.getParams() + 0);
+                objectParameters.setParams(objectParameters.getParams() + 0);
             }
             if (i != columns.length - 1) {
-                parameterSingleObject.setParams(parameterSingleObject.getParams() + ",");
+                objectParameters.setParams(objectParameters.getParams() + ",");
             }
         }
-        HttpResponse response = predict.startSingleTest(configurationId, parameterSingleObject);
+        HttpResponse response = predict.startSingleTest(configurationId, objectParameters);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             int processId = Integer.parseInt(Constant.responseToString(response));
@@ -120,7 +120,7 @@ public class DiagnosticMenuController extends MenuController {
                             setStatusCode(response.getStatusLine().getStatusCode());
                             if (getStatusCode() == 200) {
                                 predict = new Predict().fromJson(response);
-                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + parameterSingleObject.getSignificance());
+                                System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + objectParameters.getSignificance());
                                 if (predict.getPredictClass() != 0) {
 //                                        if (predict.getRealClass() == predict.getPredictClass()) {
                                     NumberFormat formatter = new DecimalFormat("#00.00");

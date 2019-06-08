@@ -122,7 +122,7 @@ public class MainMenuController extends MenuController {
 
     public void addDataSet(ActionEvent event) throws IOException {
         windowsController.openNewModalWindow("dataSet/addDataSetMenu", getStage(), addDataSetMenuController,
-                "Add new dataSet", 740, 500);
+                "", 740, 500);
     }
 
     public void viewDataSet(ActionEvent event) throws IOException {
@@ -137,7 +137,7 @@ public class MainMenuController extends MenuController {
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            HazelCastMap.getDataSetMap().put(1, tableView_AllDataSetTable.getSelectionModel().getSelectedItem());
+            HazelCastMap.getDataSetMap().put(1, tableView_MyDataSetTable.getSelectionModel().getSelectedItem());
             HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
@@ -250,7 +250,8 @@ public class MainMenuController extends MenuController {
                 + tableView.getSelectionModel().getSelectedItem().getName()
                 + "?");
         if (result) {
-            HttpResponse response = dataSet.deleteDataSet(tableView.getSelectionModel().getSelectedItem().getId());
+            dataSet = tableView.getSelectionModel().getSelectedItem();
+            HttpResponse response = dataSet.deleteDataSet();
             setStatusCode(response.getStatusLine().getStatusCode());
             if (checkStatusCode(getStatusCode())) {
                 Constant.getAlert(null, tableView.getSelectionModel().getSelectedItem().getName()
