@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.ChangeConfigurationMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.windows.dataSet.ChangeConfigurationMenuController">
    <children>
       <FlowPane layoutX="14.0" layoutY="52.0" prefHeight="22.0" prefWidth="837.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="52.0">
          <children>
@@ -87,7 +87,7 @@
       <ProgressIndicator fx:id="progressIndicator_Progress" layoutX="157.0" layoutY="172.0" progress="0.0" />
       <Button fx:id="button_Test" layoutX="228.0" layoutY="183.0" minWidth="80.0" mnemonicParsing="false" onAction="#diagnosticSingleObject" text="Test single object" />
       <Button fx:id="button_ShowDetails" layoutX="694.0" layoutY="183.0" minWidth="80.0" mnemonicParsing="false" onAction="#showDetails" text="Show full objects info" />
-      <TableView fx:id="tableView_RegionMatrix" layoutX="14.0" layoutY="269.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="206.0" prefWidth="842.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="269.0">
+      <TableView fx:id="tableView_RegionMatrix" layoutX="14.0" layoutY="269.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="214.0" prefWidth="842.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="269.0">
          <columns>
             <TableColumn fx:id="column_Significance" maxWidth="104.00001525878906" minWidth="90.0" prefWidth="102.00001525878906" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Significance" />
             <TableColumn fx:id="column_RealClassTrue" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" resizable="false" sortable="false" text="Real class: 1">

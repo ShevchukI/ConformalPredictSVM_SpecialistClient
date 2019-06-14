@@ -34,7 +34,7 @@ public class Model {
 
     public HttpResponse createConfiguration(Model model, int dataSetId) throws IOException {
         String json = new Gson().toJson(model);
-        String url = getUrl() + "/model/" + dataSetId;
+        String url = getUrl() + "/configuration/" + dataSetId;
         HttpPost request = new HttpPost(url);
         HttpResponse response = crudEntity(new StringEntity(json), request, null, null, null);
 
@@ -97,7 +97,7 @@ public class Model {
 
     public static HttpResponse changeModel(Model model, int configId) throws IOException {
         String json = new Gson().toJson(model);
-        String url = getUrl() + "/model/" + configId;
+        String url = getUrl() + "/configuration/" + configId;
         HttpPut request = new HttpPut(url);
         HttpResponse response = crudEntity(new StringEntity(json), null, null, request, null);
         return response;
