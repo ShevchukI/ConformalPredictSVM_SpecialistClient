@@ -261,7 +261,6 @@ public class MainMenuController extends MenuController {
             }
         }
     }
-
     private void setSettingColumnTable(int pageIndex, TableView tableView,
                                        TableColumn<DataSet, Number> columnNumber,
                                        TableColumn columnName,

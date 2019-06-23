@@ -24,10 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -80,13 +77,21 @@ public class Constant {
 //    private final static String LOCALHOST_URL = "http://495cad62.ngrok.io/";
     private final static String DOCTOR_URL = "/doctor-system/specialist";
     private final static String URL = LOCALHOST_URL + DOCTOR_URL;
+    private final static String SETTING_FILE_NAME = "config.ini";
 
     public static String getLocalhostUrl() {
         return LOCALHOST_URL;
     }
 
-    public static String getUrl(){
-        return URL;
+    public static String getUrl() {
+        try {
+            FileReader fileReader = new FileReader(SETTING_FILE_NAME);
+            Scanner scanner = new Scanner(fileReader);
+            return scanner.nextLine() + DOCTOR_URL;
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return URL;
+        }
     }
 
     public static HttpResponse crudEntity(HttpEntity httpEntity, HttpPost post, HttpGet get, HttpPut put, HttpDelete delete) {

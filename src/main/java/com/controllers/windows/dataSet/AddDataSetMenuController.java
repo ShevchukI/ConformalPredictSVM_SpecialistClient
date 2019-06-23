@@ -244,6 +244,4 @@ public class AddDataSetMenuController extends MenuController {
             return true;
         }
     }
-
-
 }

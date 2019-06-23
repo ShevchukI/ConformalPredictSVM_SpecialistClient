@@ -14,15 +14,6 @@ import static com.tools.Constant.getUrl;
 public class SVMParameter {
     private int id;
     private String name;
-
-    public SVMParameter() {
-    }
-
-    public SVMParameter(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public static HttpResponse getAllKernel() throws IOException {
         String url = getUrl()+"/configuration/kernel";
         HttpGet request = new HttpGet(url);
