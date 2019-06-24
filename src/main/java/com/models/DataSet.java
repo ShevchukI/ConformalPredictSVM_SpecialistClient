@@ -52,27 +52,6 @@ public class DataSet implements Serializable {
         this.columns = columns;
     }
 
-    public DataSet(String name, String description, String columns) {
-        this.name = name;
-        this.description = description;
-        this.columns = columns;
-    }
-
-    public DataSet(int id, String name, String description, boolean active, SpecialistEntity specialistEntity) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.active = active;
-        this.specialistEntity = specialistEntity;
-    }
-
-    public DataSet(int id, String name, String description, boolean active) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.active = active;
-    }
-
     public int addNew(String name, String description, String columns, File fileBuf) {
         int statusCode = 0;
         try {
@@ -133,7 +112,6 @@ public class DataSet implements Serializable {
         String basicAuthPayload = "Basic " + Base64.getEncoder().encodeToString((Constant.getAuth()[0] + ":" + Constant.getAuth()[1]).getBytes());
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost(url);
-//        HttpPost request = new HttpPost(getUrl() + "/dataset/" + dataSetId + "/objects");
         request.addHeader("Authorization", basicAuthPayload);
         MultipartEntity entity = new MultipartEntity();
         entity.addPart("file", new FileBody(file));

@@ -84,14 +84,6 @@ public class ChangeConfigurationMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         stage.setOnHidden(event -> {
             GlobalMap.getMiscMap().remove(Constant.CONFIGURATION_ID);
-//
-//            if (HazelCastMap.getInstance().getLifecycleService().isRunning()) {
-////                HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).remove("name");
-////                HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).remove("column");
-//                GlobalMap.getMiscMap().remove(Constant.CONFIGURATION_ID);
-////                HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).remove("configurationId");
-////                HazelCastMap.getInstance().getLifecycleService().shutdown();
-//            }
         });
         setStage(stage);
         setNewWindow(newWindow);
@@ -105,8 +97,6 @@ public class ChangeConfigurationMenuController extends MenuController {
         this.change = change;
         model = new Model();
         label_DataSetName.setText(GlobalMap.getDataSetMap().get(1).getName());
-//        label_DataSetName.setText(HazelCastMap.getDataSetMap().get(1).getName());
-//        label_DataSetName.setText(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("name").toString());
         HttpResponse response = SVMParameter.getAllKernel();
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {

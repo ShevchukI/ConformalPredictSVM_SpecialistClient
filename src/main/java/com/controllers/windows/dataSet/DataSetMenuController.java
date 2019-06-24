@@ -125,9 +125,6 @@ public class DataSetMenuController extends MenuController {
     private MenuItem menuItem_AllChangeActive;
 
     public void initialize(Stage stage) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         changePane(false);
         setStage(stage);
         mainMenuController = new MainMenuController();
@@ -142,11 +139,7 @@ public class DataSetMenuController extends MenuController {
         filterList.add("*.txt");
         ObservableList<String> observableList = new ObservableListWrapper<String>(list);
         choiceBox_Activate.setItems(observableList);
-//        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(String.valueOf(HazelCastMap.getDataSetMap().get(1).getId())));
-//        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString()));
-//        setStatusCode(response.getStatusLine().getStatusCode());
         dataSet = GlobalMap.getDataSetMap().get(1);
-//        dataSet = HazelCastMap.getDataSetMap().get(1);
         textField_Name.setText(dataSet.getName());
         textArea_Description.setText(dataSet.getDescription());
         if (dataSet.isActive()) {
@@ -154,16 +147,6 @@ public class DataSetMenuController extends MenuController {
         } else {
             choiceBox_Activate.setValue(list.get(1));
         }
-//        if (checkStatusCode(getStatusCode())) {
-//            dataSet = new DataSet().fromJson(response);
-//            textField_Name.setText(dataSet.getName());
-//            textArea_Description.setText(dataSet.getDescription());
-//            if (dataSet.isActive()) {
-//                choiceBox_Activate.setValue(list.get(0));
-//            } else {
-//                choiceBox_Activate.setValue(list.get(1));
-//            }
-//        }
         button_Delete.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllConfiguration.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyConfiguration.getSelectionModel().getSelectedItems())));
@@ -174,19 +157,14 @@ public class DataSetMenuController extends MenuController {
         HttpResponse response = dataSet.getDataSetObjects(dataSet.getId());
         dataSetObject = Constant.responseToString(response);
         tableView_Object = fillTableFromString(dataSetObject);
-
         allPageIndex = 1;
         allPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_ALL_MODEL));
-//        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_ALL_MODEL).toString());
         setSettingColumnTable(allPageIndex, tableView_AllConfiguration, tableColumn_AllNumber, tableColumn_AllName, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllConfiguration.setPageFactory(this::createAllPage);
-
         myPageIndex = 1;
         myPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_MY_MODEL));
-//        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_MY_MODEL).toString());
         setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyConfiguration.setPageFactory(this::createMyPage);
-
         choiceBox_Activate.getSelectionModel().selectedIndexProperty().addListener(
                 new ChangeListener<Number>() {
                     @Override
@@ -211,7 +189,6 @@ public class DataSetMenuController extends MenuController {
             button_Activate.setDisable(true);
         }
         changeFile = false;
-
         button_Add.setGraphic(Constant.addIcon());
         button_View.setGraphic(Constant.infoIcon());
         button_Change.setGraphic(Constant.editIcon());
@@ -219,7 +196,6 @@ public class DataSetMenuController extends MenuController {
         button_Cancel.setGraphic(Constant.cancelIcon());
         button_Back.setGraphic(Constant.returnIcon());
         button_Delete.setGraphic(Constant.deleteIcon());
-
     }
 
     private Node createAllPage(int pageIndex) {
@@ -271,19 +247,12 @@ public class DataSetMenuController extends MenuController {
         if (tab_AllConfiguration.isSelected()) {
             GlobalMap.getMiscMap().put(Constant.CONFIGURATION_ID,
                     String.valueOf(tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId()));
-//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
-//                    tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId());
         }
         if (tab_MyConfiguration.isSelected()) {
             GlobalMap.getMiscMap().put(Constant.CONFIGURATION_ID,
                     String.valueOf(tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId()));
-//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
-//                    tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
         }
         GlobalMap.getDataSetMap().put(1, dataSet);
-//        HazelCastMap.getDataSetMap().put(1, dataSet);
-//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("name", dataSet.getName());
-//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", true, 870, 540);
     }
@@ -321,9 +290,6 @@ public class DataSetMenuController extends MenuController {
 
     public void addConfiguration(ActionEvent event) throws IOException {
         GlobalMap.getDataSetMap().put(1, dataSet);
-//        HazelCastMap.getDataSetMap().put(1, dataSet);
-//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("name", dataSet.getName());
-//        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
                 "Add configuration", false, 870, 540);
     }
@@ -497,7 +463,6 @@ public class DataSetMenuController extends MenuController {
         String fileName = "file.txt";
         fileBuf = new File(fileName);
         FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
-
         String[] mainContent = textArea_Content.getText().split("\n");
         textArea_Content.clear();
         String[][] content = new String[mainContent.length][3];

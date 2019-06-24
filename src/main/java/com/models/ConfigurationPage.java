@@ -15,7 +15,6 @@ public class ConfigurationPage {
     private int numberOfPages;
     private List<ConfigurationEntity> datasetConfigurationEntities;
 
-
     public ConfigurationPage() {
     }
 

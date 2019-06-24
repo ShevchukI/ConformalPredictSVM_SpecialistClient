@@ -62,7 +62,6 @@ public class DetailsResultMenuController extends MenuController {
         setStage(stage);
         setNewWindow(newWindow);
         configId = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.CONFIGURATION_ID));
-//        configId = Integer.parseInt(HazelCastMap.getMiscellaneousMap().get("configurationId").toString());
         HttpResponse response = Model.getDetailedResult(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -90,8 +89,6 @@ public class DetailsResultMenuController extends MenuController {
         File file = directoryChooser.showDialog(getNewWindow());
         if (file != null) {
             textField_FileName.setText(file.getAbsolutePath() + GlobalMap.getDataSetMap().get(1).getName());
-//            textField_FileName.setText(file.getAbsolutePath() + HazelCastMap.getDataSetMap().get(1).getName());
-//            textField_FileName.setText(file.getAbsolutePath() + HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("name"));
         }
     }
 

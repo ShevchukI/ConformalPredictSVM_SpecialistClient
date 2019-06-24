@@ -16,9 +16,6 @@ public abstract class MenuController {
     private int statusCode;
 
     public void initialize(Stage stage) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
     }
 

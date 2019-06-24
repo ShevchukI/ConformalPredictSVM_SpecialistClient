@@ -1,6 +1,5 @@
 package com.controllers.windows.dataSet;
 
-//import com.controllers.requests.IllnessController;
 import com.controllers.windows.menu.MenuController;
 import com.models.DataSet;
 import com.models.ParameterSingleObject;
@@ -31,16 +30,13 @@ import java.util.List;
  */
 public class DiagnosticMenuController extends MenuController {
 
-
     private DataSet dataSet;
-//    private IllnessController illnessController;
     private int dataSetId;
     private int configurationId;
     private String[] columns;
     private List<Predict> predictList;
     private ObservableList<Predict> predicts;
     private Predict predict;
-
 
     @FXML
     private ScrollPane scrollPane_Data;
@@ -63,14 +59,9 @@ public class DiagnosticMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         newWindow.setOnHidden(event -> {
             GlobalMap.getDataSetMap().clear();
-//            HazelCastMap.getDataSetMap().clear();
         });
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         setNewWindow(newWindow);
-//        illnessController = new IllnessController();
         predict = new Predict();
         predictList = new ArrayList<>();
         stackPane_Table.setVisible(true);
@@ -82,10 +73,7 @@ public class DiagnosticMenuController extends MenuController {
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         dataSetId = GlobalMap.getDataSetMap().get(1).getId();
-//        dataSetId = HazelCastMap.getDataSetMap().get(1).getId();
-//        dataSetId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString());
         configurationId = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.CONFIGURATION_ID));
-//        configurationId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString());
         createFields(dataSetId);
     }
 
@@ -113,10 +101,8 @@ public class DiagnosticMenuController extends MenuController {
             Thread calculation = new Thread(new Runnable() {
                 @Override
                 public void run() {
-//                    button_Run.setDisable(true);
                     predict = new Predict();
                     predict.setPredictClass(0);
-//                    double progress = 0;
                     while (predict.getPredictClass() == 0) {
                         try {
                             HttpResponse response = predict.resultSingleTest(processId);
@@ -125,12 +111,8 @@ public class DiagnosticMenuController extends MenuController {
                                 predict = new Predict().fromJson(response);
                                 System.out.println(predict.getRealClass() + " : " + predict.getPredictClass() + " : " + predict.getConfidence() + " Sig: " + objectParameters.getSignificance());
                                 if (predict.getPredictClass() != 0) {
-//                                        if (predict.getRealClass() == predict.getPredictClass()) {
                                     NumberFormat formatter = new DecimalFormat("#00.00");
                                     predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
-//                                        } else {
-//                                            predict.setVisibleConfidence("");
-//                                        }
                                     predictList.clear();
                                     predictList.add(predict);
                                     predicts = FXCollections.observableArrayList(predictList);
@@ -139,34 +121,6 @@ public class DiagnosticMenuController extends MenuController {
                                     tableView_Result.setOpacity(100);
 
                                 }
-//                                if (predict.getPredictClass() != 0) {
-//                                    if (predict.getRealClass() == predict.getPredictClass() || predict.getRealClass() == 0) {
-////                                        switch (predict.getPredictClass()) {
-////                                            case 1:
-////                                                predict.setVisibleClass("Positive");
-////                                                break;
-////                                            case -1:
-////                                                predict.setVisibleClass("Negative");
-////                                                break;
-////                                            default:
-////                                                break;
-////                                        }
-//                                        NumberFormat formatter = new DecimalFormat("#00.00");
-////                                        predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
-//                                        predict.setVisibleConfidence(String.valueOf(formatter.format(predict.getConfidence() * 100)) + "%");
-//                                    } else {
-////                                        predict.setVisibleClass("Uncertain");
-//                                        predict.setVisibleConfidence("");
-//                                    }
-////
-////                                    predict.setVisibleConfidence(String.valueOf(predict.getConfidence() * 100) + "%");
-//                                    predictList.clear();
-//                                    predictList.add(predict);
-//                                    predicts = FXCollections.observableArrayList(predictList);
-//                                    tableView_Result.setItems(predicts);
-//                                    stackPane_Progress.setVisible(false);
-//                                    tableView_Result.setOpacity(100);
-//                                }
                                 Thread.sleep(1000 * 1);
                             } else {
                                 return;
@@ -188,7 +142,6 @@ public class DiagnosticMenuController extends MenuController {
         getNewWindow().close();
     }
 
-
     private void createFields(int dataSetId) throws IOException {
         HttpResponse response = dataSet.getDataSetById(dataSetId);
         setStatusCode(response.getStatusLine().getStatusCode());
@@ -204,7 +157,6 @@ public class DiagnosticMenuController extends MenuController {
                 gridPane_Data.setHalignment(label, HPos.LEFT);
                 gridPane_Data.add(textField, 1, i);
                 gridPane_Data.setHalignment(textField, HPos.RIGHT);
-
                 gridPane_Data.setMargin(label, new Insets(14, 5, 10, 14));
                 gridPane_Data.setMargin(textField, new Insets(14, 14, 10, 5));
             }

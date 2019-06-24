@@ -45,10 +45,7 @@ public class ChangeInfoMenuController extends MenuController {
 
 
     @FXML
-    public void initialize(Stage stage, Stage newWindow) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
+    public void initialize(Stage stage, Stage newWindow, boolean change) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
         modelDeveloper = new ModelDeveloper();
@@ -70,10 +67,6 @@ public class ChangeInfoMenuController extends MenuController {
                                 Encryptor.encrypt(GlobalMap.getKeyMap().get(Constant.KEY),
                                         GlobalMap.getKeyMap().get(Constant.VECTOR),
                                         passwordField_ConfirmPassword.getText()));
-
-//                        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", new Encryptor().encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
-//                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
-//                                passwordField_ConfirmPassword.getText().toString()));
                         Constant.getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
                         getNewWindow().close();
                     }
@@ -82,13 +75,11 @@ public class ChangeInfoMenuController extends MenuController {
                 Constant.getAlert(null, "Error! Current password incorrect, please try again.", Alert.AlertType.ERROR);
             }
         }
-
     }
 
     public void cancel(ActionEvent event) {
         getNewWindow().close();
     }
-
 
     public boolean checkPasswords() {
         if (passwordField_CurrentPassword.getText().equals("")) {
@@ -123,5 +114,4 @@ public class ChangeInfoMenuController extends MenuController {
             return false;
         }
     }
-
 }

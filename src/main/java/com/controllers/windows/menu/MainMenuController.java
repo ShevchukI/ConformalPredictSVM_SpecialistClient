@@ -79,34 +79,24 @@ public class MainMenuController extends MenuController {
     private Button button_Delete;
 
     public void initialize(Stage stage) throws IOException {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         addDataSetMenuController = new AddDataSetMenuController();
         windowsController = new WindowsController();
         dataSetMenuController = new DataSetMenuController();
         GlobalMap.getDataSetMap().clear();
-//        HazelCastMap.getDataSetMap().clear();
         menuBarController.init(this);
         dataSet = new DataSet();
-
         label_Name.setText(GlobalMap.getSpecialistMap().get(1).getSurname() + " " + GlobalMap.getSpecialistMap().get(1).getName());
-//        label_Name.setText(HazelCastMap.getSpecialistMap().get(1).getSurname() + " " + HazelCastMap.getSpecialistMap().get(1).getName());
         allPageIndex = 1;
         allPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_ALL_DATASET));
-//        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndexAllDataSet").toString());
         setSettingColumnTable(allPageIndex, tableView_AllDataSetTable, tableColumn_AllNumber,
                 tableColumn_AllName, tableColumn_AllDescription, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllDataSet.setPageFactory(this::createAllPage);
-
         myPageIndex = 1;
         myPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_MY_DATASET));
-//        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndexMyDataSet").toString());
         setSettingColumnTable(myPageIndex, tableView_MyDataSetTable, tableColumn_MyNumber,
                 tableColumn_MyName, tableColumn_MyDescription, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyDataSet.setPageFactory(this::createMyPage);
-
         button_View.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
@@ -116,11 +106,9 @@ public class MainMenuController extends MenuController {
         button_Delete.disableProperty()
                 .bind(Bindings.isEmpty(tableView_AllDataSetTable.getSelectionModel().getSelectedItems())
                         .and(Bindings.isEmpty(tableView_MyDataSetTable.getSelectionModel().getSelectedItems())));
-
         button_Add.setGraphic(Constant.addIcon());
         button_View.setGraphic(Constant.infoIcon());
         button_Delete.setGraphic(Constant.deleteIcon());
-
     }
 
 
@@ -137,16 +125,12 @@ public class MainMenuController extends MenuController {
         if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
             GlobalMap.getDataSetMap().put(1, tableView_AllDataSetTable.getSelectionModel().getSelectedItem());
             GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_ALL_DATASET, String.valueOf(allPageIndex));
-//            HazelCastMap.getDataSetMap().put(1, tableView_AllDataSetTable.getSelectionModel().getSelectedItem());
-//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_ALL_DATASET, allPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
             GlobalMap.getDataSetMap().put(1, tableView_MyDataSetTable.getSelectionModel().getSelectedItem());
             GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_MY_DATASET, String.valueOf(myPageIndex));
-//            HazelCastMap.getDataSetMap().put(1, tableView_MyDataSetTable.getSelectionModel().getSelectedItem());
-//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
@@ -162,7 +146,6 @@ public class MainMenuController extends MenuController {
             e.printStackTrace();
         }
         GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_ALL_DATASET, String.valueOf(allPageIndex));
-//        HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_ALL_DATASET, allPageIndex);
         return tableView_AllDataSetTable;
     }
 
@@ -175,7 +158,6 @@ public class MainMenuController extends MenuController {
             e.printStackTrace();
         }
         GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_MY_DATASET, String.valueOf(myPageIndex));
-//        HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
         return tableView_MyDataSetTable;
     }
 
@@ -190,7 +172,6 @@ public class MainMenuController extends MenuController {
 
     public ObservableList getOListAfterFillPage(int pageIndex, HttpResponse response, ObservableList<DataSet> list,
                                                 Pagination pagination, TableView<DataSet> tableView) throws IOException {
-
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
             dataSetPage = new DataSetPage().fromJson(response);
@@ -232,7 +213,6 @@ public class MainMenuController extends MenuController {
         firstTable.refresh();
         secondTable.refresh();
     }
-
 
     public void delete(ActionEvent event) throws IOException {
         if (tab_All.isSelected()) {

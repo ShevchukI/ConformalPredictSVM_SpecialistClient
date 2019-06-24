@@ -21,7 +21,6 @@ public class SVMParameter {
         return response;
     }
 
-
     public int getId() {
         return id;
     }

@@ -43,14 +43,6 @@ public class Constant {
     public final static String PAGE_INDEX_MY_MODEL = "pageIndexMyModel";
     public final static String CONFIGURATION_ID = "configuration_id";
 
-
-
-//    private static final String INSTANCE_NAME = "mainSpecialistInstance";
-//    private static final String USER_MAP_NAME = "specialist";
-//    private static final String DATASET_MAP_NAME = "dataSet";
-//    private static final String KEY_MAP_NAME = "key";
-//    private static final String MISCELLANEOUS_MAP_NAME = "misc";
-
     //Icons
     private final static String SIGN_IN_ICON = "/img/icons/signIn.png";
     private final static String APPLICATION_ICON = "img/icons/icon.png";
@@ -64,7 +56,6 @@ public class Constant {
     private final static String SEARCH_ICON = "img/icons/search.png";
     private final static String EDIT_ICON = "img/icons/edit.png";
 
-
     private static final int SVM_DEGREE = 3;
     private static final double SVM_GAMMA = 1;
     private static final double SVM_C = 1;
@@ -74,8 +65,6 @@ public class Constant {
     private static final int OBJECT_ON_PAGE = 30;
 
     private final static String LOCALHOST_URL = "http://localhost:8888";
-    //    private final static String LOCALHOST_URL = "http://111810cd.ngrok.io";
-//    private final static String LOCALHOST_URL = "http://495cad62.ngrok.io/";
     private final static String DOCTOR_URL = "/doctor-system/specialist";
     private final static String URL = LOCALHOST_URL + DOCTOR_URL;
     private final static String SETTING_FILE_NAME = "config.ini";
@@ -100,21 +89,17 @@ public class Constant {
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpRequestBase request = null;
         if (post != null) {
-
             post.setHeader("Content-Type", "application/json");
             if(httpEntity!=null) {
                 post.setEntity(httpEntity);
             }
             request = post;
-
         } else if (put != null) {
-
             put.setHeader("Content-Type", "application/json");
             if(httpEntity!=null) {
                 put.setEntity(httpEntity);
             }
             request = put;
-
         } else if (get != null) {
             request = get;
         } else if (delete != null) {
@@ -161,47 +146,11 @@ public class Constant {
         }
     }
 
-//    public static void createInstanceAndMap() {
-//        Config config = new Config();
-//        config.setInstanceName(INSTANCE_NAME);
-//        NetworkConfig networkConfig = config.getNetworkConfig();
-//        networkConfig.setPort(1488);
-//        config.addMapConfig(createMapWithName(USER_MAP_NAME));
-//        config.addMapConfig(createMapWithName(DATASET_MAP_NAME));
-//        config.addMapConfig(createMapWithName(KEY_MAP_NAME));
-//        config.addMapConfig(createMapWithName(MISCELLANEOUS_MAP_NAME));
-//        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
-//    }
-
-//    public static HazelcastInstance getInstance() {
-//        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME);
-//    }
-
-//    public static IMap getMapByName(String mapName) {
-//        return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME).getMap(mapName);
-//    }
-
     private static MapConfig createMapWithName(String mapName) {
         MapConfig mapConfig = new MapConfig();
         mapConfig.setName(mapName);
         return mapConfig;
     }
-
-//    public static void fillMap(SpecialistEntity specialistEntity, String login, String password) {
-//        String key = new Encryptor().genRandString();
-//        String vector = new Encryptor().genRandString();
-//        getMapByName(KEY_MAP_NAME).put("key", key);
-//        getMapByName(KEY_MAP_NAME).put("vector", vector);
-//        getMapByName(USER_MAP_NAME).put("login", new Encryptor().encrypt(key, vector, login));
-//        getMapByName(USER_MAP_NAME).put("password", new Encryptor().encrypt(key, vector, password));
-//        getMapByName(USER_MAP_NAME).put("id", specialistEntity.getId());
-//        getMapByName(USER_MAP_NAME).put("name", specialistEntity.getName());
-//        getMapByName(USER_MAP_NAME).put("surname", specialistEntity.getSurname());
-//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllDataSet", "1");
-//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyDataSet", "1");
-//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexAllConfiguration", "1");
-//        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyConfiguration", "1");
-//    }
 
     public static String[] getAuth() {
         String[] auth = new String[2];
@@ -211,23 +160,10 @@ public class Constant {
         String password = Encryptor.decrypt(GlobalMap.getKeyMap().get(Constant.KEY),
                 GlobalMap.getKeyMap().get(Constant.VECTOR),
                 GlobalMap.getUserMap().get(Constant.PASSWORD));
-//        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
-//        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
         auth[0] = login;
         auth[1] = password;
         return auth;
     }
-
-//    public static String[] getAuth() {
-//        String[] auth = new String[2];
-//        auth[0] = new Encryptor().decrypt(getMapByName(KEY_MAP_NAME).get("key").toString(),
-//                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("login").toString());
-//        auth[1] = new Encryptor().decrypt(getMapByName("key").get("key").toString(),
-//                getMapByName(KEY_MAP_NAME).get("vector").toString(), getMapByName(USER_MAP_NAME).get("password").toString());
-//        return auth;
-//    }
 
     public static ArrayList<SVMParameter> fillKernelType(HttpResponse response) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -298,7 +234,6 @@ public class Constant {
     public static String responseToString(HttpResponse response) throws IOException {
         HttpEntity entity = response.getEntity();
         String content = EntityUtils.toString(entity);
-//        return  EntityUtils.toString(response.getEntity());
         return content;
     }
 
@@ -323,7 +258,6 @@ public class Constant {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Result");
         XSSFCellStyle styleStandart = settingsExcel.createStyleForCellStandart(workbook);
-
         String[] columnsTitle = {"Id", "Real class", "Predict class", "Confidence", "Credibility",
                 "pPositive", "pNegative", "Alpha positive", "Alpha negative", "Parameters"};
         settingsExcel.createCellForTitle(sheet, columnsTitle);
@@ -331,7 +265,6 @@ public class Constant {
         Cell cell;
 
         settingsExcel.createMainCell(sheet, predicts);
-
         int indentRow = predicts.size() + 2;
 
         row = sheet.createRow(indentRow);
@@ -364,7 +297,6 @@ public class Constant {
         cell.setCellStyle(styleStandart);
 
         double[] significance = {0.01, 0.05, 0.1, 0.15, 0.2};
-
         int column = 6;
         int[] matrix = new int[column];
 
@@ -388,25 +320,11 @@ public class Constant {
                 } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == 1) {
                     matrix[3] = matrix[3] + 1;
                 }
-//                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == 1) {
-//                    matrix[1] = matrix[1] + 1;
-//                } else if (predicts.get(k).getRealClass() == 1 && predicts.get(k).getPredictClass() == -1) {
-//                    matrix[2] = matrix[2] + 1;
-//                } else if (predicts.get(k).getRealClass() == -1 && predicts.get(k).getPredictClass() == -1) {
-//                    matrix[3] = matrix[3] + 1;
-//                }
-
             }
             settingsExcel.createCellRowMatrixRegionPrediction(sheet, matrix, significance[i], indentRow + i);
         }
-
-//        File file = null;
-//        try {
         File file = new File(outputFileName + ".xlsx");
         file.getParentFile().mkdirs();
-//        } catch (NullPointerException e) {
-//            getAlert(null, "Invalid directory", Alert.AlertType.ERROR);
-//        }
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
         outFile.close();
@@ -431,26 +349,6 @@ public class Constant {
             return false;
         }
     }
-
-//    public static String getInstanceName() {
-//        return INSTANCE_NAME;
-//    }
-//
-//    public static String getUserMapName() {
-//        return USER_MAP_NAME;
-//    }
-//
-//    public static String getDataSetMapName() {
-//        return DATASET_MAP_NAME;
-//    }
-//
-//    public static String getKeyMapName() {
-//        return KEY_MAP_NAME;
-//    }
-//
-//    public static String getMiscellaneousMapName() {
-//        return MISCELLANEOUS_MAP_NAME;
-//    }
 
     public static int getObjectOnPage() {
         return OBJECT_ON_PAGE;

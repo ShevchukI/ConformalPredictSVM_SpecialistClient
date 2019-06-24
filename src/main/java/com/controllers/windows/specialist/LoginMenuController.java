@@ -35,13 +35,9 @@ public class LoginMenuController extends MenuController {
     private Button button_SignIn;
 
     public void initialize(Stage stage){
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         mainMenuController = new MainMenuController();
         windowsController = new WindowsController();
-//        modelDeveloper = new ModelDeveloper();
         button_SignIn.setGraphic(Constant.signInIcon());
     }
 
@@ -64,11 +60,9 @@ public class LoginMenuController extends MenuController {
             if(checkStatusCode(getStatusCode())){
                 GlobalMap.fillMap(authorization);
                 GlobalMap.getSpecialistMap().put(1, new SpecialistEntity().fromJson(response));
-//                HazelCastMap.fillMap(new SpecialistEntity().fromJson(response), authorization);
                 windowsController.openWindowResizable("menu/mainMenu", getStage(),
                         mainMenuController, "Main menu", 1100, 640);
             }
         }
     }
-
 }

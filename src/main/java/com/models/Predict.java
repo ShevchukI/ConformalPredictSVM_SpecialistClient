@@ -32,7 +32,6 @@ public class Predict {
     private String visibleConfidence;
     private String visibleParameters;
 
-
     public Predict() {
     }
 
@@ -153,20 +152,6 @@ public class Predict {
         }
     }
 
-//    public String getVisibleClass() {
-//        if (getRealClass() == getPredictClass()) {
-//            switch (getPredictClass()) {
-//                case 1:
-//                    return "Positive";
-//                case -1:
-//                    return "Negative";
-//                default:
-//                    break;
-//            }
-//        }
-//        return "Uncertain";
-//    }
-
     public String getVisibleCredibility() {
         return visibleCredibility;
     }
@@ -201,14 +186,8 @@ public class Predict {
         return visibleConfidence;
     }
 
-//    public String getVisibleConfidence() {
-//        NumberFormat formatter = new DecimalFormat("#00.00");
-//        return String.valueOf(formatter.format(getConfidence())) + "%";
-//    }
-
     public Integer getObjectId(){
         return datasetObjectsEntity.getUserObjectId();
     }
-
 
 }

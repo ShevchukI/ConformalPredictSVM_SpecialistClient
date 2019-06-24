@@ -25,9 +25,7 @@ public class WindowsController {
         screenBounds = Screen.getPrimary().getVisualBounds();
     }
 
-
     public void start(Stage stage) throws IOException {
-//        HazelCastMap.createInstanceAndMap();
         FXMLLoader loginMenuLoader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/specialist/loginMenu.fxml"));
         Pane loginMenuPane = (Pane) loginMenuLoader.load();
         Scene loginMenuScene = new Scene(loginMenuPane);

@@ -44,9 +44,6 @@ public class AddDataSetMenuController extends MenuController {
     private TextArea textArea_Error;
 
     public void initialize(Stage stage, Stage newWindow) {
-//        stage.setOnHidden(event -> {
-//            HazelCastMap.getInstance().getLifecycleService().shutdown();
-//        });
         setStage(stage);
         setNewWindow(newWindow);
         menuBarController.init(this);
@@ -125,10 +122,6 @@ public class AddDataSetMenuController extends MenuController {
         String fileName = "file.txt";
         File fileBuf = new File(fileName);
         FileWriter writer = new FileWriter(fileBuf.getAbsolutePath());
-//        FileReader input = new FileReader(textField_FileName.getText());
-//        BufferedReader bufRead = new BufferedReader(input);
-//        String line = bufRead.readLine();
-//        textArea_Columns.setText(line);
         String[] mainContent = textArea_Content.getText().split("\n");
         textArea_Content.clear();
         String[][] content = new String[mainContent.length][3];
