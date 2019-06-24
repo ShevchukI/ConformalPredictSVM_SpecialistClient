@@ -41,6 +41,7 @@ public class Constant {
     public final static String PAGE_INDEX_MY_DATASET = "pageIndexMyDataSet";
     public final static String PAGE_INDEX_ALL_MODEL = "pageIndexAllModel";
     public final static String PAGE_INDEX_MY_MODEL = "pageIndexMyModel";
+    public final static String CONFIGURATION_ID = "configuration_id";
 
 
 
@@ -204,10 +205,16 @@ public class Constant {
 
     public static String[] getAuth() {
         String[] auth = new String[2];
-        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
-        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
-                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
+        String login = Encryptor.decrypt(GlobalMap.getKeyMap().get(Constant.KEY),
+                GlobalMap.getKeyMap().get(Constant.VECTOR),
+                GlobalMap.getUserMap().get(Constant.LOGIN));
+        String password = Encryptor.decrypt(GlobalMap.getKeyMap().get(Constant.KEY),
+                GlobalMap.getKeyMap().get(Constant.VECTOR),
+                GlobalMap.getUserMap().get(Constant.PASSWORD));
+//        String login = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
+//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(LOGIN).toString());
+//        String password = Encryptor.decrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(KEY).toString(),
+//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(VECTOR).toString(), HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).get(PASSWORD).toString());
         auth[0] = login;
         auth[1] = password;
         return auth;

@@ -4,7 +4,7 @@ import com.controllers.windows.menu.MenuController;
 import com.models.ModelDeveloper;
 import com.tools.Constant;
 import com.tools.Encryptor;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -46,9 +46,9 @@ public class ChangeInfoMenuController extends MenuController {
 
     @FXML
     public void initialize(Stage stage, Stage newWindow) throws IOException {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         setNewWindow(newWindow);
         modelDeveloper = new ModelDeveloper();
@@ -66,9 +66,14 @@ public class ChangeInfoMenuController extends MenuController {
                     HttpResponse response = modelDeveloper.changePassword(passwordField_ConfirmPassword.getText());
                     setStatusCode(response.getStatusLine().getStatusCode());
                     if (checkStatusCode(getStatusCode())) {
-                        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", new Encryptor().encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
-                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
-                                passwordField_ConfirmPassword.getText().toString()));
+                        GlobalMap.getUserMap().put(Constant.PASSWORD,
+                                Encryptor.encrypt(GlobalMap.getKeyMap().get(Constant.KEY),
+                                        GlobalMap.getKeyMap().get(Constant.VECTOR),
+                                        passwordField_ConfirmPassword.getText()));
+
+//                        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put("password", new Encryptor().encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("key").toString(),
+//                                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get("vector").toString(),
+//                                passwordField_ConfirmPassword.getText().toString()));
                         Constant.getAlert(null, "Password changed!", Alert.AlertType.INFORMATION);
                         getNewWindow().close();
                     }

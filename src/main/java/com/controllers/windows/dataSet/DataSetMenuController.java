@@ -10,7 +10,7 @@ import com.models.DataSet;
 import com.models.Model;
 import com.sun.javafx.collections.ObservableListWrapper;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -125,9 +125,9 @@ public class DataSetMenuController extends MenuController {
     private MenuItem menuItem_AllChangeActive;
 
     public void initialize(Stage stage) throws IOException {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         changePane(false);
         setStage(stage);
         mainMenuController = new MainMenuController();
@@ -145,7 +145,8 @@ public class DataSetMenuController extends MenuController {
 //        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(String.valueOf(HazelCastMap.getDataSetMap().get(1).getId())));
 //        HttpResponse response = DataSetController.getDataSetById(Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString()));
 //        setStatusCode(response.getStatusLine().getStatusCode());
-        dataSet = HazelCastMap.getDataSetMap().get(1);
+        dataSet = GlobalMap.getDataSetMap().get(1);
+//        dataSet = HazelCastMap.getDataSetMap().get(1);
         textField_Name.setText(dataSet.getName());
         textArea_Description.setText(dataSet.getDescription());
         if (dataSet.isActive()) {
@@ -175,12 +176,14 @@ public class DataSetMenuController extends MenuController {
         tableView_Object = fillTableFromString(dataSetObject);
 
         allPageIndex = 1;
-        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_ALL_MODEL).toString());
+        allPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_ALL_MODEL));
+//        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_ALL_MODEL).toString());
         setSettingColumnTable(allPageIndex, tableView_AllConfiguration, tableColumn_AllNumber, tableColumn_AllName, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllConfiguration.setPageFactory(this::createAllPage);
 
         myPageIndex = 1;
-        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_MY_MODEL).toString());
+        myPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_MY_MODEL));
+//        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get(Constant.PAGE_INDEX_MY_MODEL).toString());
         setSettingColumnTable(myPageIndex, tableView_MyConfiguration, tableColumn_MyNumber, tableColumn_MyName, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyConfiguration.setPageFactory(this::createMyPage);
 
@@ -189,8 +192,8 @@ public class DataSetMenuController extends MenuController {
                     @Override
                     public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                         if (choiceBox_Activate.getSelectionModel().getSelectedIndex() == 0
-                                && (tableView_AllConfiguration.getSelectionModel().getSelectedItem()!=null)
-                                || tableView_MyConfiguration.getSelectionModel().getSelectedItem()!=null){
+                                && (tableView_AllConfiguration.getSelectionModel().getSelectedItem() != null)
+                                || tableView_MyConfiguration.getSelectionModel().getSelectedItem() != null) {
                             button_Activate.setDisable(false);
                             menuItem_AllChangeActive.setDisable(false);
                         } else {
@@ -200,7 +203,7 @@ public class DataSetMenuController extends MenuController {
                     }
                 }
         );
-        if (choiceBox_Activate.getSelectionModel().getSelectedIndex() == 0){
+        if (choiceBox_Activate.getSelectionModel().getSelectedIndex() == 0) {
             button_Activate.setDisable(false);
             menuItem_AllChangeActive.setDisable(false);
         } else {
@@ -266,14 +269,19 @@ public class DataSetMenuController extends MenuController {
 
     public void viewConfiguration() throws IOException {
         if (tab_AllConfiguration.isSelected()) {
-            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
-                    tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId());
+            GlobalMap.getMiscMap().put(Constant.CONFIGURATION_ID,
+                    String.valueOf(tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId()));
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
+//                    tableView_AllConfiguration.getSelectionModel().getSelectedItem().getId());
         }
         if (tab_MyConfiguration.isSelected()) {
-            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
-                    tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
+            GlobalMap.getMiscMap().put(Constant.CONFIGURATION_ID,
+                    String.valueOf(tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId()));
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put("configurationId",
+//                    tableView_MyConfiguration.getSelectionModel().getSelectedItem().getId());
         }
-        HazelCastMap.getDataSetMap().put(1, dataSet);
+        GlobalMap.getDataSetMap().put(1, dataSet);
+//        HazelCastMap.getDataSetMap().put(1, dataSet);
 //        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("name", dataSet.getName());
 //        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
@@ -295,7 +303,7 @@ public class DataSetMenuController extends MenuController {
                 Constant.getAlert(null, "Active don`t change!", Alert.AlertType.ERROR);
             }
         }
-        if(changeFile) {
+        if (changeFile) {
             response = dataSet.addObjectsToDataSet(fileBuf, dataSet.getId());
             setStatusCode(response.getStatusLine().getStatusCode());
             if (!checkStatusCode(getStatusCode())) {
@@ -312,7 +320,8 @@ public class DataSetMenuController extends MenuController {
     }
 
     public void addConfiguration(ActionEvent event) throws IOException {
-        HazelCastMap.getDataSetMap().put(1, dataSet);
+        GlobalMap.getDataSetMap().put(1, dataSet);
+//        HazelCastMap.getDataSetMap().put(1, dataSet);
 //        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("name", dataSet.getName());
 //        HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).put("column", dataSet.getColumns());
         windowsController.openNewModalWindow("dataSet/changeConfigurationMenu", getStage(), changeConfigurationMenuController,
@@ -330,7 +339,7 @@ public class DataSetMenuController extends MenuController {
             String[] content = line.split(",");
             for (int i = tableView_Object.getColumns().size(); i < content.length; i++) {
                 TableColumn<List<String>, String> col = new TableColumn<>(listName.get(i));
-                if(i == 0){
+                if (i == 0) {
                     col.setSortable(false);
                 }
                 col.setMinWidth(listName.get(i).length() * 10);
@@ -383,14 +392,14 @@ public class DataSetMenuController extends MenuController {
 
     public void activateConfiguration(ActionEvent event) throws IOException {
         if (tab_AllConfiguration.isSelected()
-                && tableView_AllConfiguration.getSelectionModel().getSelectedItem()!=null) {
+                && tableView_AllConfiguration.getSelectionModel().getSelectedItem() != null) {
             activateConfiguration(allPageIndex, myPageIndex, true, tableView_AllConfiguration,
                     tableView_MyConfiguration, allConfigurationObservableList,
                     myConfigurationObservableList, pagination_AllConfiguration,
                     pagination_MyConfiguration);
         }
         if (tab_MyConfiguration.isSelected()
-                && tableView_MyConfiguration.getSelectionModel().getSelectedItem()!=null) {
+                && tableView_MyConfiguration.getSelectionModel().getSelectedItem() != null) {
             activateConfiguration(myPageIndex, allPageIndex, false, tableView_MyConfiguration,
                     tableView_AllConfiguration, myConfigurationObservableList,
                     allConfigurationObservableList, pagination_MyConfiguration,
@@ -497,7 +506,7 @@ public class DataSetMenuController extends MenuController {
             content[i][0] = split[0];
             content[i][1] = mainContent[i].substring(split[0].length() + 1, mainContent[i].length());
             content[i][2] = split[1];
-            if(!checkObjectFormat(mainContent[i])){
+            if (!checkObjectFormat(mainContent[i])) {
                 error++;
             }
             if (!checkObjectLength(tableView_Object.getColumns().size(), content[i][0] + "," + content[i][1])) {
@@ -536,8 +545,8 @@ public class DataSetMenuController extends MenuController {
 
     private boolean checkObjectFormat(String object) {
         String[] obj = object.split(",");
-        for (int i = 2; i<obj.length; i++){
-            if(!obj[i].matches("[0-9]{1,3}")){
+        for (int i = 2; i < obj.length; i++) {
+            if (!obj[i].matches("[0-9]{1,3}")) {
                 textArea_Error.appendText("Object error! Object [" + object + "] has invalid characters!\n");
                 return false;
             }

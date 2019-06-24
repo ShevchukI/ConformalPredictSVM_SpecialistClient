@@ -4,7 +4,7 @@ import com.controllers.windows.menu.MenuController;
 import com.models.Model;
 import com.models.Predict;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -61,7 +61,8 @@ public class DetailsResultMenuController extends MenuController {
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         setStage(stage);
         setNewWindow(newWindow);
-        configId = Integer.parseInt(HazelCastMap.getMiscellaneousMap().get("configurationId").toString());
+        configId = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.CONFIGURATION_ID));
+//        configId = Integer.parseInt(HazelCastMap.getMiscellaneousMap().get("configurationId").toString());
         HttpResponse response = Model.getDetailedResult(configId);
         setStatusCode(response.getStatusLine().getStatusCode());
         if (checkStatusCode(getStatusCode())) {
@@ -88,7 +89,8 @@ public class DetailsResultMenuController extends MenuController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File file = directoryChooser.showDialog(getNewWindow());
         if (file != null) {
-            textField_FileName.setText(file.getAbsolutePath() + HazelCastMap.getDataSetMap().get(1).getName());
+            textField_FileName.setText(file.getAbsolutePath() + GlobalMap.getDataSetMap().get(1).getName());
+//            textField_FileName.setText(file.getAbsolutePath() + HazelCastMap.getDataSetMap().get(1).getName());
 //            textField_FileName.setText(file.getAbsolutePath() + HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("name"));
         }
     }

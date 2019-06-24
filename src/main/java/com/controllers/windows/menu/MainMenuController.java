@@ -5,7 +5,7 @@ import com.controllers.windows.dataSet.DataSetMenuController;
 import com.models.DataSet;
 import com.models.DataSetPage;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -79,26 +79,30 @@ public class MainMenuController extends MenuController {
     private Button button_Delete;
 
     public void initialize(Stage stage) throws IOException {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         addDataSetMenuController = new AddDataSetMenuController();
         windowsController = new WindowsController();
         dataSetMenuController = new DataSetMenuController();
-        HazelCastMap.getDataSetMap().clear();
+        GlobalMap.getDataSetMap().clear();
+//        HazelCastMap.getDataSetMap().clear();
         menuBarController.init(this);
         dataSet = new DataSet();
 
-        label_Name.setText(HazelCastMap.getSpecialistMap().get(1).getSurname() + " " + HazelCastMap.getSpecialistMap().get(1).getName());
+        label_Name.setText(GlobalMap.getSpecialistMap().get(1).getSurname() + " " + GlobalMap.getSpecialistMap().get(1).getName());
+//        label_Name.setText(HazelCastMap.getSpecialistMap().get(1).getSurname() + " " + HazelCastMap.getSpecialistMap().get(1).getName());
         allPageIndex = 1;
-        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndexAllDataSet").toString());
+        allPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_ALL_DATASET));
+//        allPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndexAllDataSet").toString());
         setSettingColumnTable(allPageIndex, tableView_AllDataSetTable, tableColumn_AllNumber,
                 tableColumn_AllName, tableColumn_AllDescription, tableColumn_AllOwner, tableColumn_AllActive);
         pagination_AllDataSet.setPageFactory(this::createAllPage);
 
         myPageIndex = 1;
-        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndexMyDataSet").toString());
+        myPageIndex = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.PAGE_INDEX_MY_DATASET));
+//        myPageIndex = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("pageIndexMyDataSet").toString());
         setSettingColumnTable(myPageIndex, tableView_MyDataSetTable, tableColumn_MyNumber,
                 tableColumn_MyName, tableColumn_MyDescription, tableColumn_MyOwner, tableColumn_MyActive);
         pagination_MyDataSet.setPageFactory(this::createMyPage);
@@ -131,14 +135,18 @@ public class MainMenuController extends MenuController {
 
     public void viewDataSet() throws IOException {
         if (tab_All.isSelected() && !tableView_AllDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            HazelCastMap.getDataSetMap().put(1, tableView_AllDataSetTable.getSelectionModel().getSelectedItem());
-            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_ALL_DATASET, allPageIndex);
+            GlobalMap.getDataSetMap().put(1, tableView_AllDataSetTable.getSelectionModel().getSelectedItem());
+            GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_ALL_DATASET, String.valueOf(allPageIndex));
+//            HazelCastMap.getDataSetMap().put(1, tableView_AllDataSetTable.getSelectionModel().getSelectedItem());
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_ALL_DATASET, allPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
         if (tab_My.isSelected() && !tableView_MyDataSetTable.getSelectionModel().getSelectedItems().isEmpty()) {
-            HazelCastMap.getDataSetMap().put(1, tableView_MyDataSetTable.getSelectionModel().getSelectedItem());
-            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
+            GlobalMap.getDataSetMap().put(1, tableView_MyDataSetTable.getSelectionModel().getSelectedItem());
+            GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_MY_DATASET, String.valueOf(myPageIndex));
+//            HazelCastMap.getDataSetMap().put(1, tableView_MyDataSetTable.getSelectionModel().getSelectedItem());
+//            HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
             windowsController.openWindowResizable("dataSet/dataSetMenu", getStage(),
                     dataSetMenuController, "DataSet menu", 800, 640);
         }
@@ -153,7 +161,8 @@ public class MainMenuController extends MenuController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_ALL_DATASET, allPageIndex);
+        GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_ALL_DATASET, String.valueOf(allPageIndex));
+//        HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_ALL_DATASET, allPageIndex);
         return tableView_AllDataSetTable;
     }
 
@@ -165,7 +174,8 @@ public class MainMenuController extends MenuController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
+        GlobalMap.getMiscMap().put(Constant.PAGE_INDEX_MY_DATASET, String.valueOf(myPageIndex));
+//        HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).put(Constant.PAGE_INDEX_MY_DATASET, myPageIndex);
         return tableView_MyDataSetTable;
     }
 

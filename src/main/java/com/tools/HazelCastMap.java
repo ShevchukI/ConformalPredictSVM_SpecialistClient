@@ -38,7 +38,6 @@ public class HazelCastMap {
         return mapConfig;
     }
 
-
 //    public static void fillMap(SpecialistEntity specialistEntity, String login, String password) {
 //        String key = new Encryptor().genRandString();
 //        String vector = new Encryptor().genRandString();
@@ -55,22 +54,21 @@ public class HazelCastMap {
 //        getMapByName(MISCELLANEOUS_MAP_NAME).put("pageIndexMyConfiguration", "1");
 //    }
 
-    public static void fillMap(SpecialistEntity specialistEntity, String[] authorization) {
-        String key = new Encryptor().genRandString();
-        String vector = new Encryptor().genRandString();
-        getMapByName(KEY_MAP_NAME).put(Constant.KEY, key);
-        getMapByName(KEY_MAP_NAME).put(Constant.VECTOR, vector);
-        getMapByName(USER_MAP_NAME).put(Constant.LOGIN, Encryptor.encrypt(key, vector, authorization[0]));
-        getMapByName(USER_MAP_NAME).put(Constant.PASSWORD, Encryptor.encrypt(key, vector, authorization[1]));
-
-        getSpecialistMap().put(1, specialistEntity);
-
-        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_ALL_DATASET, 1);
-        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_MY_DATASET, 1);
-        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_ALL_MODEL, 1);
-        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_MY_MODEL, 1);
-    }
-
+//    public static void fillMap(SpecialistEntity specialistEntity, String[] authorization) {
+//        String key = new Encryptor().genRandString();
+//        String vector = new Encryptor().genRandString();
+//        getMapByName(KEY_MAP_NAME).put(Constant.KEY, key);
+//        getMapByName(KEY_MAP_NAME).put(Constant.VECTOR, vector);
+//        getMapByName(USER_MAP_NAME).put(Constant.LOGIN, Encryptor.encrypt(key, vector, authorization[0]));
+//        getMapByName(USER_MAP_NAME).put(Constant.PASSWORD, Encryptor.encrypt(key, vector, authorization[1]));
+//
+//        getSpecialistMap().put(1, specialistEntity);
+//
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_ALL_DATASET, 1);
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_MY_DATASET, 1);
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_ALL_MODEL, 1);
+//        getMapByName(MISCELLANEOUS_MAP_NAME).put(Constant.PAGE_INDEX_MY_MODEL, 1);
+//    }
 
     public static HazelcastInstance getInstance() {
         return Hazelcast.getHazelcastInstanceByName(INSTANCE_NAME);
@@ -116,16 +114,16 @@ public class HazelCastMap {
     }
 
 
-    public static void changePassword(String password){
-        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put(Constant.PASSWORD,
-                Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(Constant.KEY).toString(),
-                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(Constant.VECTOR).toString(),
-                password));
-    }
+//    public static void changePassword(String password){
+//        HazelCastMap.getMapByName(HazelCastMap.getUserMapName()).put(Constant.PASSWORD,
+//                Encryptor.encrypt(HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(Constant.KEY).toString(),
+//                HazelCastMap.getMapByName(HazelCastMap.getKeyMapName()).get(Constant.VECTOR).toString(),
+//                password));
+//    }
 
-    public static void changeUserInformation(SpecialistEntity specialistEntity){
-        getSpecialistMap().put(1, specialistEntity);
-    }
+//    public static void changeUserInformation(SpecialistEntity specialistEntity){
+//        getSpecialistMap().put(1, specialistEntity);
+//    }
 
     public static IMap<Integer, DataSet> getDataSetMap(){
         return hazelcastInstance.getMap(DATASET_MAP_NAME);

@@ -6,7 +6,6 @@ import com.controllers.windows.menu.MenuController;
 import com.controllers.windows.menu.WindowsController;
 import com.models.DataSet;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -45,9 +44,9 @@ public class AddDataSetMenuController extends MenuController {
     private TextArea textArea_Error;
 
     public void initialize(Stage stage, Stage newWindow) {
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         setNewWindow(newWindow);
         menuBarController.init(this);

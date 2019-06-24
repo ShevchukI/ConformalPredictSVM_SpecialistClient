@@ -6,7 +6,7 @@ import com.models.DataSet;
 import com.models.ParameterSingleObject;
 import com.models.Predict;
 import com.tools.Constant;
-import com.tools.HazelCastMap;
+import com.tools.GlobalMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -62,11 +62,12 @@ public class DiagnosticMenuController extends MenuController {
     @FXML
     public void initialize(Stage stage, Stage newWindow) throws IOException {
         newWindow.setOnHidden(event -> {
-            HazelCastMap.getDataSetMap().clear();
+            GlobalMap.getDataSetMap().clear();
+//            HazelCastMap.getDataSetMap().clear();
         });
-        stage.setOnHidden(event -> {
-            HazelCastMap.getInstance().getLifecycleService().shutdown();
-        });
+//        stage.setOnHidden(event -> {
+//            HazelCastMap.getInstance().getLifecycleService().shutdown();
+//        });
         setStage(stage);
         setNewWindow(newWindow);
 //        illnessController = new IllnessController();
@@ -80,9 +81,11 @@ public class DiagnosticMenuController extends MenuController {
         tableColumn_Credibility.setCellValueFactory(new PropertyValueFactory<Predict, String>("visibleConfidence"));
         scrollPane_Data.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane_Data.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        dataSetId = HazelCastMap.getDataSetMap().get(1).getId();
+        dataSetId = GlobalMap.getDataSetMap().get(1).getId();
+//        dataSetId = HazelCastMap.getDataSetMap().get(1).getId();
 //        dataSetId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString());
-        configurationId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString());
+        configurationId = Integer.parseInt(GlobalMap.getMiscMap().get(Constant.CONFIGURATION_ID));
+//        configurationId = Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getMiscellaneousMapName()).get("configurationId").toString());
         createFields(dataSetId);
     }
 
