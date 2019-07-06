@@ -182,7 +182,7 @@ public class ChangeConfigurationMenuController extends MenuController {
             if (model == null) {
                 return;
             }
-            response = model.createConfiguration(model,
+            response = model.addConfiguration(model,
                     Integer.parseInt(String.valueOf(GlobalMap.getDataSetMap().get(1).getId())));
 //                    Integer.parseInt(String.valueOf(HazelCastMap.getDataSetMap().get(1).getId())));
 //                    Integer.parseInt(HazelCastMap.getMapByName(HazelCastMap.getDataSetMapName()).get("id").toString()));

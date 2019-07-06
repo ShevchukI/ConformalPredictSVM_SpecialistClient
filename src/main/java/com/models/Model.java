@@ -32,7 +32,7 @@ public class Model {
     public Model() {
     }
 
-    public HttpResponse createConfiguration(Model model, int dataSetId) throws IOException {
+    public HttpResponse addConfiguration(Model model, int dataSetId) throws IOException {
         String json = new Gson().toJson(model);
         String url = getUrl() + "/configuration/" + dataSetId;
         HttpPost request = new HttpPost(url);
@@ -70,44 +70,38 @@ public class Model {
             url = getUrl() + "/configuration/all/" + dataSetId + "/" + page + "/" + Constant.getObjectOnPage() + "/specialist";
         }
         HttpGet request = new HttpGet(url);
-        HttpResponse response = crudEntity(null, null, request, null, null);
-        return response;
+        return crudEntity(null, null, request, null, null);
     }
 
     public static HttpResponse activateModel(int configId) throws IOException {
         String url = getUrl() + "/configuration/" + configId + "/activate";
         HttpPut request = new HttpPut(url);
-        HttpResponse response = crudEntity(null, null, null, request, null);
-        return response;
+        return crudEntity(null, null, null, request, null);
     }
 
     public HttpResponse getModel(int configId) throws IOException {
         String url = getUrl() + "/configuration/" + configId;
         HttpGet request = new HttpGet(url);
-        HttpResponse response = crudEntity(null, null, request, null, null);
-        return response;
+        return crudEntity(null, null, request, null, null);
     }
 
     public static HttpResponse deleteModel(int configId) throws IOException {
         String url = getUrl() + "/configuration/" + configId;
         HttpDelete request = new HttpDelete(url);
-        HttpResponse response = crudEntity(null, null, null, null, request);
-        return response;
+        return crudEntity(null, null, null, null, request);
     }
 
     public static HttpResponse changeModel(Model model, int configId) throws IOException {
         String json = new Gson().toJson(model);
         String url = getUrl() + "/configuration/" + configId;
         HttpPut request = new HttpPut(url);
-        HttpResponse response = crudEntity(new StringEntity(json), null, null, request, null);
-        return response;
+        return crudEntity(new StringEntity(json), null, null, request, null);
     }
 
     public static HttpResponse getDetailedResult(int configId) throws IOException {
         String url = getUrl() + "/result/general/" + configId + "/configuration_result";
         HttpGet request = new HttpGet(url);
-        HttpResponse response = crudEntity(null, null, request, null, null);
-        return response;
+        return crudEntity(null, null, request, null, null);
     }
 
     public String getName() {
